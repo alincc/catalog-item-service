@@ -1,0 +1,6 @@
+{
+  "generator-spring-microservice": {
+    "packageName": "no.nb.microservices.catalogitem",
+    "packageFolder": "no/nb/microservices/catalogitem"
+  }
+}

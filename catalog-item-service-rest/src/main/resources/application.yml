@@ -1,0 +1,13 @@
+info:
+  app:
+    name: catalog-item-service
+    description: Finds metadata and content links about a item
+
+endpoints:
+  restart:
+    enabled: true
+  refresh:
+    enabled: true
+
+server:
+  port: 8080
