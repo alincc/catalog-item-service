@@ -18,22 +18,22 @@
         <module>catalog-item-service-rest</module>
     </modules>
 
-    
     <scm>
-        <url>https://github.com/example-org/example-rep.git</url>
-        <connection>scm:git:git://github.com/example-org/example-rep.git</connection>
-        <developerConnection>scm:git:git@github.com:example-org/example-rep.git</developerConnection>
+        <url>https://github.com/NationalLibraryOfNorway/catalog-item-service.git</url>
+        <connection>scm:git:git://github.com/NationalLibraryOfNorway/catalog-item-service.git</connection>
+        <developerConnection>scm:git:git@github.com:NationalLibraryOfNorway/catalog-item-service.git</developerConnection>
     </scm>
+
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <name>Snapshot Repository</name>
-            <url>http://example.com:8091/artifactory/libs-snapshots-local</url>
+            <name>NB Snapshot Repository</name>
+            <url>http://utvikling.nb.no:8091/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
         <repository>
             <id>releases</id>
-            <name>Release Repository</name>
-            <url>http://example.com:8091/artifactory/libs-releases-local</url>
+            <name>NB Release Repository</name>
+            <url>http://utvikling.nb.no:8091/artifactory/libs-releases-local</url>
         </repository>
     </distributionManagement>
 
