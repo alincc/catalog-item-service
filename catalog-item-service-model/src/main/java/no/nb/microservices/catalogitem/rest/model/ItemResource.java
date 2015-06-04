@@ -8,14 +8,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ItemResource extends ResourceSupport {
     
     private String id;
+    private Metadata metadata;
 
     @JsonCreator
-    public ItemResource() {
+    public ItemResource(String id) {
+        this.id = id;
     }
     
     @JsonProperty(value="id")
     public String geItemtId() {
         return id;
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
 }
