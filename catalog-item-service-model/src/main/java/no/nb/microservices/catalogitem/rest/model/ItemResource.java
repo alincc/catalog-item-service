@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ItemResource extends ResourceSupport {
     
+    @JsonProperty(value="id")
     private String id;
     private Metadata metadata;
 
@@ -15,7 +16,6 @@ public class ItemResource extends ResourceSupport {
         this.id = id;
     }
     
-    @JsonProperty(value="id")
     public String geItemtId() {
         return id;
     }
