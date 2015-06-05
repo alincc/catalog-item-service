@@ -12,7 +12,12 @@ public class ItemResource extends ResourceSupport {
     private Metadata metadata;
 
     @JsonCreator
+    public ItemResource() {
+        super();
+    }
+    
     public ItemResource(String id) {
+        super();
         this.id = id;
     }
     
