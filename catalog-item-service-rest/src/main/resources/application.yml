@@ -9,5 +9,16 @@ endpoints:
   refresh:
     enabled: true
 
+---
+spring:
+    profiles: docker
+
 server:
-  port: 8080
+    port: 8080
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/    
