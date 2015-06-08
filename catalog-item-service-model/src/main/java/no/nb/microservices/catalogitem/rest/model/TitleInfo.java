@@ -1,6 +1,6 @@
 package no.nb.microservices.catalogitem.rest.model;
 
-public class TitelInfo {
+public class TitleInfo {
 
     private String title;
 

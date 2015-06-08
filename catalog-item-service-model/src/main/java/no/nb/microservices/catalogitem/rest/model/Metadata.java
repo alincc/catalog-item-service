@@ -2,13 +2,13 @@ package no.nb.microservices.catalogitem.rest.model;
 
 public class Metadata {
 
-    private TitelInfo titleInfo;
+    private TitleInfo titleInfo;
 
-    public TitelInfo getTitleInfo() {
+    public TitleInfo getTitleInfo() {
         return titleInfo;
     }
 
-    public void setTitleInfo(TitelInfo titleInfo) {
+    public void setTitleInfo(TitleInfo titleInfo) {
         this.titleInfo = titleInfo;
     }
 }
