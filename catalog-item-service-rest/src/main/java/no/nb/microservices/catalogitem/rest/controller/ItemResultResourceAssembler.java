@@ -15,6 +15,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         ItemResource resource = new ItemResource(item.getId());
         Metadata metadata = new Metadata();
         TitleInfo titleInfo = new TitleInfo();
+        titleInfo.setTitle(item.getTitle());
         metadata.setTitleInfo(titleInfo);
         resource.setMetadata(metadata);
         

@@ -8,7 +8,12 @@ endpoints:
     enabled: true
   refresh:
     enabled: true
-
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 ---
 spring:
     profiles: docker
