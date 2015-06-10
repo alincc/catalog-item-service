@@ -7,6 +7,7 @@ public class Item implements Identifiable<String> {
     private String id;
     private String title;
 
+    @Override
     public String getId() {
         return id;
     }
