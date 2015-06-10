@@ -2,6 +2,11 @@ package no.nb.microservices.catalogitem.core.item.service;
 
 import org.springframework.hateoas.Identifiable;
 
+/**
+ * 
+ * @author ronnymikalsen
+ *
+ */
 public class Item implements Identifiable<String> {
 
     private String id;
