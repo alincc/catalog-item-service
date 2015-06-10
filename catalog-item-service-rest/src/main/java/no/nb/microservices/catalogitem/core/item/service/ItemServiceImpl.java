@@ -41,7 +41,7 @@ public class ItemServiceImpl implements IItemService {
 
     private void populateAccessInfo(List<Field> fields, Item item) {
         String digital = getNamedField("digital", fields).getValue();
-        item.getAccessInfo().setDigital(digital.equals("Ja") ? true : false);
+        item.getAccessInfo().setDigital("Ja".equals(digital) ? true : false);
     }
 
     private Field getNamedField(String name, List<Field> fields) {
