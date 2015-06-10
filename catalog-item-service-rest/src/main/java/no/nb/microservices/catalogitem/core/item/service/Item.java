@@ -11,6 +11,7 @@ public class Item implements Identifiable<String> {
 
     private String id;
     private String title;
+    private AccessInfo accessInfo = new AccessInfo(); 
 
     @Override
     public String getId() {
@@ -27,6 +28,14 @@ public class Item implements Identifiable<String> {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public AccessInfo getAccessInfo() {
+        return accessInfo;
+    }
+
+    public void setAccessInfo(AccessInfo accessInfo) {
+        this.accessInfo = accessInfo;
     }
 
 }

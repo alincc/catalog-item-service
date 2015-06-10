@@ -44,7 +44,7 @@
         <dependency>
             <groupId>no.nb.microservices</groupId>
             <artifactId>catalog-metadata-model</artifactId>
-            <version>0.0.1-e1b0c068411dd1539beaefc86283e11a12ab8302-43</version>
+            <version>0.0.1-7fd84ce1bb82b40016ad22e673f3d8c4f38a9929-59</version>
         </dependency>
 
         <dependency>

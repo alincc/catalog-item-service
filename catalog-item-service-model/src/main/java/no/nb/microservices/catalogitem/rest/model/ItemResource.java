@@ -5,11 +5,17 @@ import org.springframework.hateoas.ResourceSupport;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 
+ * @author ronnymikalsen
+ *
+ */
 public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
     private String id;
     private Metadata metadata;
+    private AccessInfo accessInfo;
 
     @JsonCreator
     public ItemResource() {
@@ -31,6 +37,14 @@ public class ItemResource extends ResourceSupport {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
+    }
+
+    public AccessInfo getAccessInfo() {
+        return accessInfo;
+    }
+
+    public void setAccessInfo(AccessInfo accessInfo) {
+        this.accessInfo = accessInfo;
     }
 
 }

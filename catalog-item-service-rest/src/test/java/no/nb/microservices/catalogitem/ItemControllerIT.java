@@ -1,6 +1,5 @@
 package no.nb.microservices.catalogitem;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -52,6 +51,7 @@ public class ItemControllerIT {
 	public void testGetItem() throws Exception {
 
 	    String modsMock = IOUtils.toString(this.getClass().getResourceAsStream("mods.xml"));
+	    String fieldsMock = IOUtils.toString(this.getClass().getResourceAsStream("fields.json"));
 
 	    MockWebServer server = new MockWebServer();
 	    final Dispatcher dispatcher = new Dispatcher() {
@@ -61,7 +61,11 @@ public class ItemControllerIT {
 	            System.out.println(request.getPath());
 	            if (request.getPath().equals("/id1/mods")){
 	                return new MockResponse().setBody(modsMock).setResponseCode(200).setHeader("Content-Type", "application/xml");
-	            }
+	            } else if( request.getPath().equals("/id1/fields")){
+                    return new MockResponse().setBody(fieldsMock).setResponseCode(200).setHeader("Content-Type", "application/json");
+                }
+	            
+	            
 	            return new MockResponse().setResponseCode(404);
 	        }
 	    };
@@ -77,6 +81,7 @@ public class ItemControllerIT {
 	    assertNotNull("Response should have page element", result.getBody().getMetadata());
 	    assertNotNull("Response should have links", result.getBody().getLinks());
         assertNotNull("Title should be \"Født til klovn\"", result.getBody().getMetadata().getTitleInfo().getTitle());
+        assertTrue("isDigital should be true", result.getBody().getAccessInfo().isDigital());
 
 	}
 
