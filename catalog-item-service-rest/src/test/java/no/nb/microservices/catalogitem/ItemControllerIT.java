@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -80,8 +81,9 @@ public class ItemControllerIT {
 	    assertTrue("Status code should be 200 ", result.getStatusCode().is2xxSuccessful());
 	    assertNotNull("Response should have page element", result.getBody().getMetadata());
 	    assertNotNull("Response should have links", result.getBody().getLinks());
-        assertNotNull("Title should be \"Født til klovn\"", result.getBody().getMetadata().getTitleInfo().getTitle());
+        assertEquals("Title should be \"Født til klovn\"", "Født til klovn", result.getBody().getMetadata().getTitleInfo().getTitle());
         assertTrue("isDigital should be true", result.getBody().getAccessInfo().isDigital());
+        assertTrue("isPublicDomain should be true", result.getBody().getAccessInfo().isPublicDomain());
 
 	}
 

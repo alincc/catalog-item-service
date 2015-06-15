@@ -41,6 +41,7 @@ public class ItemServiceImpl implements IItemService {
 
     private void populateAccessInfo(Fields fields, Item item) {
         item.getAccessInfo().setDigital(fields.isDigital());
+        item.getAccessInfo().setContentClasses(fields.getContentClasses());
     }
 
 }

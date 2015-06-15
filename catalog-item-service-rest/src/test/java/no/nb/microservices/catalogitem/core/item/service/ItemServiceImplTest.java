@@ -13,7 +13,6 @@ import java.util.List;
 import no.nb.microservices.catalogitem.core.item.model.IItemService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
-import no.nb.microservices.catalogmetadata.model.fields.Field;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
@@ -56,6 +55,7 @@ public class ItemServiceImplTest {
         
         Fields fields = new Fields();
         fields.setDigital(true);
+        fields.setContentClasses(Arrays.asList("restricted", "public"));
         
         when(metadataRepository.getModsById(id)).thenReturn(mods);
         when(metadataRepository.getFieldsById(id)).thenReturn(fields);
@@ -65,6 +65,7 @@ public class ItemServiceImplTest {
         assertNotNull("Item should not be null", item);
         assertEquals("Title should be \"Supersonic\"", title, item.getTitle());
         assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
+        assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
         
     }
     
