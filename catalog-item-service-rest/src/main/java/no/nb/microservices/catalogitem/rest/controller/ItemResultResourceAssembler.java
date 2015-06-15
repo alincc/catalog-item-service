@@ -44,6 +44,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     private void populateAccessInfo(Item item, ItemResource resource) {
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setDigital(item.getAccessInfo().isDigital());
+        accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
         resource.setAccessInfo(accessInfo);
     }
 

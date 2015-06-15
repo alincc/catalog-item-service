@@ -1,5 +1,8 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author ronnymikalsen
@@ -8,7 +11,7 @@ package no.nb.microservices.catalogitem.core.item.model;
 public class AccessInfo {
 
     private boolean digital;
-    private boolean publicDomain;
+    private List<String> contentClasses = new ArrayList<>();
 
     public boolean isDigital() {
         return digital;
@@ -18,11 +21,18 @@ public class AccessInfo {
         this.digital = digital;
     }
 
-    public boolean isPublicDomain() {
-        return publicDomain;
+    public List<String> getContentClasses() {
+        return contentClasses;
     }
 
-    public void setPublicDomain(boolean publicDomain) {
-        this.publicDomain = publicDomain;
+    public void setContentClasses(List<String> contentClasses) {
+        this.contentClasses = contentClasses;
     }
+    
+    public boolean isPublicDomain() {
+        assert contentClasses != null;
+        
+        return contentClasses.contains("public");
+    }
+
 }
