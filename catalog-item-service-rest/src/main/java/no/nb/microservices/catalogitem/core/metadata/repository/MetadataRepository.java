@@ -1,8 +1,6 @@
 package no.nb.microservices.catalogitem.core.metadata.repository;
 
-import java.util.List;
-
-import no.nb.microservices.catalogmetadata.model.fields.Field;
+import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -23,6 +21,6 @@ public interface MetadataRepository {
     Mods getModsById(@PathVariable("id") String id);
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/fields", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Field> getFieldsById(@PathVariable("id") String id);
+    Fields getFieldsById(@PathVariable("id") String id);
 
 }

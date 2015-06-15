@@ -1,9 +1,9 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
-import java.util.List;
-
+import no.nb.microservices.catalogitem.core.item.model.IItemService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
-import no.nb.microservices.catalogmetadata.model.fields.Field;
+import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ItemServiceImpl implements IItemService {
     @Override
     public Item getItemById(String id) {
         Mods mods = metadatRepository.getModsById(id);
-        List<Field> fields = metadatRepository.getFieldsById(id);
+        Fields fields = metadatRepository.getFieldsById(id);
         
         Item item = new Item();
         item.setId(id);
@@ -39,18 +39,8 @@ public class ItemServiceImpl implements IItemService {
         return item;
     }
 
-    private void populateAccessInfo(List<Field> fields, Item item) {
-        String digital = getNamedField("digital", fields).getValue();
-        item.getAccessInfo().setDigital("Ja".equals(digital) ? true : false);
-    }
-
-    private Field getNamedField(String name, List<Field> fields) {
-        for(Field field : fields) {
-            if (field.getName().equalsIgnoreCase(name)) {
-                return field;
-            }
-        }
-        return null;
+    private void populateAccessInfo(Fields fields, Item item) {
+        item.getAccessInfo().setDigital(fields.isDigital());
     }
 
 }

@@ -1,4 +1,4 @@
-package no.nb.microservices.catalogitem.core.item.service;
+package no.nb.microservices.catalogitem.core.item.model;
 
 import org.springframework.hateoas.Identifiable;
 

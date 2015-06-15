@@ -1,7 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import no.nb.microservices.catalogitem.core.item.service.Item;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.Metadata;

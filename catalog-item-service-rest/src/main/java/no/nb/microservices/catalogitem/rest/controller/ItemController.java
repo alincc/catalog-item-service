@@ -1,7 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import no.nb.microservices.catalogitem.core.item.service.IItemService;
-import no.nb.microservices.catalogitem.core.item.service.Item;
+import no.nb.microservices.catalogitem.core.item.model.IItemService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
