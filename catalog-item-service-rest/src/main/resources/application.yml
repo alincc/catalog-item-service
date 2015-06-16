@@ -8,12 +8,17 @@ endpoints:
     enabled: true
   refresh:
     enabled: true
+
 eureka:
   instance:
     preferIpAddress: true
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+      
+ni:
+  servers: am3.nb.no:7654, am4.nb.no:7654, am5.nb.no:7654
+
 ---
 spring:
     profiles: docker

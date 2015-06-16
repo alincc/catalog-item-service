@@ -45,6 +45,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setDigital(item.getAccessInfo().isDigital());
         accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
+        accessInfo.setViewability(item.getAccessInfo().getViewability());
         resource.setAccessInfo(accessInfo);
     }
 

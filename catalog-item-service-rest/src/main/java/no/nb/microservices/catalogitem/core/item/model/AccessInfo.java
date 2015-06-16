@@ -10,8 +10,12 @@ import java.util.List;
  */
 public class AccessInfo {
 
+    public final static String VIEWABILITY_ALL = "ALL";
+    public final static String VIEWABILITY_NONE = "NONE";
+    
     private boolean digital;
     private List<String> contentClasses = new ArrayList<>();
+    private boolean hasAccess;
 
     public boolean isDigital() {
         return digital;
@@ -33,6 +37,18 @@ public class AccessInfo {
         assert contentClasses != null;
         
         return contentClasses.contains("public");
+    }
+
+    public boolean isHasAccess() {
+        return hasAccess;
+    }
+
+    public void setHasAccess(boolean hasAccess) {
+        this.hasAccess = hasAccess;
+    }
+    
+    public String getViewability() {
+        return hasAccess ? AccessInfo.VIEWABILITY_ALL : AccessInfo.VIEWABILITY_NONE;
     }
 
 }

@@ -17,6 +17,8 @@ public class AccessInfo {
     @JsonProperty("isPublicDomain")
     private boolean publicDomain;
 
+    private String viewability;
+    
     public boolean isDigital() {
         return digital;
     }
@@ -31,6 +33,14 @@ public class AccessInfo {
 
     public void setPublicDomain(boolean publicDomain) {
         this.publicDomain = publicDomain;
+    }
+
+    public String getViewability() {
+        return viewability;
+    }
+
+    public void setViewability(String viewability) {
+        this.viewability = viewability;
     }
 
     
