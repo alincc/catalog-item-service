@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class AccessInfo {
 
-    public final static String VIEWABILITY_ALL = "ALL";
-    public final static String VIEWABILITY_NONE = "NONE";
+    public static final String VIEWABILITY_ALL = "ALL";
+    public static final String VIEWABILITY_NONE = "NONE";
     
     private boolean digital;
     private List<String> contentClasses = new ArrayList<>();
@@ -34,12 +34,12 @@ public class AccessInfo {
     }
     
     public boolean isPublicDomain() {
-        assert contentClasses != null;
+        assert getContentClasses() != null;
         
-        return contentClasses.contains("public");
+        return getContentClasses().contains("public");
     }
 
-    public boolean isHasAccess() {
+    public boolean hasAccess() {
         return hasAccess;
     }
 
@@ -48,7 +48,7 @@ public class AccessInfo {
     }
     
     public String getViewability() {
-        return hasAccess ? AccessInfo.VIEWABILITY_ALL : AccessInfo.VIEWABILITY_NONE;
+        return hasAccess() ? AccessInfo.VIEWABILITY_ALL : AccessInfo.VIEWABILITY_NONE;
     }
 
 }
