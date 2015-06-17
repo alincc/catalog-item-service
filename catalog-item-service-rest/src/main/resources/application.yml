@@ -30,9 +30,5 @@ eureka:
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/    
 
----
-spring:
-    profiles: prod
-
 ni:
-  servers: am3.nb.no:7654, am4.nb.no:7654, am5.nb.no:7654
+  servers: niserver:7654
