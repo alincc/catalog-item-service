@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
  *
  */
 @Configuration
-@Profile("prod")
+@Profile("docker")
 public class NiConfig {
 
     private final NiSettings niSetting;
