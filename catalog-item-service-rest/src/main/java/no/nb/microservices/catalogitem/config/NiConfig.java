@@ -16,13 +16,8 @@ import org.springframework.context.annotation.Profile;
 @Profile("docker")
 public class NiConfig {
 
-    private final NiSettings niSetting;
-
     @Autowired
-    public NiConfig(NiSettings niSetting) {
-        super();
-        this.niSetting = niSetting;
-    }
+    private NiSettings niSetting;
 
     @Bean
     public NiClient getNiClient() {

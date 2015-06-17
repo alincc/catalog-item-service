@@ -2,7 +2,7 @@ package no.nb.microservices.catalogitem.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(value="ni")
+@ConfigurationProperties(prefix="ni")
 public class NiSettings {
     
     private String[] servers = {};
