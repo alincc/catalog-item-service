@@ -67,6 +67,7 @@ public class ItemResultResourceAssemblerTest {
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setDigital(true);
         accessInfo.setContentClasses(Arrays.asList("restricted", "public"));
+        accessInfo.setHasAccess(true);
         item.setAccessInfo(accessInfo);
         ItemResource itemResource = resource.toResource(item );
         
@@ -74,6 +75,8 @@ public class ItemResultResourceAssemblerTest {
         assertTrue("isDigital should be true", itemResource.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", itemResource.getAccessInfo().isPublicDomain());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
+        assertEquals("Viewability should be ALL", AccessInfo.VIEWABILITY_ALL, itemResource.getAccessInfo().getViewability());
+        
     }
 
 }

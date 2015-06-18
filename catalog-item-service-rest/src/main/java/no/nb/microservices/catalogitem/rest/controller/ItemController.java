@@ -1,7 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import no.nb.microservices.catalogitem.core.item.model.IItemService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.service.IItemService;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class ItemController {
 
     @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
-    @RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id) {
         Item item = itemService.getItemById(id);
         

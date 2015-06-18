@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import no.nb.microservices.catalogitem.core.item.model.IItemService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
+import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
@@ -36,10 +36,13 @@ public class ItemServiceImplTest {
 
     @Mock
     MetadataRepository metadataRepository;
+    
+    @Mock
+    SecurityRepository securityRepository;
 
     @Before
     public void setup() {
-        itemService = new ItemServiceImpl(metadataRepository);
+        itemService = new ItemServiceImpl(metadataRepository, securityRepository);
     }
 
     @Test
@@ -60,6 +63,7 @@ public class ItemServiceImplTest {
         
         when(metadataRepository.getModsById(id)).thenReturn(mods);
         when(metadataRepository.getFieldsById(id)).thenReturn(fields);
+        when(securityRepository.hasAccess(id)).thenReturn(true);
         
         Item item = itemService.getItemById(id);
         
@@ -69,6 +73,7 @@ public class ItemServiceImplTest {
         assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
         
+        assertEquals("Viewability should be ALL", "ALL", item.getAccessInfo().getViewability());
     }
     
 

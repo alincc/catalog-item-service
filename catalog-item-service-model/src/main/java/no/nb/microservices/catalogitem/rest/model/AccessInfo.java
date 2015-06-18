@@ -20,6 +20,8 @@ public class AccessInfo {
     
     private String accessAllowedFrom;
 
+    private String viewability;
+    
     public boolean isDigital() {
         return digital;
     }
@@ -43,5 +45,12 @@ public class AccessInfo {
     public void setAccessAllowedFrom(String accessAllowedFrom) {
     	this.accessAllowedFrom = accessAllowedFrom;
     }
-    
+    public String getViewability() {
+        return viewability;
+    }
+
+    public void setViewability(String viewability) {
+        this.viewability = viewability;
+    }
+
 }
