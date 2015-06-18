@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,7 @@ import org.junit.Test;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 public class AccessInfoTest {
@@ -29,5 +31,12 @@ public class AccessInfoTest {
         
         assertFalse(accessInfo.isPublicDomain());
     }
-
+    
+    @Test
+    public void whenAccessAllowedFromNORWAY() {
+        AccessInfo accessInfo = new AccessInfo();
+        accessInfo.getContentClasses().addAll(Arrays.asList("bokhylla", "restricted"));
+        
+        assertEquals("Access should be \"NORWAY\"", "NORWAY", accessInfo.accessAllowedFrom());
+    }
 }

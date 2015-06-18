@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 public class ItemResultResourceAssemblerTest {
@@ -72,7 +73,7 @@ public class ItemResultResourceAssemblerTest {
         assertNotNull("Should not be null", itemResource);
         assertTrue("isDigital should be true", itemResource.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", itemResource.getAccessInfo().isPublicDomain());
-        
+        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
     }
 
 }

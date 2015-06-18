@@ -33,6 +33,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -84,7 +85,7 @@ public class ItemControllerIT {
         assertEquals("Title should be \"Født til klovn\"", "Født til klovn", result.getBody().getMetadata().getTitleInfo().getTitle());
         assertTrue("isDigital should be true", result.getBody().getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", result.getBody().getAccessInfo().isPublicDomain());
-
+        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", result.getBody().getAccessInfo().getAccessAllowedFrom());
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.hateoas.ResourceAssembler;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
@@ -45,6 +46,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setDigital(item.getAccessInfo().isDigital());
         accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
+        accessInfo.setAccessAllowedFrom(item.getAccessInfo().accessAllowedFrom());
         resource.setAccessInfo(accessInfo);
     }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,6 +17,8 @@ public class AccessInfo {
     
     @JsonProperty("isPublicDomain")
     private boolean publicDomain;
+    
+    private String accessAllowedFrom;
 
     public boolean isDigital() {
         return digital;
@@ -33,5 +36,12 @@ public class AccessInfo {
         this.publicDomain = publicDomain;
     }
 
+    public String getAccessAllowedFrom() {
+    	return accessAllowedFrom;
+    }
+    
+    public void setAccessAllowedFrom(String accessAllowedFrom) {
+    	this.accessAllowedFrom = accessAllowedFrom;
+    }
     
 }

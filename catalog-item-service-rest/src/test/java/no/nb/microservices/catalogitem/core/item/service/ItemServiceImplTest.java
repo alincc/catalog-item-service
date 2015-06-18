@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -66,6 +67,7 @@ public class ItemServiceImplTest {
         assertEquals("Title should be \"Supersonic\"", title, item.getTitle());
         assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
+        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
         
     }
     

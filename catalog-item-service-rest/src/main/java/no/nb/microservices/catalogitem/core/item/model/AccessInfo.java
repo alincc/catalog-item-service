@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * 
  * @author ronnymikalsen
+ * @author rolfmathisen
  *
  */
 public class AccessInfo {
@@ -34,5 +35,20 @@ public class AccessInfo {
         
         return contentClasses.contains("public");
     }
+
+	public String accessAllowedFrom() {
+		if (contentClasses.contains("public") | contentClasses.contains("mavispublic") | contentClasses.contains("statfjordpublic") | 
+				contentClasses.contains("friggpublic") | contentClasses.contains("showonly")) {
+			return "EVERYWHERE";
+		} else if (contentClasses.contains("bokhylla")) {
+			return "NORWAY";
+		} else if (contentClasses.contains("avisibibliotek")) {
+			return  "LIBRARY";
+		} else if (contentClasses.contains("restricted")) {
+			return "NB";
+		} else {
+			return "UNIVERSALLY_RESTRICTED";
+		}
+	}
 
 }
