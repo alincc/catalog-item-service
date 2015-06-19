@@ -87,9 +87,9 @@ public class ItemControllerIT {
     @Test
     public void testGetItem() throws Exception {
 
-        String modsMock = IOUtils.toString(this.getClass().getResourceAsStream(
+        final String modsMock = IOUtils.toString(this.getClass().getResourceAsStream(
                 "mods.xml"));
-        String fieldsMock = IOUtils.toString(this.getClass()
+        final String fieldsMock = IOUtils.toString(this.getClass()
                 .getResourceAsStream("fields.json"));
 
         MockWebServer server = new MockWebServer();
