@@ -84,17 +84,18 @@ public class ItemResultResourceAssemblerTest {
     public void testPeople() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item();
-        Person person = new Person();
-        person.setName("Bob Roger");
-        person.setDate("1990-");
-        person.setRoles(Arrays.asList("creator"));
-        item.setPersons(Arrays.asList(person));
+        Person person1 = new Person();
+        person1.setName("Bob Roger");
+        person1.setDate("1990-");
+        person1.setRoles(Arrays.asList("creator"));
+
+        Person person2 = new Person();
+        person2.setName("Kurt Josef");
+        item.setPersons(Arrays.asList(person1));
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
         assertNotNull("Should have list of people", itemResource.getMetadata().getPeople());
-        assertEquals("Name should be Bob Roger", "Bob Roger", itemResource.getMetadata().getPeople().get(0).getName());
-        assertEquals("Should have role creator", "creator", itemResource.getMetadata().getPeople().get(0).getRoles().get(0).getName());
     }
 
 }

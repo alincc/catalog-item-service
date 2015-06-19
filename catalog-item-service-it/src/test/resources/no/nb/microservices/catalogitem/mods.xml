@@ -10,5 +10,8 @@
     <name type="personal">
         <namePart>Rørstad, Hanne Lise</namePart>
         <namePart type="date">1960-</namePart>
+        <role>
+            <roleTerm>creator</roleTerm>
+        </role>
     </name>
 </mods>
