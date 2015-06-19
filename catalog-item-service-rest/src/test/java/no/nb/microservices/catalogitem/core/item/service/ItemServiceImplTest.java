@@ -14,8 +14,7 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +55,17 @@ public class ItemServiceImplTest {
         titleInfo.setTitle(title);
         titleInfos.add(titleInfo);
         mods.setTitleInfos(titleInfos);
-        
+
+        Name name = new Name();
+        name.setType("personal");
+        Namepart namepart = new Namepart();
+        namepart.setValue("Kurt Josef");
+        Role role = new Role();
+        role.setRoleTerms(Arrays.asList("creator"));
+        name.setRole(Arrays.asList(role));
+        name.setNameParts(Arrays.asList(namepart));
+        mods.setNames(Arrays.asList(name));
+
         Fields fields = new Fields();
         fields.setDigital(true);
         fields.setContentClasses(Arrays.asList("restricted", "public"));
@@ -72,7 +81,7 @@ public class ItemServiceImplTest {
         assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
-        
+        assertNotNull("Should have list of people", item.getPersons());
         assertEquals("Viewability should be ALL", "ALL", item.getAccessInfo().getViewability());
     }
     

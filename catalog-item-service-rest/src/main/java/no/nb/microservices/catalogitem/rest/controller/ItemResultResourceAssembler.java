@@ -2,12 +2,12 @@ package no.nb.microservices.catalogitem.rest.controller;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.AccessInfo;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
+import no.nb.microservices.catalogitem.rest.model.*;
 
 import org.springframework.hateoas.ResourceAssembler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -26,6 +26,8 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         populateAccessInfo(item, resource);
         
         populateLinks(item, resource);
+
+        populatePeople(item, resource);
         
         return resource;
     }
@@ -49,6 +51,31 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         accessInfo.setAccessAllowedFrom(item.getAccessInfo().accessAllowedFrom());
         accessInfo.setViewability(item.getAccessInfo().getViewability());
         resource.setAccessInfo(accessInfo);
+    }
+
+    private void populatePeople(Item item, ItemResource resource) {
+        if (item.getPersons() == null || item.getPersons().isEmpty()) {
+            return;
+        }
+        List<Person> people = new ArrayList<>();
+        for (int i = 0; i < item.getPersons().size(); i++) {
+            Person person = new Person();
+            person.setName(item.getPersons().get(i).getName());
+            person.setDate(item.getPersons().get(i).getDate());
+            if (item.getPersons().get(i).getRoles() == null) {
+                people.add(person);
+                continue;
+            }
+            List<Role> roles = new ArrayList<>();
+            for (String roleName : item.getPersons().get(i).getRoles()) {
+                Role role = new Role();
+                role.setName(roleName);
+                roles.add(role);
+            }
+            person.setRoles(roles);
+            people.add(person);
+        }
+        resource.getMetadata().setPeople(people);
     }
 
 }

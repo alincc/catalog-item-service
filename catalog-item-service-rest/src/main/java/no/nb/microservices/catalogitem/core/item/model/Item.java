@@ -2,6 +2,8 @@ package no.nb.microservices.catalogitem.core.item.model;
 
 import org.springframework.hateoas.Identifiable;
 
+import java.util.List;
+
 /**
  * 
  * @author ronnymikalsen
@@ -11,7 +13,8 @@ public class Item implements Identifiable<String> {
 
     private String id;
     private String title;
-    private AccessInfo accessInfo = new AccessInfo(); 
+    private AccessInfo accessInfo = new AccessInfo();
+    private List<Person> persons;
 
     @Override
     public String getId() {
@@ -38,4 +41,11 @@ public class Item implements Identifiable<String> {
         this.accessInfo = accessInfo;
     }
 
+    public List<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
 }

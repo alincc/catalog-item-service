@@ -3,6 +3,7 @@ package no.nb.microservices.catalogitem.core.item.service;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
+import no.nb.microservices.catalogitem.utils.ModsPersonExtractor;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
@@ -37,7 +38,7 @@ public class ItemServiceImpl implements IItemService {
         item.setTitle(mods.getTitleInfos().iterator().next().getTitle());
         
         populateAccessInfo(item, fields);
-        
+        populatePeople(item, mods);
         return item;
     }
 
@@ -45,7 +46,10 @@ public class ItemServiceImpl implements IItemService {
         item.getAccessInfo().setDigital(fields.isDigital());
         item.getAccessInfo().setContentClasses(fields.getContentClasses());
         item.getAccessInfo().setHasAccess(securityRepository.hasAccess(item.getId()));
+    }
 
+    private void populatePeople(Item item, Mods mods) {
+        item.setPersons(ModsPersonExtractor.extractPersons(mods));
     }
 
 }

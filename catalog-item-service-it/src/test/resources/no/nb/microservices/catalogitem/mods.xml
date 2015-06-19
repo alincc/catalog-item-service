@@ -3,4 +3,12 @@
    <titleInfo>
       <title>Født til klovn</title>
    </titleInfo>
+    <name type="personal">
+        <namePart>årsland, Erik</namePart>
+        <namePart type="date">1962-</namePart>
+    </name>
+    <name type="personal">
+        <namePart>Rørstad, Hanne Lise</namePart>
+        <namePart type="date">1960-</namePart>
+    </name>
 </mods>

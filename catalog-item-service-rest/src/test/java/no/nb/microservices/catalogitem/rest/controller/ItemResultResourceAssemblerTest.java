@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
 import org.junit.After;
@@ -77,6 +78,23 @@ public class ItemResultResourceAssemblerTest {
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
         assertEquals("Viewability should be ALL", AccessInfo.VIEWABILITY_ALL, itemResource.getAccessInfo().getViewability());
         
+    }
+
+    @Test
+    public void testPeople() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item();
+        Person person = new Person();
+        person.setName("Bob Roger");
+        person.setDate("1990-");
+        person.setRoles(Arrays.asList("creator"));
+        item.setPersons(Arrays.asList(person));
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource);
+        assertNotNull("Should have list of people", itemResource.getMetadata().getPeople());
+        assertEquals("Name should be Bob Roger", "Bob Roger", itemResource.getMetadata().getPeople().get(0).getName());
+        assertEquals("Should have role creator", "creator", itemResource.getMetadata().getPeople().get(0).getRoles().get(0).getName());
     }
 
 }

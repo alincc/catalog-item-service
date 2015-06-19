@@ -142,6 +142,7 @@ public class ItemControllerIntegrationTest {
                 .getAccessInfo().getViewability());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", entity.getBody()
         		.getAccessInfo().getAccessAllowedFrom());
+        assertEquals("Response should have 2 people", 2, entity.getBody().getMetadata().getPeople().size());
     }
 
 }
