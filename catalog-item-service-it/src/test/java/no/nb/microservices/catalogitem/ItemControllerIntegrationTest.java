@@ -54,7 +54,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 @SpringApplicationConfiguration(classes = { TestConfig.class,
         RibbonClientConfiguration.class })
 @WebIntegrationTest("server.port: 0")
-public class ItemControllerIT {
+public class ItemControllerIntegrationTest {
 
     @Value("${local.server.port}")
     int port;
@@ -160,7 +160,7 @@ class TestNiConfig {
 
     @Bean
     public NiClient getNiClient() throws Exception {
-        return new NiClient(ItemControllerIT.TEST_SERVER_ADDR);
+        return new NiClient(ItemControllerIntegrationTest.TEST_SERVER_ADDR);
     }
 }
 
