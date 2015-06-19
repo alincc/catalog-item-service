@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class ModsPersonExtractorTest {
 
     @Test
-    public void testExtractingNamesAndRoles() {
+    public void shouldReturnListOfNames() {
         Mods mods = new Mods();
         Name n1 = new Name();
         n1.setType("personal");
@@ -30,14 +30,25 @@ public class ModsPersonExtractorTest {
         Role r1 = new Role();
         r1.setRoleTerms(Arrays.asList("red."));
         n1.setRole(Arrays.asList(r1));
-
         n1.setNameParts(Arrays.asList(np1,np2));
-        mods.setNames(Arrays.asList(n1));
+
+        Name n2 = new Name();
+        Namepart np3 = new Namepart();
+        np3.setValue("Kurt Josef");
+        n2.setNameParts(Arrays.asList(np3));
+        mods.setNames(Arrays.asList(n1,n2));
 
         List<Person> persons = ModsPersonExtractor.extractPersons(mods);
 
         assertEquals("Should return list with 1 person",1,persons.size());
         assertEquals("Name should be Myhre, Margareta Magnus", "Myhre, Margareta Magnus", persons.get(0).getName());
         assertEquals("Date should be 1970-", "1970-", persons.get(0).getDate());
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenModsHaveNoNames() {
+        Mods mods = new Mods();
+        List<Person> persons = ModsPersonExtractor.extractPersons(mods);
+        assertEquals("List should be empty", 0, persons.size());
     }
 }

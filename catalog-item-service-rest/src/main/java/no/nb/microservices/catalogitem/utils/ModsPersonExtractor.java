@@ -38,7 +38,7 @@ public class ModsPersonExtractor {
         for (Namepart namepart : name.getNameParts()) {
             if ("date".equalsIgnoreCase(namepart.getType())) {
                 person.setDate(namepart.getValue());
-            } else if (namepart.getType() == null || !namepart.getType().isEmpty()) {
+            } else if (namepart.getType() == null) {
                 person.setName(namepart.getValue());
             }
         }
