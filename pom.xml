@@ -24,8 +24,8 @@
     <modules>
         <module>catalog-item-service-model</module>
         <module>catalog-item-service-rest</module>
-    <module>catalog-item-service-it</module>
-  </modules>
+        <module>catalog-item-service-it</module>
+    </modules>
 
     <scm>
         <url>https://github.com/NationalLibraryOfNorway/catalog-item-service.git</url>
