@@ -1,10 +1,14 @@
 package no.nb.microservices.catalogitem.core.security.repository;
 
+import javax.servlet.http.HttpServletRequest;
+
 import no.nb.commons.web.util.UserUtils;
 import no.nb.sesam.ni.niclient.NiClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * 
@@ -25,7 +29,10 @@ public class NiSecurityRepository implements SecurityRepository {
     @Override
     public boolean hasAccess(String id) {
         try {
-            return niClient.hasAccess(UserUtils.getSsoToken(), id, null, UserUtils.getClientIp());
+            HttpServletRequest request = 
+                    ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                    .getRequest();
+            return niClient.hasAccess(UserUtils.getSsoToken(request), id, null, UserUtils.getClientIp(request));
         } catch (Exception ex) {
             throw new SecurityException("Error getting access info for id " + id, ex);
         }

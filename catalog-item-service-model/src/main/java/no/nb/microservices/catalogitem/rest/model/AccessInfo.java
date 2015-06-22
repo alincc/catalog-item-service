@@ -14,14 +14,14 @@ public class AccessInfo {
 
     @JsonProperty("isDigital")
     private boolean digital;
-    
+
     @JsonProperty("isPublicDomain")
     private boolean publicDomain;
-    
+
     private String accessAllowedFrom;
 
     private String viewability;
-    
+
     public boolean isDigital() {
         return digital;
     }
@@ -39,12 +39,13 @@ public class AccessInfo {
     }
 
     public String getAccessAllowedFrom() {
-    	return accessAllowedFrom;
+        return accessAllowedFrom;
     }
-    
+
     public void setAccessAllowedFrom(String accessAllowedFrom) {
-    	this.accessAllowedFrom = accessAllowedFrom;
+        this.accessAllowedFrom = accessAllowedFrom;
     }
+
     public String getViewability() {
         return viewability;
     }
