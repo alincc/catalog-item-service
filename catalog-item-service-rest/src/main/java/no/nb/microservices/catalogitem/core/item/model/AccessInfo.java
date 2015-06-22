@@ -52,19 +52,21 @@ public class AccessInfo {
         return hasAccess() ? AccessInfo.VIEWABILITY_ALL : AccessInfo.VIEWABILITY_NONE;
     }
 
-	public String accessAllowedFrom() {
-		if (contentClasses.contains("public") | contentClasses.contains("mavispublic") | contentClasses.contains("statfjordpublic") | 
-				contentClasses.contains("friggpublic") | contentClasses.contains("showonly")) {
-			return "EVERYWHERE";
-		} else if (contentClasses.contains("bokhylla")) {
-			return "NORWAY";
-		} else if (contentClasses.contains("avisibibliotek")) {
-			return  "LIBRARY";
-		} else if (contentClasses.contains("restricted")) {
-			return "NB";
-		} else {
-			return "UNIVERSALLY_RESTRICTED";
-		}
-	}
+    public String accessAllowedFrom() {
+        String result = "";
+        if (contentClasses.contains("public") || contentClasses.contains("mavispublic") || contentClasses.contains("statfjordpublic") || 
+                contentClasses.contains("friggpublic") || contentClasses.contains("showonly")) {
+            result = "EVERYWHERE";
+        } else if (contentClasses.contains("bokhylla")) {
+            result = "NORWAY";
+        } else if (contentClasses.contains("avisibibliotek")) {
+            result =  "LIBRARY";
+        } else if (contentClasses.contains("restricted")) {
+            result = "NB";
+        } else {
+            result = "UNIVERSALLY_RESTRICTED";
+        }
+        return result;
+    }
 
 }
