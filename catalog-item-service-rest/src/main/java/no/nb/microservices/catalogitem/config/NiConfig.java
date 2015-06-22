@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
  *
  */
 @Configuration
-@Profile("docker")
+@Profile({"docker", "dev"})
 public class NiConfig {
 
     @Autowired
