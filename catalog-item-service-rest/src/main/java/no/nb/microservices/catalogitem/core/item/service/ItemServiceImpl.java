@@ -3,6 +3,7 @@ package no.nb.microservices.catalogitem.core.item.service;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
+import no.nb.microservices.catalogitem.utils.ModsOriginInfoExtractor;
 import no.nb.microservices.catalogitem.utils.ModsPersonExtractor;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
@@ -36,6 +37,7 @@ public class ItemServiceImpl implements IItemService {
         Item item = new Item();
         item.setId(id);
         item.setTitle(mods.getTitleInfos().iterator().next().getTitle());
+        item.setOrigin(ModsOriginInfoExtractor.extractOriginInfo(mods));
         
         populateAccessInfo(item, fields);
         populatePeople(item, mods);

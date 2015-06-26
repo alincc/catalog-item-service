@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.Origin;
 import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
@@ -59,6 +60,20 @@ public class ItemResultResourceAssemblerTest {
         assertNotNull("Should not be null", itemResource);
         assertEquals("Title shoud be \"Supersonic\"", title, itemResource.getMetadata().getTitleInfo().getTitle());
         
+    }
+
+    @Test
+    public void testOriginInfo() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item();
+        Origin origin = new Origin();
+        origin.setDateCreated("2001-01-01");
+        origin.setPublisher("Banana Airlines");
+        item.setOrigin(origin);
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource.getMetadata().getOriginInfo());
+        assertEquals("Publisher should be Banana Airlines", "Banana Airlines" ,itemResource.getMetadata().getOriginInfo().getPublisher());
     }
 
     @Test
