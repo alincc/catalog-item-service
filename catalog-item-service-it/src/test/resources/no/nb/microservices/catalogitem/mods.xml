@@ -14,4 +14,13 @@
             <roleTerm>creator</roleTerm>
         </role>
     </name>
+    <originInfo>
+        <dateIssued>[1995]</dateIssued>
+        <dateIssued encoding="marc">1995</dateIssued>
+        <issuance>monographic</issuance>
+        <place>
+            <placeTerm>[Oslo]</placeTerm>
+        </place>
+        <publisher>Det norske teatret</publisher>
+    </originInfo>
 </mods>
