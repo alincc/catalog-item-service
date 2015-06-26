@@ -1,6 +1,5 @@
 package no.nb.microservices.catalogitem.utils;
 
-import no.nb.microservices.catalogitem.core.item.model.Origin;
 import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
