@@ -60,7 +60,7 @@ public class ModsOriginInfoExtractor {
             return;
         }
         for (DateMods dateMods : originInfo.getDateCreated()) {
-            if (dateMods.getKeyDate() != null && dateMods.getKeyDate().equalsIgnoreCase("yes")) {
+            if ("yes".equalsIgnoreCase(dateMods.getKeyDate())) {
                 origin.setDateCreated(dateMods.getValue());
                 return;
             }

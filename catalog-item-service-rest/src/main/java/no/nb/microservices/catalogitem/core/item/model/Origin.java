@@ -1,7 +1,5 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
-import java.util.List;
-
 public class Origin {
     private String publisher;
     private String dateIssued;
