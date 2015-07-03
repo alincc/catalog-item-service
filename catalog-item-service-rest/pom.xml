@@ -45,13 +45,19 @@
         <dependency>
             <groupId>no.nb.microservices</groupId>
             <artifactId>catalog-metadata-model</artifactId>
-            <version>0.0.1-8171e9d0311f74273d997b11de04e959bb1557a8-71</version>
+            <version>0.0.1-2ab2f11ac5f85c78e37411a7bfae989cc24280c8-80</version>
         </dependency>
 
         <dependency>
             <groupId>no.nb.sesam.ni</groupId>
             <artifactId>niclient</artifactId>
             <version>${ni.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nb.htrace</groupId>
+            <artifactId>htrace-impl-spring</artifactId>
+            <version>0.0.1-6</version>
         </dependency>
 
         <dependency>

@@ -28,8 +28,26 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         populateLinks(item, resource);
 
         populatePeople(item, resource);
+
+        populateOriginInfo(item, resource);
         
         return resource;
+    }
+
+    private void populateOriginInfo(Item item, ItemResource resource) {
+        if (item.getOrigin() == null) {
+            return;
+        }
+        OriginInfo originInfo = new OriginInfo();
+        originInfo.setPublisher(item.getOrigin().getPublisher());
+        originInfo.setCaptured(item.getOrigin().getDateCaptured());
+        originInfo.setCreated(item.getOrigin().getDateCreated());
+        originInfo.setEdition(item.getOrigin().getEdition());
+        originInfo.setFrequency(item.getOrigin().getFrequency());
+        originInfo.setIssued(item.getOrigin().getDateIssued());
+        originInfo.setModified(item.getOrigin().getDateModified());
+
+        resource.getMetadata().setOriginInfo(originInfo);
     }
 
     private void populateLinks(Item item, ItemResource resource) {

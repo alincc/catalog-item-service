@@ -15,6 +15,7 @@ public class Item implements Identifiable<String> {
     private String title;
     private AccessInfo accessInfo = new AccessInfo();
     private List<Person> persons;
+    private Origin origin;
 
     @Override
     public String getId() {
@@ -47,5 +48,13 @@ public class Item implements Identifiable<String> {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+
+    public Origin getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Origin origin) {
+        this.origin = origin;
     }
 }

@@ -3,6 +3,7 @@ package no.nb.microservices.catalogitem.core.security.repository;
 import javax.servlet.http.HttpServletRequest;
 
 import no.nb.commons.web.util.UserUtils;
+import no.nb.htrace.annotations.Traceable;
 import no.nb.sesam.ni.niclient.NiClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class NiSecurityRepository implements SecurityRepository {
     }
 
     @Override
+    @Traceable(description="NI hasAccess")
     public boolean hasAccess(String id) {
         try {
             HttpServletRequest request = 

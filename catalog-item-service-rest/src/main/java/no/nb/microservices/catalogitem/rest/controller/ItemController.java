@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
+import no.nb.htrace.annotations.Traceable;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.IItemService;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
@@ -31,6 +32,7 @@ public class ItemController {
 
     @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
+    @Traceable(description="item")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id) {
         Item item = itemService.getItemById(id);

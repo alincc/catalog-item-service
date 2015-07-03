@@ -1,5 +1,7 @@
 package no.nb.microservices.catalogitem;
 
+import no.nb.htrace.annotations.EnableTracing;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +22,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableCircuitBreaker
 @EnableOAuth2Resource
 @RefreshScope
+@EnableTracing
 public class Application {
 
     public static void main(String[] args) {
