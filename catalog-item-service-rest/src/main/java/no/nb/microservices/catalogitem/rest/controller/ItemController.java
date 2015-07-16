@@ -1,6 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import no.nb.htrace.annotations.Traceable;
+import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.IItemService;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
