@@ -6,11 +6,6 @@ import org.springframework.stereotype.Repository;
 import no.nb.htrace.annotation.Traceable;
 import no.nb.sesam.ni.niclient.NiClient;
 
-/**
- * 
- * @author ronnymikalsen
- *
- */
 @Repository
 public class NiSecurityRepository implements SecurityRepository {
 

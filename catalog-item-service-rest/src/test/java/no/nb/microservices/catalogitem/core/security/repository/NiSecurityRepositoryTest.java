@@ -2,7 +2,12 @@ package no.nb.microservices.catalogitem.core.security.repository;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import no.nb.commons.web.util.UserUtils;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.springframework.util.SocketUtils;
+
 import no.nb.sesam.ni.niclient.NiClient;
 import no.nb.sesam.ni.niserver.AuthorisationHandler;
 import no.nb.sesam.ni.niserver.AuthorisationHandlerResolver;
@@ -10,16 +15,6 @@ import no.nb.sesam.ni.niserver.AuthorisationRequest;
 import no.nb.sesam.ni.niserver.NiServer;
 import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
 import no.nb.sesam.ni.niserver.authorisation.DenyHandler;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.util.SocketUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class NiSecurityRepositoryTest {
 
@@ -60,6 +55,14 @@ public class NiSecurityRepositoryTest {
         assertFalse(niSecurityRepository.hasAccess("URN:NBN:no-nb_deny", "123.45.123.123", "amsso1"));
     }
 
+    @Test(expected = SecurityException.class)
+    public void throwSecurityExceptionIfException() throws Exception {
+        
+        NiClient niClient = new NiClient(TEST_SERVER_ADDR);
+        NiSecurityRepository niSecurityRepository = new NiSecurityRepository(niClient);
+        assertFalse(niSecurityRepository.hasAccess("URN:NBN:no-nb_ex", "123.45.123.123", "amsso1"));
+    }
+
     static class MockAuthorisationHandlerResolver implements
             AuthorisationHandlerResolver {
 
@@ -71,6 +74,9 @@ public class NiSecurityRepositoryTest {
             } else if (request.id != null
                     && request.id.startsWith("URN:NBN:no-nb_deny")) {
                 return new DenyHandler();
+            } else if (request.id != null
+                    && request.id.startsWith("URN:NBN:no-nb_ex")) {
+                throw new RuntimeException("somthing wrong happend!");
             } else {
                 return new DenyHandler();
             }
