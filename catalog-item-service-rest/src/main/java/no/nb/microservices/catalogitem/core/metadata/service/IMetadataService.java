@@ -4,6 +4,7 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public interface IMetadataService {
 
-    Mods getModsById(String id);
+    Mods getModsById(String id, String xHost, String xPort, String xRealIp,
+            String sso);
     
 }

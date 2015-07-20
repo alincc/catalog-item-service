@@ -44,30 +44,12 @@ public class NiSecurityRepositoryTest {
         server.shutdown(500);
     }
 
-    @Before
-    public void init() {
-        
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/search?q=Junit");
-        ServletRequestAttributes attributes = new ServletRequestAttributes(request);
-        String remoteAddr = "123.45.123.123";
-        request.setRemoteAddr(remoteAddr);
-        String amsso = "amsso1";
-        request.addHeader(UserUtils.SSO_HEADER, amsso);
-
-        RequestContextHolder.setRequestAttributes(attributes);
-    }
-
-    @After
-    public void cleanUp() {
-        RequestContextHolder.resetRequestAttributes();
-    }
-    
     @Test
     public void whenUserHasAccessThenReturnTrue() throws Exception {
         
         NiClient niClient = new NiClient(TEST_SERVER_ADDR);
         NiSecurityRepository niSecurityRepository = new NiSecurityRepository(niClient);
-        assertTrue(niSecurityRepository.hasAccess("URN:NBN:no-nb_accept"));
+        assertTrue(niSecurityRepository.hasAccess("URN:NBN:no-nb_accept", "123.45.123.123", "amsso1"));
     }
 
     @Test
@@ -75,7 +57,7 @@ public class NiSecurityRepositoryTest {
         
         NiClient niClient = new NiClient(TEST_SERVER_ADDR);
         NiSecurityRepository niSecurityRepository = new NiSecurityRepository(niClient);
-        assertFalse(niSecurityRepository.hasAccess("URN:NBN:no-nb_deny"));
+        assertFalse(niSecurityRepository.hasAccess("URN:NBN:no-nb_deny", "123.45.123.123", "amsso1"));
     }
 
     static class MockAuthorisationHandlerResolver implements

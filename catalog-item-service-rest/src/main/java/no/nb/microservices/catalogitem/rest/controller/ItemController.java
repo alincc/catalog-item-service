@@ -2,7 +2,7 @@ package no.nb.microservices.catalogitem.rest.controller;
 
 import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.service.IItemService;
+import no.nb.microservices.catalogitem.core.item.service.ItemService;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "/", description = "Home api")
 public class ItemController {
 
-    IItemService itemService;
+    ItemService itemService;
     
     @Autowired
-    public ItemController(IItemService itemService) {
+    public ItemController(ItemService itemService) {
         super();
         this.itemService = itemService;
     }

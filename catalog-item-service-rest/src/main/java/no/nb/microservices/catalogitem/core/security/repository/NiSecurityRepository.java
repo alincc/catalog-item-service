@@ -1,15 +1,10 @@
 package no.nb.microservices.catalogitem.core.security.repository;
 
-import javax.servlet.http.HttpServletRequest;
-
-import no.nb.commons.web.util.UserUtils;
-import no.nb.htrace.annotation.Traceable;
-import no.nb.sesam.ni.niclient.NiClient;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
+import no.nb.htrace.annotation.Traceable;
+import no.nb.sesam.ni.niclient.NiClient;
 
 /**
  * 
@@ -29,12 +24,9 @@ public class NiSecurityRepository implements SecurityRepository {
 
     @Override
     @Traceable(description="NI hasAccess")
-    public boolean hasAccess(String id) {
+    public boolean hasAccess(String id, String clientIp, String ssoToken) {
         try {
-            HttpServletRequest request = 
-                    ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                    .getRequest();
-            return niClient.hasAccess(UserUtils.getSsoToken(request), id, null, UserUtils.getClientIp(request));
+            return niClient.hasAccess(ssoToken, id, null, clientIp);
         } catch (Exception ex) {
             throw new SecurityException("Error getting access info for id " + id, ex);
         }

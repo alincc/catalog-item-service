@@ -18,8 +18,10 @@ public class MetadataServiceImpl  implements IMetadataService{
     }
 
     @Override
-    public Mods getModsById(String id) {
-        return metadataRepository.getModsById(id);
+    public Mods getModsById(String id, String xHost, String xPort,
+            String xRealIp, String sso) {
+        return metadataRepository.getModsById(id, xHost, xPort, xRealIp, sso);
     }
+
 
 }
