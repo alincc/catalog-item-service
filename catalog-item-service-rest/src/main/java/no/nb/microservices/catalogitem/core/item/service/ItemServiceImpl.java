@@ -19,16 +19,10 @@ import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import reactor.Environment;
 import reactor.fn.Function;
-import reactor.fn.tuple.Tuple2;
 import reactor.fn.tuple.Tuple3;
 import reactor.rx.Stream;
 import reactor.rx.Streams;
 
-/**
- * 
- * @author ronnymikalsen
- *
- */
 @Service
 public class ItemServiceImpl implements ItemService {
 
@@ -69,12 +63,9 @@ public class ItemServiceImpl implements ItemService {
 
             return resp.next().await();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
-
-        
     }
 
     private SecurityInfo getSecurityInfo() {
@@ -96,15 +87,7 @@ public class ItemServiceImpl implements ItemService {
                     public Mods apply(TracableId id) {
                         Trace.continueSpan(id.getSpan());
                         SecurityInfo securityInfo = id.getSecurityInfo();
-                        System.out.println(id.getId());
                         return metadatRepository.getModsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-                    }
-                }).onErrorReturn(Exception.class, new Function<Exception, Mods>() {
-                    @Override
-                    public Mods apply(Exception t) {
-                        System.out.println(">>>>>>>>>>>>>>>>>> " + t.getMessage() + " <<<<<<<<<<<<<<<<<<<<");
-                        System.out.println(t);
-                        return new Mods();
                     }
                 });
     }
@@ -118,13 +101,6 @@ public class ItemServiceImpl implements ItemService {
                         Trace.continueSpan(id.getSpan());
                         SecurityInfo securityInfo = id.getSecurityInfo();
                         return metadatRepository.getFieldsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-                    }
-                }).onErrorReturn(Exception.class, new Function<Exception, Fields>() {
-                    @Override
-                    public Fields apply(Exception t) {
-                        System.out.println(">>>>>>>>>>>>>>>>>> " + t.getMessage() + " <<<<<<<<<<<<<<<<<<<<");
-                        System.out.println(t);
-                        return new Fields();
                     }
                 });
     }
@@ -141,7 +117,6 @@ public class ItemServiceImpl implements ItemService {
                     }
                 });
     }
-    
     
     private void populateAccessInfo(Item item, Fields fields, Boolean hasAccess) {
         item.getAccessInfo().setDigital(fields.isDigital());
