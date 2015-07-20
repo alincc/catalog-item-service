@@ -3,6 +3,8 @@ package no.nb.microservices.catalogitem.core.item.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.htrace.Trace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,7 +27,8 @@ import reactor.rx.Streams;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-
+    private static final Logger LOG = LoggerFactory.getLogger(ItemServiceImpl.class);
+    
     final MetadataRepository metadatRepository;
     final SecurityRepository securityRepository;
 
@@ -62,8 +65,8 @@ public class ItemServiceImpl implements ItemService {
                 });
 
             return resp.next().await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ex) {
+            LOG.warn("Failed getting item for id " + id, ex);
         }
         return null;
     }
