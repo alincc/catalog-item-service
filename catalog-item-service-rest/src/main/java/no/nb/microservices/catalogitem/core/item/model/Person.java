@@ -43,7 +43,7 @@ public final class Person {
         }
         
         public Person createPerson() {
-            return new Person(getName(), getDateOfBirthAndDeath(), getRoles());
+            return new Person(getName(), getDateOfBirthAndDeath(), getRoleTerms());
         }
         
         private String getName() {
@@ -66,17 +66,17 @@ public final class Person {
             return null;
         }
         
-        private List<String> getRoles() {
-            List<String> roles = new ArrayList<>();
+        private List<String> getRoleTerms() {
+            List<String> roleTerms = new ArrayList<>();
             if (name.getRole() != null) {
                 for (Role role : name.getRole()) {
                     if (role.getRoleTerms() == null) {
                         continue;
                     }
-                    roles.addAll(role.getRoleTerms().stream().collect(Collectors.toList()));
+                    roleTerms.addAll(role.getRoleTerms().stream().collect(Collectors.toList()));
                 }
             }
-            return roles;
+            return roleTerms;
         }
         
 

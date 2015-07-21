@@ -31,21 +31,20 @@ public class Persons {
         
         public List<Person> buildList() {
             Iterator<Name> iter = getPersonalNames(mods.getNames()).iterator();
-            List<Person> persons = new ArrayList<>();
+            List<Person> personals = new ArrayList<>();
             while (iter.hasNext()) {
-                persons.add(new Person.PersonBuilder(iter.next()).createPerson());
+                personals.add(new Person.PersonBuilder(iter.next()).createPerson());
             }
-            return new Persons(persons).getPersons();
+            return new Persons(personals).getPersons();
         }
 
         private List<Name> getPersonalNames(List<Name> names) {
-            if (names == null) {
-                names = new ArrayList<>();
-            }
-            
-            return names.stream()
+            if (names != null) {
+                return names.stream()
                     .filter(name -> "personal".equalsIgnoreCase(name.getType()))
                     .collect(Collectors.toList());
+            }
+            return new ArrayList<>();
         }        
 
     }
