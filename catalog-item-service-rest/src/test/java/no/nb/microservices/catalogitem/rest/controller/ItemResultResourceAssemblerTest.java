@@ -2,13 +2,23 @@ package no.nb.microservices.catalogitem.rest.controller;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Origin;
 import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,12 +27,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-/**
- * 
- * @author ronnymikalsen
- * @author rolfmathisen
- *
- */
 public class ItemResultResourceAssemblerTest {
 
     @Before
@@ -42,8 +46,7 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testLinks() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item();
-        item.setId("id1");
+        Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertNotNull("Links should not be null", itemResource.getLinks());
         assertEquals("Should have a self-referential link element", "self", itemResource.getId().getRel());
@@ -52,24 +55,31 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testMetadata() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item();
-        String title = "Supersonic";
-        item.setTitle(title);
+        Mods mods = new Mods();
+        TitleInfo titleInfo = new TitleInfo();
+        titleInfo.setTitle("Supersonic");
+        mods.setTitleInfos(Arrays.asList(titleInfo));
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
-        assertEquals("Title shoud be \"Supersonic\"", title, itemResource.getMetadata().getTitleInfo().getTitle());
+        assertEquals("Title shoud be \"Supersonic\"", "Supersonic", itemResource.getMetadata().getTitleInfo().getTitle());
         
     }
 
     @Test
     public void testOriginInfo() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item();
-        Origin origin = new Origin();
-        origin.setDateCreated("2001-01-01");
-        origin.setPublisher("Banana Airlines");
-        item.setOrigin(origin);
+        
+        Mods mods = new Mods();
+        OriginInfo originInfo = new OriginInfo();
+        DateMods dateCreated = new DateMods();
+        dateCreated.setValue("2001-01-01");
+        originInfo.setDateCreated(Arrays.asList(dateCreated));
+        originInfo.setPublisher("Banana Airlines");
+        mods.setOriginInfo(originInfo);
+
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getOriginInfo());
@@ -79,12 +89,12 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testAccessInfo() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item();
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.setDigital(true);
-        accessInfo.setContentClasses(Arrays.asList("restricted", "public"));
-        accessInfo.setHasAccess(true);
-        item.setAccessInfo(accessInfo);
+        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("restricted", "public"));
+        fields.setDigital(true);
+        
+        Item item = new Item.ItemBuilder("id1").fields(fields).hasAccess(true).build();
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
@@ -98,19 +108,41 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testPeople() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item();
-        Person person1 = new Person();
-        person1.setName("Bob Roger");
-        person1.setDate("1990-");
-        person1.setRoles(Arrays.asList("creator"));
 
-        Person person2 = new Person();
-        person2.setName("Kurt Josef");
-        item.setPersons(Arrays.asList(person1));
+        Mods mods = new Mods();
+        mods.setNames(Arrays.asList(createName("Bob Roger", "1990-", Arrays.asList("creator")),
+                createName("Kurt Josef", null, null)));
+        
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();        
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
         assertNotNull("Should have list of people", itemResource.getMetadata().getPeople());
+    }
+
+    private Name createName(String value, String birthAndDeath,
+            List<String> roleTerms) {
+        Name name = new Name();
+        name.setType("personal");
+        List<Namepart> nameParts = new ArrayList<>();
+        
+        Namepart namepart = new Namepart();
+        namepart.setValue(value);
+        nameParts.add(namepart);
+
+        Namepart date = new Namepart();
+        date.setValue(birthAndDeath);
+        nameParts.add(date);
+
+        name.setNameParts(nameParts);
+        
+        List<Role> rolea = new ArrayList<>();
+        Role role = new Role();
+        role.setRoleTerms(roleTerms);
+        rolea.add(role );
+        name.setRole(rolea);
+        
+        return name;
     }
 
 }

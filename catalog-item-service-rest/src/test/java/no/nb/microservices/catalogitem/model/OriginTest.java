@@ -1,4 +1,4 @@
-package no.nb.microservices.catalogitem.utils;
+package no.nb.microservices.catalogitem.model;
 
 import no.nb.microservices.catalogitem.core.item.model.Origin;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-public class ModsOriginInfoExtractorTest {
+public class OriginTest {
 
     @Test
     public void whenOriginInfoHasPublisherItShouldBeExtracted() {
@@ -18,7 +18,7 @@ public class ModsOriginInfoExtractorTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setPublisher("Oslo nye teater");
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("Oslo nye teater",origin.getPublisher());
     }
 
@@ -28,7 +28,7 @@ public class ModsOriginInfoExtractorTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setFrequency("Annual");
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("Annual",origin.getFrequency());
     }
 
@@ -38,7 +38,7 @@ public class ModsOriginInfoExtractorTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setEdition("7th ed.");
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("7th ed.", origin.getEdition());
     }
 
@@ -51,7 +51,7 @@ public class ModsOriginInfoExtractorTest {
         dateCaptured.setValue("20010712");
         mods.getOriginInfo().setDateCaptured(dateCaptured);
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("20010712", origin.getDateCaptured());
     }
 
@@ -64,7 +64,7 @@ public class ModsOriginInfoExtractorTest {
         dateModified.setValue("20031008");
         mods.getOriginInfo().setDateModified(dateModified);
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("20031008", origin.getDateModified());
     }
 
@@ -87,7 +87,7 @@ public class ModsOriginInfoExtractorTest {
 
         mods.getOriginInfo().setDateIssuedList(Arrays.asList(dateIssuedString, dateIssuedStart, dateIssuedEnd));
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("1998-", origin.getDateIssued());
     }
 
@@ -100,7 +100,7 @@ public class ModsOriginInfoExtractorTest {
         dateCreated.setKeyDate("yes");
         mods.getOriginInfo().setDateCreated(Arrays.asList(dateCreated));
 
-        Origin origin = ModsOriginInfoExtractor.extractOriginInfo(mods);
+        Origin origin = new Origin.OriginBuilder().mods(mods).build();
         assertEquals("1972-10-08", origin.getDateCreated());
     }
 }

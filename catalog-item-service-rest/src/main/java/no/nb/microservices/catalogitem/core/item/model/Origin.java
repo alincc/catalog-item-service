@@ -1,5 +1,9 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+
 public class Origin {
     private String publisher;
     private String dateIssued;
@@ -8,6 +12,16 @@ public class Origin {
     private String dateModified;
     private String frequency;
     private String edition;
+
+    private Origin(OriginBuilder builder) {
+        this.dateIssued = builder.getDateIssued();
+        this.dateCreated = builder.getDateCreated();
+        this.dateCaptured = builder.getDateCaptured();
+        this.dateModified = builder.getDateModified();
+        this.publisher = builder.getPublisher();
+        this.frequency = builder.getFrequency();
+        this.edition = builder.getEdition();
+    }
 
     public String getPublisher() {
         return publisher;
@@ -63,5 +77,81 @@ public class Origin {
 
     public void setEdition(String edition) {
         this.edition = edition;
+    }
+    
+    public static class OriginBuilder {
+        
+        private OriginInfo originInfo;
+        
+        public OriginBuilder mods(final Mods mods) {
+            if (mods == null) {
+                this.originInfo = new OriginInfo();
+            } else {
+                this.originInfo = mods.getOriginInfo() != null ? mods.getOriginInfo() : new OriginInfo();
+            }
+            return this;
+        }
+        
+        public Origin build() {
+            return new Origin(this);
+        }
+        
+        private String getDateIssued() {
+            if (originInfo.getDateIssuedList() != null && !originInfo.getDateIssuedList().isEmpty()) {
+                for (DateMods dateMods : originInfo.getDateIssuedList()) {
+                    if (dateMods.getEncoding() == null && dateMods.getPoint() == null) {
+                        return dateMods.getValue();
+                    }
+                }
+            }
+            return null;
+        }
+        
+        private String getDateCreated() {
+            if (originInfo.getDateCreated() != null && !originInfo.getDateCreated().isEmpty()) {
+                for (DateMods dateMods : originInfo.getDateCreated()) {
+                    if ("yes".equalsIgnoreCase(dateMods.getKeyDate())) {
+                        return dateMods.getValue();
+                    }
+                }
+            }
+            return null;
+        }        
+     
+        private String getDateCaptured() {
+            if (originInfo.getDateCaptured() != null) {
+                return originInfo.getDateCaptured().getValue();
+            }
+            return null;
+        }
+        
+        private String getDateModified() {
+            if (originInfo.getDateModified() != null) {
+                return originInfo.getDateModified().getValue();
+            }
+            return null;
+        }
+
+        private String getPublisher() {
+            if (originInfo.getPublisher() != null) {
+                return originInfo.getPublisher();
+            }
+            return null;
+        }
+
+        private String getFrequency() {
+            if (originInfo.getFrequency() != null) {
+                return originInfo.getFrequency();
+            }
+            return null;
+        }
+
+        private String getEdition() {
+            if (originInfo.getEdition() != null) {
+                return originInfo.getEdition();
+            }
+            return null;
+        }
+
     }
 }

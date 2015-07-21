@@ -1,60 +1,83 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
-import org.springframework.hateoas.Identifiable;
-
+import java.util.Collections;
 import java.util.List;
 
-/**
- * 
- * @author ronnymikalsen
- *
- */
+import org.springframework.hateoas.Identifiable;
+
+import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+
 public class Item implements Identifiable<String> {
 
     private String id;
-    private String title;
-    private AccessInfo accessInfo = new AccessInfo();
+    private TitleInfo titleInfo;
+    private AccessInfo accessInfo;
     private List<Person> persons;
     private Origin origin;
+
+    private Item(String id, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin) {
+        this.id = id;
+        this.titleInfo = titleInfo;
+        this.persons = persons;
+        this.accessInfo = accessInfo;
+        this.origin = origin;
+    }
 
     @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public TitleInfo getTitleInfo() {
+        return titleInfo;
     }
 
     public AccessInfo getAccessInfo() {
         return accessInfo;
     }
 
-    public void setAccessInfo(AccessInfo accessInfo) {
-        this.accessInfo = accessInfo;
-    }
-
     public List<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+        return Collections.unmodifiableList(persons);
     }
 
     public Origin getOrigin() {
         return origin;
     }
+    
+    public static class ItemBuilder  {
+        private final String id;
+        private Mods mods; 
+        private Fields fields;
+        private boolean hasAccess;
+        
+        public ItemBuilder(final String id) {
+            this.id = id;
+        }
+        
+        public ItemBuilder mods(final Mods mods) {
+            this.mods = mods;
+            return this;
+        }
+        
+        public ItemBuilder fields(final Fields fields) {
+            this.fields = fields;
+            return this;
+        }
+        
+        public ItemBuilder hasAccess(final boolean hasAccess) {
+            this.hasAccess = hasAccess;
+            return this;
+        }
 
-    public void setOrigin(Origin origin) {
-        this.origin = origin;
+        public Item build() {
+            return new Item(id, 
+                    new TitleInfo.TitleBuilder(mods).build(), 
+                    new Persons.PersonsBuilder(mods).buildList(),
+                    new AccessInfo.AccessInfoBuilder().fields(fields).hasAccess(hasAccess).build(),
+                    new Origin.OriginBuilder().mods(mods).build());
+        }
+
     }
+
 }

@@ -83,7 +83,7 @@ public class ItemServiceImplTest {
         Item item = itemService.getItemById(id);
         
         assertNotNull("Item should not be null", item);
-        assertEquals("Title should be \"Supersonic\"", title, item.getTitle());
+        assertEquals("Title should be \"Supersonic\"", title, item.getTitleInfo().getTitle());
         assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());

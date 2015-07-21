@@ -13,10 +13,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import no.nb.commons.web.util.UserUtils;
 import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import static no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
-import no.nb.microservices.catalogitem.utils.ModsOriginInfoExtractor;
-import no.nb.microservices.catalogitem.utils.ModsPersonExtractor;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import reactor.Environment;
@@ -24,6 +23,7 @@ import reactor.fn.Function;
 import reactor.fn.tuple.Tuple3;
 import reactor.rx.Stream;
 import reactor.rx.Streams;
+
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -53,14 +53,11 @@ public class ItemServiceImpl implements ItemService {
                     Fields fields = tup.getT2();
                     Boolean hasAccess = tup.getT3();
                     
-                    Item item = new Item();
-                    item.setId(id);
-                    item.setTitle(mods.getTitleInfos().iterator().next().getTitle());
-                    item.setOrigin(ModsOriginInfoExtractor.extractOriginInfo(mods));
-                    
-                    populateAccessInfo(item, fields, hasAccess);
-                    populatePeople(item, mods);
-                    return item;
+                    ItemBuilder itemBuilder = new ItemBuilder(id)
+                            .mods(mods)
+                            .fields(fields)
+                            .hasAccess(hasAccess);
+                    return itemBuilder.build();
                     
                 });
 
@@ -121,14 +118,5 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
     
-    private void populateAccessInfo(Item item, Fields fields, Boolean hasAccess) {
-        item.getAccessInfo().setDigital(fields.isDigital());
-        item.getAccessInfo().setContentClasses(fields.getContentClasses());
-        item.getAccessInfo().setHasAccess(hasAccess);
-    }
-
-    private void populatePeople(Item item, Mods mods) {
-        item.setPersons(ModsPersonExtractor.extractPersons(mods));
-    }
 
 }

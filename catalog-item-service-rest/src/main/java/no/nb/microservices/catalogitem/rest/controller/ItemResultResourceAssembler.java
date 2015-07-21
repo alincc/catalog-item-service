@@ -57,7 +57,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     private void populateMetadata(Item item, ItemResource resource) {
         Metadata metadata = new Metadata();
         TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle(item.getTitle());
+        titleInfo.setTitle(item.getTitleInfo().getTitle());
         metadata.setTitleInfo(titleInfo);
         resource.setMetadata(metadata);
     }
@@ -79,7 +79,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         for (int i = 0; i < item.getPersons().size(); i++) {
             Person person = new Person();
             person.setName(item.getPersons().get(i).getName());
-            person.setDate(item.getPersons().get(i).getDate());
+            person.setDate(item.getPersons().get(i).getBirthAndDeathYear());
             if (item.getPersons().get(i).getRoles() == null) {
                 people.add(person);
                 continue;

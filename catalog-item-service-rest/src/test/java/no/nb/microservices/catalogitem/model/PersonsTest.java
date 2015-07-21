@@ -1,6 +1,7 @@
-package no.nb.microservices.catalogitem.utils;
+package no.nb.microservices.catalogitem.model;
 
 import no.nb.microservices.catalogitem.core.item.model.Person;
+import no.nb.microservices.catalogitem.core.item.model.Persons;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ModsPersonExtractorTest {
+public class PersonsTest {
 
     @Test
     public void shouldReturnListOfNames() {
@@ -38,17 +39,17 @@ public class ModsPersonExtractorTest {
         n2.setNameParts(Arrays.asList(np3));
         mods.setNames(Arrays.asList(n1,n2));
 
-        List<Person> persons = ModsPersonExtractor.extractPersons(mods);
+        List<Person> persons = new Persons.PersonsBuilder(mods).buildList();
 
         assertEquals("Should return list with 1 person",1,persons.size());
         assertEquals("Name should be Myhre, Margareta Magnus", "Myhre, Margareta Magnus", persons.get(0).getName());
-        assertEquals("Date should be 1970-", "1970-", persons.get(0).getDate());
+        assertEquals("Date should be 1970-", "1970-", persons.get(0).getBirthAndDeathYear());
     }
 
     @Test
     public void shouldReturnEmptyListWhenModsHaveNoNames() {
         Mods mods = new Mods();
-        List<Person> persons = ModsPersonExtractor.extractPersons(mods);
+        List<Person> persons = new Persons.PersonsBuilder(mods).buildList();
         assertEquals("List should be empty", 0, persons.size());
     }
 }

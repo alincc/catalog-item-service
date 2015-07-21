@@ -8,99 +8,106 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-/**
- * 
- * @author ronnymikalsen
- * @author rolfmathisen
- *
- */
+import no.nb.microservices.catalogmetadata.model.fields.Fields;
+
 public class AccessInfoTest {
 
     @Test
     public void whenPublicThenReturnTrue() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("restricted", "public"));
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("restricted", "public"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
         
         assertTrue(accessInfo.isPublicDomain());
     }
 
     @Test
     public void whenNotPublicThenReturnFalse() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("restricted", "bokhylla"));
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("restricted", "pubokhyllablic"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
         
         assertFalse(accessInfo.isPublicDomain());
     }
     
     @Test
     public void whenAccessAllowedFromNORWAY() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("bokhylla", "restricted"));
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("bokhylla", "restricted"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
         
         assertEquals("Access should be \"NORWAY\"", "NORWAY", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromLIBRARY() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("avisibibliotek"));
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("avisibibliotek"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
         
         assertEquals("Access should be \"LIBRARY\"", "LIBRARY", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromNB() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("restricted"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("restricted"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"NB\"", "NB", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromUNIVERSALLYRESTRICTED() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList(""));
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList(""));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
         
         assertEquals("Access should be \"UNIVERSALLY_RESTRICTED\"", "UNIVERSALLY_RESTRICTED", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREpublic() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("restricted", "public"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("restricted", "public"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREmavispublic() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("", "mavispublic"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("", "mavispublic"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREstatfjordpublic() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("statfjordpublic", "public"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("statfjordpublic", "public"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREfriggpublic() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("friggpublic"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("friggpublic"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", accessInfo.accessAllowedFrom());
     }
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREshowonly() {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.getContentClasses().addAll(Arrays.asList("showonly"));
-        
+        Fields fields = new Fields();
+        fields.setContentClasses(Arrays.asList("showonly"));
+        AccessInfo accessInfo = new AccessInfo.AccessInfoBuilder().fields(fields).build();
+
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", accessInfo.accessAllowedFrom());
     }
 }
