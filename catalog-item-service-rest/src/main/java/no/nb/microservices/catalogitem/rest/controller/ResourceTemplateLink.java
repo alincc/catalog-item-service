@@ -1,7 +1,8 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
 public enum ResourceTemplateLink {
-    MODS ("/catalog/metadata/{id}/mods");
+    MODS ("/catalog/metadata/{id}/mods"),
+    PRESENTATION ("/catalog/iiif/{id}/manifest");
     
     private final String resourceLink;
 

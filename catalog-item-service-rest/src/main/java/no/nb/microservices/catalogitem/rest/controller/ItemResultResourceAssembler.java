@@ -33,6 +33,12 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         return resource;
     }
 
+    private void populateLinks(Item item, ItemResource resource) {
+        resource.add(createSelfLink(item));
+        resource.add(createModsLink(item));
+        resource.add(createPresentationLink(item));
+    }
+
     private void populateOriginInfo(Item item, ItemResource resource) {
         if (item.getOrigin() == null) {
             return;
@@ -47,11 +53,6 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         originInfo.setModified(item.getOrigin().getDateModified());
 
         resource.getMetadata().setOriginInfo(originInfo);
-    }
-
-    private void populateLinks(Item item, ItemResource resource) {
-        resource.add(createSelfLink(item));
-        resource.add(createModsLink(item));
     }
 
     private void populateMetadata(Item item, ItemResource resource) {
@@ -120,12 +121,16 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
            }
     }
     
+    private Link createSelfLink(Item item) {
+        return linkTo(ItemController.class).slash(item).withSelfRel();
+    }
+
     private Link createModsLink(Item item) {
         return ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, item.getId()).withRel("mods");
     }
 
-    private Link createSelfLink(Item item) {
-        return linkTo(ItemController.class).slash(item).withSelfRel();
+    private Link createPresentationLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, item.getId()).withRel("presentation");
     }
 
 }

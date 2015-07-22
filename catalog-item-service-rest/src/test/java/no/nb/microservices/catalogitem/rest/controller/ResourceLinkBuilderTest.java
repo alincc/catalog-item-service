@@ -79,5 +79,13 @@ public class ResourceLinkBuilderTest {
         assertEquals("should have \"mods\" rel", "mods", modsLink.getRel());
         assertEquals("Should have mods href", "http://localhost/catalog/metadata/id1/mods", modsLink.getHref());
     }
-    
+
+    @Test
+    public void whenPresentationThenReturnPresentationLink() {
+        Link presentationLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, "id1").withRel("presentation");
+
+        assertEquals("should have \"presentation\" rel", "presentation", presentationLink.getRel());
+        assertEquals("Should have mods href", "http://localhost/catalog/iiif/id1/manifest", presentationLink.getHref());
+    }
+
 }

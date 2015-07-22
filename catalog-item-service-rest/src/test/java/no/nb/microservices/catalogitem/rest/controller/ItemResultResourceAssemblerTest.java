@@ -45,7 +45,7 @@ public class ItemResultResourceAssemblerTest {
     }
     
     @Test
-    public void testSelfLinks() {
+    public void testSelfLink() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
@@ -54,13 +54,21 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
-    public void testModsLinks() {
+    public void testModsLink() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a mods-referential link element", "mods", itemResource.getLink("mods").getRel());
     }
-    
+
+    @Test
+    public void testPresentationLink() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a presentation-referential link element", "presentation", itemResource.getLink("presentation").getRel());
+    }
+
     @Test
     public void testMetadata() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
