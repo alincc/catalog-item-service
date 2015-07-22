@@ -39,7 +39,7 @@ public class PersonsTest {
         n2.setNameParts(Arrays.asList(np3));
         mods.setNames(Arrays.asList(n1,n2));
 
-        List<Person> persons = new Persons.PersonsBuilder(mods).buildList();
+        List<Person> persons = new Persons.Builder(mods).buildList();
 
         assertEquals("Should return list with 1 person",1,persons.size());
         assertEquals("Name should be Myhre, Margareta Magnus", "Myhre, Margareta Magnus", persons.get(0).getName());
@@ -49,7 +49,7 @@ public class PersonsTest {
     @Test
     public void shouldReturnEmptyListWhenModsHaveNoNames() {
         Mods mods = new Mods();
-        List<Person> persons = new Persons.PersonsBuilder(mods).buildList();
+        List<Person> persons = new Persons.Builder(mods).buildList();
         assertEquals("List should be empty", 0, persons.size());
     }
 }

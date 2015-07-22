@@ -21,11 +21,11 @@ public class Persons {
         return Collections.unmodifiableList(persons);
     }
     
-    public static class PersonsBuilder {
+    public static class Builder {
         
         private Mods mods;
         
-        public PersonsBuilder(final Mods mods) {
+        public Builder(final Mods mods) {
             this.mods = mods != null ? mods : new Mods();
         }
         

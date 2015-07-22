@@ -6,7 +6,7 @@ public class TitleInfo {
 
     private String title;
 
-    private TitleInfo(TitleBuilder builder) {
+    private TitleInfo(Builder builder) {
         this.title = builder.getTitle();
     }
 
@@ -14,11 +14,11 @@ public class TitleInfo {
         return title;
     }
 
-    public static class TitleBuilder {
+    public static class Builder {
         
         private Mods mods;
         
-        public TitleBuilder(final Mods mods) {
+        public Builder(final Mods mods) {
             this.mods = mods != null ? mods : new Mods();
         }
         

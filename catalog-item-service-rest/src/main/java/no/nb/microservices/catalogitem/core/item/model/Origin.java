@@ -13,7 +13,7 @@ public class Origin {
     private String frequency;
     private String edition;
 
-    private Origin(OriginBuilder builder) {
+    private Origin(Builder builder) {
         this.dateIssued = builder.getDateIssued();
         this.dateCreated = builder.getDateCreated();
         this.dateCaptured = builder.getDateCaptured();
@@ -79,11 +79,11 @@ public class Origin {
         this.edition = edition;
     }
     
-    public static class OriginBuilder {
+    public static class Builder {
         
         private OriginInfo originInfo;
         
-        public OriginBuilder mods(final Mods mods) {
+        public Builder mods(final Mods mods) {
             if (mods == null) {
                 this.originInfo = new OriginInfo();
             } else {

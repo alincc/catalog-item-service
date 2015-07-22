@@ -10,6 +10,7 @@ public class Metadata {
     private TitleInfo titleInfo;
     private List<Person> people;
     private OriginInfo originInfo;
+    private Classification classification;
 
     public TitleInfo getTitleInfo() {
         return titleInfo;
@@ -34,4 +35,13 @@ public class Metadata {
     public void setOriginInfo(OriginInfo originInfo) {
         this.originInfo = originInfo;
     }
+    
+    public Classification getClassification() {
+        return classification;
+    }
+
+    public void setClassification(Classification classification) {
+        this.classification = classification;
+    }
+    
 }

@@ -12,6 +12,7 @@ import no.nb.microservices.catalogitem.core.item.model.Origin;
 import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
@@ -120,6 +121,41 @@ public class ItemResultResourceAssemblerTest {
         assertNotNull("Should have list of people", itemResource.getMetadata().getPeople());
     }
 
+    @Test
+    public void testClassification() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+
+        Mods mods = new Mods();
+        List<no.nb.microservices.catalogmetadata.model.mods.v3.Classification> classifications = new ArrayList<>();
+        classifications.add(createDdcClassification("123[S]"));
+        classifications.add(createUdcClassification("456[S]"));
+        mods.setClassifications(classifications);
+        
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();        
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource.getMetadata().getClassification());
+        assertNotNull("Should have ddc", itemResource.getMetadata().getClassification().getDdc());
+        assertNotNull("Should have udc", itemResource.getMetadata().getClassification().getUdc());
+    }
+
+    private Classification createDdcClassification(
+            String value) {
+        Classification classification = new Classification();
+        classification.setAuthority("ddc");
+        classification.setValue(value);
+        return classification;
+    }
+
+    private Classification createUdcClassification(
+            String value) {
+        Classification classification = new Classification();
+        classification.setAuthority("udc");
+        classification.setValue(value);
+        return classification;
+    }
+
+    
     private Name createName(String value, String birthAndDeath,
             List<String> roleTerms) {
         Name name = new Name();

@@ -1,0 +1,30 @@
+package no.nb.microservices.catalogitem.rest.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Classification {
+    private List<String> ddc = new ArrayList<>();
+    private List<String> udc = new ArrayList<>();
+
+    public void addDdc(String ddc) {
+        this.ddc.add(ddc);
+    }
+    
+    public List<String> getDdc() {
+        return Collections.unmodifiableList(ddc);
+    }
+
+    public void addUdc(String udc) {
+        this.udc.add(udc);
+    }
+
+    public List<String> getUdc() {
+        return Collections.unmodifiableList(udc);
+    }
+
+}

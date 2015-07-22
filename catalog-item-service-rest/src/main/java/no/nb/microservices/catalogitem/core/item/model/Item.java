@@ -15,13 +15,15 @@ public class Item implements Identifiable<String> {
     private AccessInfo accessInfo;
     private List<Person> persons;
     private Origin origin;
+    private Classification classification;
 
-    private Item(String id, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin) {
+    private Item(String id, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
         this.id = id;
         this.titleInfo = titleInfo;
         this.persons = persons;
         this.accessInfo = accessInfo;
         this.origin = origin;
+        this.classification = classification;
     }
 
     @Override
@@ -44,6 +46,11 @@ public class Item implements Identifiable<String> {
     public Origin getOrigin() {
         return origin;
     }
+    
+    public Classification getClassification() {
+        return classification;
+    }
+
     
     public static class ItemBuilder  {
         private final String id;
@@ -72,10 +79,11 @@ public class Item implements Identifiable<String> {
 
         public Item build() {
             return new Item(id, 
-                    new TitleInfo.TitleBuilder(mods).build(), 
-                    new Persons.PersonsBuilder(mods).buildList(),
-                    new AccessInfo.AccessInfoBuilder().fields(fields).hasAccess(hasAccess).build(),
-                    new Origin.OriginBuilder().mods(mods).build());
+                    new TitleInfo.Builder(mods).build(), 
+                    new Persons.Builder(mods).buildList(),
+                    new AccessInfo.Builder().fields(fields).hasAccess(hasAccess).build(),
+                    new Origin.Builder().mods(mods).build(),
+                    new Classification.Builder(mods).build());
         }
 
     }

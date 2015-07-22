@@ -7,6 +7,7 @@ import no.nb.microservices.catalogitem.rest.model.*;
 import org.springframework.hateoas.ResourceAssembler;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,6 +31,8 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         populatePeople(item, resource);
 
         populateOriginInfo(item, resource);
+        
+        populateClassification(item, resource);
         
         return resource;
     }
@@ -96,4 +99,27 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         resource.getMetadata().setPeople(people);
     }
 
+    private void populateClassification(Item item, ItemResource resource) {
+       Classification classification = new Classification();
+       
+       populateDdc(item, classification);
+       populateUdc(item, classification);
+       
+       resource.getMetadata().setClassification(classification);
+        
+    }
+
+    private void populateDdc(Item item, Classification classification) {
+        Iterator<String> iter = item.getClassification().getDdc().iterator();
+           while (iter.hasNext()) {
+               classification.addDdc(iter.next());
+           }
+    }
+
+    private void populateUdc(Item item, Classification classification) {
+        Iterator<String> iter = item.getClassification().getUdc().iterator();
+           while (iter.hasNext()) {
+               classification.addUdc(iter.next());
+           }
+    }
 }

@@ -60,17 +60,17 @@ public class AccessInfo {
         return result;
     }
     
-    public static class AccessInfoBuilder {
+    public static class Builder {
         
         private Fields fields = new Fields();
         private boolean hasAccess = false;
         
-        public AccessInfoBuilder fields(final Fields fields) {
+        public Builder fields(final Fields fields) {
             this.fields = fields != null ? fields : new Fields();
             return this;
         }
 
-        public AccessInfoBuilder hasAccess(final boolean hasAccess) {
+        public Builder hasAccess(final boolean hasAccess) {
             this.hasAccess = hasAccess;
             return this;
         }

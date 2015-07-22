@@ -18,7 +18,7 @@ public class OriginTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setPublisher("Oslo nye teater");
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("Oslo nye teater",origin.getPublisher());
     }
 
@@ -28,7 +28,7 @@ public class OriginTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setFrequency("Annual");
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("Annual",origin.getFrequency());
     }
 
@@ -38,7 +38,7 @@ public class OriginTest {
         mods.setOriginInfo(new OriginInfo());
         mods.getOriginInfo().setEdition("7th ed.");
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("7th ed.", origin.getEdition());
     }
 
@@ -51,7 +51,7 @@ public class OriginTest {
         dateCaptured.setValue("20010712");
         mods.getOriginInfo().setDateCaptured(dateCaptured);
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("20010712", origin.getDateCaptured());
     }
 
@@ -64,7 +64,7 @@ public class OriginTest {
         dateModified.setValue("20031008");
         mods.getOriginInfo().setDateModified(dateModified);
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("20031008", origin.getDateModified());
     }
 
@@ -87,7 +87,7 @@ public class OriginTest {
 
         mods.getOriginInfo().setDateIssuedList(Arrays.asList(dateIssuedString, dateIssuedStart, dateIssuedEnd));
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("1998-", origin.getDateIssued());
     }
 
@@ -100,7 +100,7 @@ public class OriginTest {
         dateCreated.setKeyDate("yes");
         mods.getOriginInfo().setDateCreated(Arrays.asList(dateCreated));
 
-        Origin origin = new Origin.OriginBuilder().mods(mods).build();
+        Origin origin = new Origin.Builder().mods(mods).build();
         assertEquals("1972-10-08", origin.getDateCreated());
     }
 }
