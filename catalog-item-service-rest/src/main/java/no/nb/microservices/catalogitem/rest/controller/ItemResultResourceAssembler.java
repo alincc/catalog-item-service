@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.*;
 
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceAssembler;
 
 import java.util.ArrayList;
@@ -22,16 +23,11 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
         
-        populateMetadata(item, resource);
-        
-        populateAccessInfo(item, resource);
-        
         populateLinks(item, resource);
-
+        populateMetadata(item, resource);
+        populateAccessInfo(item, resource);
         populatePeople(item, resource);
-
         populateOriginInfo(item, resource);
-        
         populateClassification(item, resource);
         
         return resource;
@@ -54,7 +50,8 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     }
 
     private void populateLinks(Item item, ItemResource resource) {
-        resource.add(linkTo(ItemController.class).slash(item).withSelfRel());
+        resource.add(createSelfLink(item));
+        resource.add(createModsLink(item));
     }
 
     private void populateMetadata(Item item, ItemResource resource) {
@@ -122,4 +119,13 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
                classification.addUdc(iter.next());
            }
     }
+    
+    private Link createModsLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, item.getId()).withRel("mods");
+    }
+
+    private Link createSelfLink(Item item) {
+        return linkTo(ItemController.class).slash(item).withSelfRel();
+    }
+
 }

@@ -1,15 +1,22 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.Origin;
-import no.nb.microservices.catalogitem.core.item.model.Person;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.Fields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
@@ -20,13 +27,6 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
 import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class ItemResultResourceAssemblerTest {
 
@@ -45,12 +45,20 @@ public class ItemResultResourceAssemblerTest {
     }
     
     @Test
-    public void testLinks() {
+    public void testSelfLinks() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertNotNull("Links should not be null", itemResource.getLinks());
         assertEquals("Should have a self-referential link element", "self", itemResource.getId().getRel());
+    }
+
+    @Test
+    public void testModsLinks() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a mods-referential link element", "mods", itemResource.getLink("mods").getRel());
     }
     
     @Test
