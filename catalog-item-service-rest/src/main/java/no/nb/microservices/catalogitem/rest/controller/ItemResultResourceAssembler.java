@@ -11,35 +11,51 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * 
- * @author ronnymikalsen
- * @author rolfmathisen
- *
- */
 public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
         
-        populateLinks(item, resource);
-        populateMetadata(item, resource);
-        populateAccessInfo(item, resource);
-        populatePeople(item, resource);
-        populateOriginInfo(item, resource);
-        populateClassification(item, resource);
+        createLinks(item, resource);
+        createAccessInfo(item, resource);
+        createMetadata(item, resource);
         
         return resource;
     }
 
-    private void populateLinks(Item item, ItemResource resource) {
+    private void createLinks(Item item, ItemResource resource) {
         resource.add(createSelfLink(item));
         resource.add(createModsLink(item));
         resource.add(createPresentationLink(item));
     }
 
-    private void populateOriginInfo(Item item, ItemResource resource) {
+    private void createAccessInfo(Item item, ItemResource resource) {
+        AccessInfo accessInfo = new AccessInfo();
+        accessInfo.setDigital(item.getAccessInfo().isDigital());
+        accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
+        accessInfo.setAccessAllowedFrom(item.getAccessInfo().accessAllowedFrom());
+        accessInfo.setViewability(item.getAccessInfo().getViewability());
+        resource.setAccessInfo(accessInfo);
+    }
+    
+    private void createMetadata(Item item, ItemResource resource) {
+        Metadata metadata = new Metadata();
+        createTitleInfo(item, metadata);
+        createPeople(item, metadata);
+        createOriginInfo(item, metadata);
+        createClassification(item, metadata);
+
+        resource.setMetadata(metadata);
+    }
+
+    private void createTitleInfo(Item item, Metadata metadata) {
+        TitleInfo titleInfo = new TitleInfo();
+        titleInfo.setTitle(item.getTitleInfo().getTitle());
+        metadata.setTitleInfo(titleInfo);
+    }
+    
+    private void createOriginInfo(Item item, Metadata metadata) {
         if (item.getOrigin() == null) {
             return;
         }
@@ -51,28 +67,11 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         originInfo.setFrequency(item.getOrigin().getFrequency());
         originInfo.setIssued(item.getOrigin().getDateIssued());
         originInfo.setModified(item.getOrigin().getDateModified());
-
-        resource.getMetadata().setOriginInfo(originInfo);
+        
+        metadata.setOriginInfo(originInfo);
     }
-
-    private void populateMetadata(Item item, ItemResource resource) {
-        Metadata metadata = new Metadata();
-        TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle(item.getTitleInfo().getTitle());
-        metadata.setTitleInfo(titleInfo);
-        resource.setMetadata(metadata);
-    }
-
-    private void populateAccessInfo(Item item, ItemResource resource) {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.setDigital(item.getAccessInfo().isDigital());
-        accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
-        accessInfo.setAccessAllowedFrom(item.getAccessInfo().accessAllowedFrom());
-        accessInfo.setViewability(item.getAccessInfo().getViewability());
-        resource.setAccessInfo(accessInfo);
-    }
-
-    private void populatePeople(Item item, ItemResource resource) {
+    
+    private void createPeople(Item item, Metadata metadata) {
         if (item.getPersons() == null || item.getPersons().isEmpty()) {
             return;
         }
@@ -94,43 +93,43 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
             person.setRoles(roles);
             people.add(person);
         }
-        resource.getMetadata().setPeople(people);
+        metadata.setPeople(people);
     }
 
-    private void populateClassification(Item item, ItemResource resource) {
+    private void createClassification(Item item, Metadata metadata) {
        Classification classification = new Classification();
        
-       populateDdc(item, classification);
-       populateUdc(item, classification);
+       createDdc(item, classification);
+       createUdc(item, classification);
        
-       resource.getMetadata().setClassification(classification);
+       metadata.setClassification(classification);
         
     }
 
-    private void populateDdc(Item item, Classification classification) {
+    private Link createSelfLink(Item item) {
+        return linkTo(ItemController.class).slash(item).withSelfRel();
+    }
+    
+    private Link createModsLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, item.getId()).withRel("mods");
+    }
+    
+    private Link createPresentationLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, item.getId()).withRel("presentation");
+    }
+    
+    private void createDdc(Item item, Classification classification) {
         Iterator<String> iter = item.getClassification().getDdc().iterator();
            while (iter.hasNext()) {
                classification.addDdc(iter.next());
            }
     }
 
-    private void populateUdc(Item item, Classification classification) {
+    private void createUdc(Item item, Classification classification) {
         Iterator<String> iter = item.getClassification().getUdc().iterator();
            while (iter.hasNext()) {
                classification.addUdc(iter.next());
            }
     }
     
-    private Link createSelfLink(Item item) {
-        return linkTo(ItemController.class).slash(item).withSelfRel();
-    }
-
-    private Link createModsLink(Item item) {
-        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, item.getId()).withRel("mods");
-    }
-
-    private Link createPresentationLink(Item item) {
-        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, item.getId()).withRel("presentation");
-    }
-
 }
