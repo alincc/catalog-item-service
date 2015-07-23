@@ -124,7 +124,7 @@ public class ItemControllerIntegrationTest {
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
         
         ResponseEntity<ItemResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/id1", HttpMethod.GET,
+                "http://localhost:" + port + "/catalog/items/id1", HttpMethod.GET,
                 new HttpEntity<Void>(headers), ItemResource.class);
         
         assertTrue("Status code should be 200 ", entity.getStatusCode()

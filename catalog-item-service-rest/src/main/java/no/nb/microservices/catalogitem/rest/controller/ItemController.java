@@ -19,7 +19,8 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 @RestController
-@Api(value = "/", description = "Home api")
+@RequestMapping(value = "/catalog/items")
+@Api(value = "/catalog/items", description = "Home api")
 public class ItemController {
 
     ItemService itemService;
@@ -33,7 +34,7 @@ public class ItemController {
     @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
     @Traceable(description="item")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id) {
         Item item = itemService.getItemById(id);
         
