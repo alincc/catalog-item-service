@@ -36,6 +36,15 @@ public class ResourceLinkBuilderTest {
     }
 
     @Test
+    public void whenForwardedHostInHeaderThenUseItInHref() {
+        request.addHeader("Forwarded", "host=api.nb.no");
+        
+        Link modsLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, "id1").withRel("mods");
+
+        assertTrue("Should have api.nb.no as host", modsLink.getHref().startsWith("http://api.nb.no/"));
+    }
+    
+    @Test
     public void whenHostHasPortInHeaderThenUseItInHref() {
         request.addHeader("X-Forwarded-Host", "api.nb.no:8080");
         
