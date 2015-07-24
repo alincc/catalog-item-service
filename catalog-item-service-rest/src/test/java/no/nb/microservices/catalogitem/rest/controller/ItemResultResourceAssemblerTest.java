@@ -135,6 +135,9 @@ public class ItemResultResourceAssemblerTest {
 
         assertNotNull("Should not be null", itemResource);
         assertNotNull("Should have list of people", itemResource.getMetadata().getPeople());
+        assertEquals("First element should be \"Bob Roger\"", "Bob Roger", itemResource.getMetadata().getPeople().get(0).getName());
+        assertEquals("First element should have date \"1990-\"", "1990-", itemResource.getMetadata().getPeople().get(0).getDate());
+        assertEquals("First element should have role \"creator\"", "creator", itemResource.getMetadata().getPeople().get(0).getRoles().get(0).getName());
     }
 
     @Test
@@ -184,15 +187,16 @@ public class ItemResultResourceAssemblerTest {
 
         Namepart date = new Namepart();
         date.setValue(birthAndDeath);
+        date.setType("date");
         nameParts.add(date);
 
         name.setNameParts(nameParts);
         
-        List<Role> rolea = new ArrayList<>();
+        List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setRoleTerms(roleTerms);
-        rolea.add(role );
-        name.setRole(rolea);
+        roles.add(role );
+        name.setRole(roles);
         
         return name;
     }
