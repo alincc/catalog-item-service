@@ -80,10 +80,6 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
             Person person = new Person();
             person.setName(item.getPersons().get(i).getName());
             person.setDate(item.getPersons().get(i).getBirthAndDeathYear());
-            if (item.getPersons().get(i).getRoles() == null) {
-                people.add(person);
-                continue;
-            }
             List<Role> roles = new ArrayList<>();
             for (String roleName : item.getPersons().get(i).getRoles()) {
                 Role role = new Role();
