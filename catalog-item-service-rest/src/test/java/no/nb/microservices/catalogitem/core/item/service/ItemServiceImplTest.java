@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -35,7 +36,8 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceImplTest {
 
-    private ItemService itemService;
+    @InjectMocks
+    private ItemServiceImpl itemService;
 
     @Mock
     MetadataRepository metadataRepository;
@@ -45,8 +47,6 @@ public class ItemServiceImplTest {
 
     @Before
     public void setup() {
-        itemService = new ItemServiceImpl(metadataRepository, securityRepository);
-        
         mockRequest();
     }
 
