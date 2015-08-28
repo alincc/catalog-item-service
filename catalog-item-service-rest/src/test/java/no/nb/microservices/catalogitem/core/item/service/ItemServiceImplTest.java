@@ -54,6 +54,7 @@ public class ItemServiceImplTest {
     public void whenGetItemByIdThenReturnItem() {
         String id = "id1";
         String title = "Supersonic";
+        String compositeTitle = title + " ct";
         
         Mods mods = new Mods();
         List<TitleInfo> titleInfos = new ArrayList<>();
@@ -73,6 +74,7 @@ public class ItemServiceImplTest {
         mods.setNames(Arrays.asList(name));
 
         Fields fields = new Fields();
+        fields.setTitle("Supersonic ct");
         fields.setDigital(true);
         fields.setContentClasses(Arrays.asList("restricted", "public"));
         
@@ -83,7 +85,8 @@ public class ItemServiceImplTest {
         Item item = itemService.getItemById(id);
         
         assertNotNull("Item should not be null", item);
-        assertEquals("Title should be \"Supersonic\"", title, item.getTitleInfo().getTitle());
+        assertEquals("Title should be \"Supersonic tc\"", compositeTitle, item.getTitle());
+        assertEquals("Title in titleInfo should be \"Supersonic\"", title, item.getTitleInfo().getTitle());
         assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());

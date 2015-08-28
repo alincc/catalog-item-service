@@ -76,11 +76,14 @@ public class ItemResultResourceAssemblerTest {
         TitleInfo titleInfo = new TitleInfo();
         titleInfo.setTitle("Supersonic");
         mods.setTitleInfos(Arrays.asList(titleInfo));
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Fields fields = new Fields();
+        fields.setTitle(titleInfo.getTitle() + " ct");
+        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields ).build();
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
         assertEquals("Title shoud be \"Supersonic\"", "Supersonic", itemResource.getMetadata().getTitleInfo().getTitle());
+        assertEquals("CompositeTitle shoud be \"Supersonic ct\"", "Supersonic ct", itemResource.getMetadata().getCompositeTitle());
         
     }
 

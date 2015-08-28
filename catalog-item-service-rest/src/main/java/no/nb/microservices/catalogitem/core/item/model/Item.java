@@ -11,14 +11,16 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 public class Item implements Identifiable<String> {
 
     private String id;
+    private String compositeTitle;
     private TitleInfo titleInfo;
     private AccessInfo accessInfo;
     private List<Person> persons;
     private Origin origin;
     private Classification classification;
 
-    private Item(String id, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
+    private Item(String id, String compositeTitle, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
         this.id = id;
+        this.compositeTitle = compositeTitle;
         this.titleInfo = titleInfo;
         this.persons = persons;
         this.accessInfo = accessInfo;
@@ -30,7 +32,10 @@ public class Item implements Identifiable<String> {
     public String getId() {
         return id;
     }
-
+    public String getTitle() {
+        return compositeTitle;
+    }
+    
     public TitleInfo getTitleInfo() {
         return titleInfo;
     }
@@ -51,7 +56,6 @@ public class Item implements Identifiable<String> {
         return classification;
     }
 
-    
     public static class ItemBuilder  {
         private final String id;
         private Mods mods; 
@@ -78,7 +82,12 @@ public class Item implements Identifiable<String> {
         }
 
         public Item build() {
-            return new Item(id, 
+            String compositeTitle = null;
+            if (fields != null) {
+                compositeTitle = fields.getTitle();
+            }
+            return new Item(id,
+                    compositeTitle,
                     new TitleInfo.Builder(mods).build(), 
                     new Persons.Builder(mods).buildList(),
                     new AccessInfo.Builder().fields(fields).hasAccess(hasAccess).build(),

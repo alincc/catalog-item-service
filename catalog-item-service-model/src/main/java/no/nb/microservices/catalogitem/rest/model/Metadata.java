@@ -6,12 +6,20 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Metadata {
-
+    private String compositeTitle;
     private TitleInfo titleInfo;
     private List<Person> people;
     private OriginInfo originInfo;
     private Classification classification;
 
+    public String getCompositeTitle() {
+        return compositeTitle;
+    }
+    
+    public void setCompositeTitle(String compositeTitle) {
+        this.compositeTitle = compositeTitle;
+    }
+    
     public TitleInfo getTitleInfo() {
         return titleInfo;
     }
@@ -43,5 +51,5 @@ public class Metadata {
     public void setClassification(Classification classification) {
         this.classification = classification;
     }
-    
+
 }

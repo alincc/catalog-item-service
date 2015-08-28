@@ -16,7 +16,6 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
-        
         createLinks(item, resource);
         createAccessInfo(item, resource);
         createMetadata(item, resource);
@@ -41,6 +40,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     
     private void createMetadata(Item item, ItemResource resource) {
         Metadata metadata = new Metadata();
+        metadata.setCompositeTitle(item.getTitle());
         createTitleInfo(item, metadata);
         createPeople(item, metadata);
         createOriginInfo(item, metadata);
