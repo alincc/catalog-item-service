@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
 public class AccessInfo {
 
@@ -62,11 +62,11 @@ public class AccessInfo {
     
     public static class Builder {
         
-        private Fields fields = new Fields();
+        private FieldResource fields = new FieldResource();
         private boolean hasAccess = false;
         
-        public Builder fields(final Fields fields) {
-            this.fields = fields != null ? fields : new Fields();
+        public Builder fields(final FieldResource fields) {
+            this.fields = fields != null ? fields : new FieldResource();
             return this;
         }
 

@@ -8,13 +8,13 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
 public class AccessInfoTest {
 
     @Test
     public void whenPublicThenReturnTrue() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted", "public"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
         
@@ -23,7 +23,7 @@ public class AccessInfoTest {
 
     @Test
     public void whenNotPublicThenReturnFalse() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted", "pubokhyllablic"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
         
@@ -32,7 +32,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromNORWAY() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("bokhylla", "restricted"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
         
@@ -41,7 +41,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromLIBRARY() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("avisibibliotek"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
         
@@ -50,7 +50,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromNB() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 
@@ -59,7 +59,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromUNIVERSALLYRESTRICTED() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList(""));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
         
@@ -68,7 +68,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREpublic() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted", "public"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 
@@ -77,7 +77,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREmavispublic() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("", "mavispublic"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 
@@ -86,7 +86,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREstatfjordpublic() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("statfjordpublic", "public"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 
@@ -95,7 +95,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREfriggpublic() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("friggpublic"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 
@@ -104,7 +104,7 @@ public class AccessInfoTest {
     
     @Test
     public void whenAccessAllowedFromEVERYWHEREshowonly() {
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("showonly"));
         AccessInfo accessInfo = new AccessInfo.Builder().fields(fields).build();
 

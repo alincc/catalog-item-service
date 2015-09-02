@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.hateoas.Identifiable;
 
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class Item implements Identifiable<String> {
@@ -59,7 +59,7 @@ public class Item implements Identifiable<String> {
     public static class ItemBuilder  {
         private final String id;
         private Mods mods; 
-        private Fields fields;
+        private FieldResource fields;
         private boolean hasAccess;
         
         public ItemBuilder(final String id) {
@@ -71,7 +71,7 @@ public class Item implements Identifiable<String> {
             return this;
         }
         
-        public ItemBuilder fields(final Fields fields) {
+        public ItemBuilder fields(final FieldResource fields) {
             this.fields = fields;
             return this;
         }

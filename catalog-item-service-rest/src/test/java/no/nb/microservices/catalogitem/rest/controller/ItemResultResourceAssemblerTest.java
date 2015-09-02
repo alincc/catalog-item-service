@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
@@ -76,7 +76,7 @@ public class ItemResultResourceAssemblerTest {
         TitleInfo titleInfo = new TitleInfo();
         titleInfo.setTitle("Supersonic");
         mods.setTitleInfos(Arrays.asList(titleInfo));
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setTitle(titleInfo.getTitle() + " ct");
         Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields ).build();
         ItemResource itemResource = resource.toResource(item );
@@ -110,7 +110,7 @@ public class ItemResultResourceAssemblerTest {
     public void testAccessInfo() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted", "public"));
         fields.setDigital(true);
         

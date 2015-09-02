@@ -1,6 +1,6 @@
 package no.nb.microservices.catalogitem.core.metadata.repository;
 
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -21,7 +21,7 @@ public interface MetadataRepository {
             @RequestParam("amsso") String ssoToken);
 
     @RequestMapping(method = RequestMethod.GET, value = "/catalog/metadata/{id}/fields", produces = MediaType.APPLICATION_JSON_VALUE)
-    Fields getFieldsById(@PathVariable("id") String id, 
+    FieldResource getFieldsById(@PathVariable("id") String id, 
             @RequestParam("X-Forwarded-Host") String xHost, 
             @RequestParam("X-Forwarded-Port") String xPort, 
             @RequestParam("X-Original-IP-Fra-Frontend") String xRealIp, 

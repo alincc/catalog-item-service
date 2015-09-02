@@ -26,7 +26,7 @@ import no.nb.commons.web.util.UserUtils;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
@@ -73,7 +73,7 @@ public class ItemServiceImplTest {
         name.setNameParts(Arrays.asList(namepart));
         mods.setNames(Arrays.asList(name));
 
-        Fields fields = new Fields();
+        FieldResource fields = new FieldResource();
         fields.setTitle("Supersonic ct");
         fields.setDigital(true);
         fields.setContentClasses(Arrays.asList("restricted", "public"));

@@ -99,11 +99,11 @@ public class ItemControllerIntegrationTest {
             public MockResponse dispatch(RecordedRequest request)
                     throws InterruptedException {
                 System.out.println(request.getPath());
-                if (request.getPath().equals("/id1/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                if (request.getPath().equals("/catalog/metadata/id1/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(modsMock)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().equals("/catalog/metadata/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(fieldsMock)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");

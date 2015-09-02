@@ -16,7 +16,7 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import static no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
-import no.nb.microservices.catalogmetadata.model.fields.Fields;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import reactor.Environment;
 import reactor.fn.Function;
@@ -48,9 +48,9 @@ public class ItemServiceImpl implements ItemService {
 
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
             Stream<Item> resp = Streams.zip(getModsById(tracableId), getFieldsById(tracableId), hasAccess(tracableId),
-                (Tuple3<Mods, Fields, Boolean> tup) -> {
+                (Tuple3<Mods, FieldResource, Boolean> tup) -> {
                     Mods mods = tup.getT1();
-                    Fields fields = tup.getT2();
+                    FieldResource fields = tup.getT2();
                     Boolean hasAccess = tup.getT3();
                     
                     ItemBuilder itemBuilder = new ItemBuilder(id)
@@ -92,12 +92,12 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    public Stream<Fields> getFieldsById(TracableId id) {
+    public Stream<FieldResource> getFieldsById(TracableId id) {
         Environment env = new Environment();
         return Streams.just(id).dispatchOn(env)
-                .map(new Function<TracableId, Fields>() {
+                .map(new Function<TracableId, FieldResource>() {
                     @Override
-                    public Fields apply(TracableId id) {
+                    public FieldResource apply(TracableId id) {
                         Trace.continueSpan(id.getSpan());
                         SecurityInfo securityInfo = id.getSecurityInfo();
                         return metadatRepository.getFieldsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
