@@ -1,4 +1,4 @@
-package no.nb.microservices.catalogitem.rest.controller;
+package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.net.URI;
 

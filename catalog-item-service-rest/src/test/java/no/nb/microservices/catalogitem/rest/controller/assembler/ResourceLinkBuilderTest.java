@@ -1,4 +1,4 @@
-package no.nb.microservices.catalogitem.rest.controller;
+package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import no.nb.microservices.catalogitem.rest.controller.assembler.ResourceLinkBuilder;
+import no.nb.microservices.catalogitem.rest.controller.assembler.ResourceTemplateLink;
 
 public class ResourceLinkBuilderTest {
 

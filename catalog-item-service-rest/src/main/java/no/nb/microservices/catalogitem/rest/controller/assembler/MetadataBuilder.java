@@ -1,58 +1,42 @@
-package no.nb.microservices.catalogitem.rest.controller;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.*;
-
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceAssembler;
+package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.model.Classification;
+import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogitem.rest.model.OriginInfo;
+import no.nb.microservices.catalogitem.rest.model.Person;
+import no.nb.microservices.catalogitem.rest.model.Role;
+import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 
-    @Override
-    public ItemResource toResource(Item item) {
-        ItemResource resource = new ItemResource(item.getId());
-        createLinks(item, resource);
-        createAccessInfo(item, resource);
-        createMetadata(item, resource);
-        
-        return resource;
-    }
+public final class MetadataBuilder {
 
-    private void createLinks(Item item, ItemResource resource) {
-        resource.add(createSelfLink(item));
-        resource.add(createModsLink(item));
-        resource.add(createPresentationLink(item));
-    }
-
-    private void createAccessInfo(Item item, ItemResource resource) {
-        AccessInfo accessInfo = new AccessInfo();
-        accessInfo.setDigital(item.getAccessInfo().isDigital());
-        accessInfo.setPublicDomain(item.getAccessInfo().isPublicDomain());
-        accessInfo.setAccessAllowedFrom(item.getAccessInfo().accessAllowedFrom());
-        accessInfo.setViewability(item.getAccessInfo().getViewability());
-        resource.setAccessInfo(accessInfo);
-    }
+    private final Item item;
     
-    private void createMetadata(Item item, ItemResource resource) {
+    public MetadataBuilder(Item item) {
+        super();
+        this.item = item;
+    }
+
+    public Metadata build() {
         Metadata metadata = new Metadata();
         metadata.setCompositeTitle(item.getTitle());
-        createTitleInfo(item, metadata);
+        
+        TitleInfoDirector titleInfoDirector = new TitleInfoDirector();
+        
+        TitleInfo standardTitleInfo = titleInfoDirector.createTitleInfo(new StandardTitleInfoBuilder(), item);
+        metadata.setTitleInfo(standardTitleInfo);
+        
+        TitleInfo alternativeTitleInfo = titleInfoDirector.createTitleInfo(new AlternativeTitleInfoBuilder(), item);
+        metadata.setAlternativeTitleInfo(alternativeTitleInfo);
+        
         createPeople(item, metadata);
         createOriginInfo(item, metadata);
         createClassification(item, metadata);
-
-        resource.setMetadata(metadata);
-    }
-
-    private void createTitleInfo(Item item, Metadata metadata) {
-        TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle(item.getTitleInfo().getTitle());
-        metadata.setTitleInfo(titleInfo);
+        return metadata;
     }
     
     private void createOriginInfo(Item item, Metadata metadata) {
@@ -100,18 +84,6 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
        
        metadata.setClassification(classification);
         
-    }
-
-    private Link createSelfLink(Item item) {
-        return linkTo(ItemController.class).slash(item).withSelfRel();
-    }
-    
-    private Link createModsLink(Item item) {
-        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, item.getId()).withRel("mods");
-    }
-    
-    private Link createPresentationLink(Item item) {
-        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, item.getId()).withRel("presentation");
     }
     
     private void createDdc(Item item, Classification classification) {

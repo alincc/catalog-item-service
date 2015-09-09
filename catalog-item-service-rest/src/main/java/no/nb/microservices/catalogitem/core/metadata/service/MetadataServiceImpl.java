@@ -7,7 +7,7 @@ import no.nb.microservices.catalogitem.core.metadata.repository.MetadataReposito
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 @Service
-public class MetadataServiceImpl  implements IMetadataService{
+public class MetadataServiceImpl  implements MetadataService{
 
     MetadataRepository metadataRepository;
     

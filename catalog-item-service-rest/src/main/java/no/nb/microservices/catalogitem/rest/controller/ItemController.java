@@ -3,6 +3,7 @@ package no.nb.microservices.catalogitem.rest.controller;
 import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemService;
+import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,31 +6,71 @@ public class TitleInfo {
 
     private String title;
 
-    private TitleInfo(Builder builder) {
-        this.title = builder.getTitle();
+    private TitleInfo(String title) {
+        this.title =title;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public static class Builder {
+    public abstract static class TitleBuilder {
         
-        private Mods mods;
+        protected Mods mods;
         
-        public Builder(final Mods mods) {
+        public TitleBuilder(final Mods mods) {
             this.mods = mods != null ? mods : new Mods();
         }
         
         public TitleInfo build() {
-            return new TitleInfo(this);
+            String title = getTitle();
+            if (title != null) {
+                return new TitleInfo(title);
+            } else {
+                return null;
+            }
         }
         
-        private String getTitle() {
+        abstract String getTitle();
+        
+    }
+
+    public static class StandardTitleBuilder extends TitleBuilder {
+        
+        public StandardTitleBuilder(final Mods mods) {
+            super(mods);
+        }
+
+        @Override
+        protected String getTitle() {
             if (mods.getTitleInfos() != null) {
-                return mods.getTitleInfos().iterator().next().getTitle();
+                for (no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo title : mods.getTitleInfos()) {
+                    if (title.getType() == null) {
+                        return title.getTitle();
+                    }
+                }
             }
             return null;
         }
     }
+    
+    public static class AlternativeTitleBuilder extends TitleBuilder {
+        
+        public AlternativeTitleBuilder(final Mods mods) {
+            super(mods);
+        }
+        
+        @Override
+        protected String getTitle() {
+            if (mods.getTitleInfos() != null) {
+                for (no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo title : mods.getTitleInfos()) {
+                    if ("alternative".equalsIgnoreCase(title.getType())) {
+                        return title.getTitle();
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package no.nb.microservices.catalogitem.rest.controller;
+package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
@@ -76,13 +77,19 @@ public class ItemResultResourceAssemblerTest {
         TitleInfo titleInfo = new TitleInfo();
         titleInfo.setTitle("Supersonic");
         mods.setTitleInfos(Arrays.asList(titleInfo));
+        TitleInfo alternativeTitleInfo = new TitleInfo();
+        alternativeTitleInfo.setTitle("Supersonic alt");
+        alternativeTitleInfo.setType("alternative");
+        mods.setTitleInfos(Arrays.asList(titleInfo, alternativeTitleInfo));
         FieldResource fields = new FieldResource();
         fields.setTitle(titleInfo.getTitle() + " ct");
         Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields ).build();
+        
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
         assertEquals("Title shoud be \"Supersonic\"", "Supersonic", itemResource.getMetadata().getTitleInfo().getTitle());
+        assertEquals("AlternativeTitle shoud be \"Supersonic alt\"", "Supersonic alt", itemResource.getMetadata().getAlternativeTitleInfo().getTitle());
         assertEquals("CompositeTitle shoud be \"Supersonic ct\"", "Supersonic ct", itemResource.getMetadata().getCompositeTitle());
         
     }
