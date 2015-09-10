@@ -1,65 +1,45 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.hateoas.Identifiable;
 
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class Item implements Identifiable<String> {
-
+    
     private String id;
-    private String compositeTitle;
-    private TitleInfo titleInfo;
-    private TitleInfo alternativeTitleInfo;
-    private AccessInfo accessInfo;
-    private List<Person> persons;
-    private Origin origin;
-    private Classification classification;
+    private Mods mods; 
+    private FieldResource field;
+    private boolean hasAccess;
 
-    private Item(String id, String compositeTitle, TitleInfo titleInfo, TitleInfo alternativeTitleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
+    private Item(String id, Mods mods, FieldResource field, boolean hasAccess) {
         this.id = id;
-        this.compositeTitle = compositeTitle;
-        this.titleInfo = titleInfo;
-        this.alternativeTitleInfo = alternativeTitleInfo;
-        this.persons = persons;
-        this.accessInfo = accessInfo;
-        this.origin = origin;
-        this.classification = classification;
+        this.mods = mods;
+        this.field = field;
+        this.hasAccess = hasAccess;
     }
 
     @Override
     public String getId() {
         return id;
     }
-    public String getTitle() {
-        return compositeTitle;
-    }
-    
-    public TitleInfo getTitleInfo() {
-        return titleInfo;
+
+    public Mods getMods() {
+        if (mods == null) {
+            mods = new Mods();
+        }
+        return mods;
     }
 
-    public TitleInfo getTitleAlternativeInfo() {
-        return alternativeTitleInfo;
+    public FieldResource getField() {
+        if (field == null) {
+            field = new FieldResource();
+        }
+        return field;
     }
 
-    public AccessInfo getAccessInfo() {
-        return accessInfo;
-    }
-
-    public List<Person> getPersons() {
-        return Collections.unmodifiableList(persons);
-    }
-
-    public Origin getOrigin() {
-        return origin;
-    }
-    
-    public Classification getClassification() {
-        return classification;
+    public boolean hasAccess() {
+        return hasAccess;
     }
 
     public static class ItemBuilder  {
@@ -88,18 +68,7 @@ public class Item implements Identifiable<String> {
         }
 
         public Item build() {
-            String compositeTitle = null;
-            if (fields != null) {
-                compositeTitle = fields.getTitle();
-            }
-            return new Item(id,
-                    compositeTitle,
-                    new TitleInfo.StandardTitleBuilder(mods).build(),
-                    new TitleInfo.AlternativeTitleBuilder(mods).build(),
-                    new Persons.Builder(mods).buildList(),
-                    new AccessInfo.Builder().fields(fields).hasAccess(hasAccess).build(),
-                    new Origin.Builder().mods(mods).build(),
-                    new Classification.Builder(mods).build());
+            return new Item(id, mods, fields, hasAccess);
         }
 
     }

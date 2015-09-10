@@ -3,6 +3,15 @@ package no.nb.microservices.catalogitem.rest.model;
 public class Role {
     private String name;
 
+    public Role() {
+        super();
+    }
+    
+    public Role(String name) {
+        super();
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

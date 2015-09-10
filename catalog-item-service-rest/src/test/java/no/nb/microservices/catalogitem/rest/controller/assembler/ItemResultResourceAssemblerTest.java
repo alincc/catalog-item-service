@@ -15,9 +15,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
+import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
@@ -127,8 +126,8 @@ public class ItemResultResourceAssemblerTest {
         assertNotNull("Should not be null", itemResource);
         assertTrue("isDigital should be true", itemResource.getAccessInfo().isDigital());
         assertTrue("isPublicDomain should be true", itemResource.getAccessInfo().isPublicDomain());
-        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
-        assertEquals("Viewability should be ALL", AccessInfo.VIEWABILITY_ALL, itemResource.getAccessInfo().getViewability());
+        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", itemResource.getAccessInfo().getAccessAllowedFrom());
+        assertEquals("Viewability should be ALL", AccessInfoBuilder.VIEWABILITY_ALL, itemResource.getAccessInfo().getViewability());
         
     }
 

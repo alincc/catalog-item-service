@@ -15,7 +15,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
         createLinks(item, resource);
-        resource.setAccessInfo(new AccessInfoBuilder(item).build());
+        resource.setAccessInfo(new AccessInfoBuilder().fields(item.getField()).access(item.hasAccess()).build());
         resource.setMetadata(new MetadataBuilder(item).build());
         
         return resource;

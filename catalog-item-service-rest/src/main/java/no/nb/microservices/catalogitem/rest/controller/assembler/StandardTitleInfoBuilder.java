@@ -1,18 +1,17 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
-
 public class StandardTitleInfoBuilder extends TitleInfoBuilder {
 
     @Override
-    public TitleInfo createTitleInfo() {
-        if (item.getTitleInfo() != null) {
-            TitleInfo titleInfo = new TitleInfo();
-            titleInfo.setTitle(item.getTitleInfo().getTitle());
-            return titleInfo;
-        } else {
-            return null;
+    protected String getTitle() {
+        if (mods.getTitleInfos() != null) {
+            for (no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo title : mods.getTitleInfos()) {
+                if (title.getType() == null) {
+                    return title.getTitle();
+                }
+            }
         }
+        return null;
     }
 
 }

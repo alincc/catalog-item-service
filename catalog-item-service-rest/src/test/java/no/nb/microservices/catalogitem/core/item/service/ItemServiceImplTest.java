@@ -85,13 +85,9 @@ public class ItemServiceImplTest {
         Item item = itemService.getItemById(id);
         
         assertNotNull("Item should not be null", item);
-        assertEquals("Title should be \"Supersonic tc\"", compositeTitle, item.getTitle());
-        assertEquals("Title in titleInfo should be \"Supersonic\"", title, item.getTitleInfo().getTitle());
-        assertTrue("isDigital should be true", item.getAccessInfo().isDigital());
-        assertTrue("isPublicDomain should be true", item.getAccessInfo().isPublicDomain());
-        assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", item.getAccessInfo().accessAllowedFrom());
-        assertNotNull("Should have list of people", item.getPersons());
-        assertEquals("Viewability should be ALL", "ALL", item.getAccessInfo().getViewability());
+        assertNotNull("Item should have mods", item.getMods());
+        assertNotNull("Item should have field", item.getField());
+        assertNotNull("Item should have access", item.hasAccess());
     }
     
     private void mockRequest() {

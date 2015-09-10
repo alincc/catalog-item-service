@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import no.nb.commons.web.util.UserUtils;
-import no.nb.microservices.catalogitem.core.item.model.AccessInfo;
+import no.nb.microservices.catalogitem.rest.controller.assembler.AccessInfoBuilder;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.sesam.ni.niclient.NiClient;
 import no.nb.sesam.ni.niserver.AuthorisationHandler;
@@ -44,12 +44,6 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
-/**
- * 
- * @author ronnymikalsen
- * @author rolfmathisen
- *
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TestConfig.class,
         RibbonClientConfiguration.class })
@@ -138,7 +132,7 @@ public class ItemControllerIntegrationTest {
                 .isDigital());
         assertTrue("isPublicDomain should be true", entity.getBody()
                 .getAccessInfo().isPublicDomain());
-        assertEquals("Viewability should be ALL", AccessInfo.VIEWABILITY_ALL, entity.getBody()
+        assertEquals("Viewability should be ALL", AccessInfoBuilder.VIEWABILITY_ALL, entity.getBody()
                 .getAccessInfo().getViewability());
         assertEquals("Access should be \"EVERYWHERE\"", "EVERYWHERE", entity.getBody()
         		.getAccessInfo().getAccessAllowedFrom());
