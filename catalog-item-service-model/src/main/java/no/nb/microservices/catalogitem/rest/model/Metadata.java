@@ -9,6 +9,7 @@ public class Metadata {
     private String compositeTitle;
     private TitleInfo titleInfo;
     private TitleInfo alternativeTitleInfo;
+    private String summary;
     private List<Person> people;
     private OriginInfo originInfo;
     private Classification classification;
@@ -37,6 +38,14 @@ public class Metadata {
         this.alternativeTitleInfo = alternativeTitleInfo;
     }
     
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     public List<Person> getPeople() {
         return people;
     }
