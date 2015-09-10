@@ -13,15 +13,17 @@ public class Item implements Identifiable<String> {
     private String id;
     private String compositeTitle;
     private TitleInfo titleInfo;
+    private String summary;
     private AccessInfo accessInfo;
     private List<Person> persons;
     private Origin origin;
     private Classification classification;
 
-    private Item(String id, String compositeTitle, TitleInfo titleInfo, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
+    private Item(String id, String compositeTitle, TitleInfo titleInfo, String summary, List<Person> persons, AccessInfo accessInfo, Origin origin, Classification classification) {
         this.id = id;
         this.compositeTitle = compositeTitle;
         this.titleInfo = titleInfo;
+        this.summary = summary;
         this.persons = persons;
         this.accessInfo = accessInfo;
         this.origin = origin;
@@ -38,6 +40,14 @@ public class Item implements Identifiable<String> {
     
     public TitleInfo getTitleInfo() {
         return titleInfo;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public AccessInfo getAccessInfo() {
@@ -88,7 +98,8 @@ public class Item implements Identifiable<String> {
             }
             return new Item(id,
                     compositeTitle,
-                    new TitleInfo.Builder(mods).build(), 
+                    new TitleInfo.Builder(mods).build(),
+                    new Summary.Builder(mods).build().getValue(),
                     new Persons.Builder(mods).buildList(),
                     new AccessInfo.Builder().fields(fields).hasAccess(hasAccess).build(),
                     new Origin.Builder().mods(mods).build(),

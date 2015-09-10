@@ -8,6 +8,7 @@ import java.util.List;
 public class Metadata {
     private String compositeTitle;
     private TitleInfo titleInfo;
+    private String summary;
     private List<Person> people;
     private OriginInfo originInfo;
     private Classification classification;
@@ -26,6 +27,14 @@ public class Metadata {
 
     public void setTitleInfo(TitleInfo titleInfo) {
         this.titleInfo = titleInfo;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public List<Person> getPeople() {
