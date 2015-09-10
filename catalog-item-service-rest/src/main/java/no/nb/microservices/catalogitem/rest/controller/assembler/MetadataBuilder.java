@@ -1,9 +1,12 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import java.util.List;
+
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public final class MetadataBuilder {
@@ -30,6 +33,7 @@ public final class MetadataBuilder {
         metadata.setPeople(new PersonsBuilder(mods.getNames()).buildList());
         metadata.setOriginInfo(new OriginInfoBuilder().mods(mods).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
+        metadata.setSummary(getSummary());
         
         return metadata;
     }
@@ -41,4 +45,13 @@ public final class MetadataBuilder {
         return null;
     }
 
+    private String getSummary() {
+        if (mods != null) {
+            List<Abstract> abstracts = mods.getAbstracts();
+            return (abstracts != null && !abstracts.isEmpty()) ? abstracts.get(0).getValue() : "";
+        } else {
+            return null;
+        }
+    }
+    
 }
