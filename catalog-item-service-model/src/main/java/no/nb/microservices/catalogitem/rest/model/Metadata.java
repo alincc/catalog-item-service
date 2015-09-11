@@ -11,6 +11,7 @@ public class Metadata {
     private TitleInfo alternativeTitleInfo;
     private String summary;
     private List<Person> people;
+    private Geographic geographic;
     private OriginInfo originInfo;
     private Classification classification;
 
@@ -52,6 +53,14 @@ public class Metadata {
 
     public void setPeople(List<Person> people) {
         this.people = people;
+    }
+
+    public Geographic getGeographic() {
+        return geographic;
+    }
+
+    public void setGeographic(Geographic geographic) {
+        this.geographic = geographic;
     }
 
     public OriginInfo getOriginInfo() {
