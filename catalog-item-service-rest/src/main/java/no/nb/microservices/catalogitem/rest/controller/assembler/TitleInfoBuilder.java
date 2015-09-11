@@ -23,4 +23,16 @@ public abstract class TitleInfoBuilder {
         }
     }
     
+    protected String getTitleByType(String type) {
+        if (mods.getTitleInfos() != null) {
+            for (no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo title : mods.getTitleInfos()) {
+                if (type.equalsIgnoreCase(title.getType())) {
+                    return title.getTitle();
+                }
+            }
+        }
+        return null;
+    }
+    
+    
 }
