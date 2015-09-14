@@ -1,19 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Created by andreasb on 14.09.15.
- */
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
+
 public class SubjectBuilder {
 
     private List<Subject> subjects;

@@ -10,12 +10,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-
-/**
- * Created by andreasb on 14.09.15.
- *
- */
 public class SubjectBuilderTest {
+
     @Test
     public void subjectTopicsTest() {
         List<Subject> subjects = getSubjects();
@@ -26,9 +22,15 @@ public class SubjectBuilderTest {
         no.nb.microservices.catalogitem.rest.model.Subject build = builder.build();
 
         assertEquals(3, build.getTopics().size());
-        assertEquals("Ski", build.getTopics().stream().filter(q -> q.equalsIgnoreCase("ski")).findFirst().get());
-        assertEquals("War", build.getTopics().stream().filter(q -> q.equalsIgnoreCase("war")).findFirst().get());
-        assertEquals("Europe", build.getTopics().stream().filter(q -> q.equalsIgnoreCase("europe")).findFirst().get());
+        assertEquals("Ski", getTopicFromResultIgnoreCase(build, "ski"));
+        assertEquals("War", getTopicFromResultIgnoreCase(build, "war"));
+        assertEquals("Europe", getTopicFromResultIgnoreCase(build, "Europe"));
+    }
+
+    private String getTopicFromResultIgnoreCase(
+            no.nb.microservices.catalogitem.rest.model.Subject build,
+            String topic) {
+        return build.getTopics().stream().filter(q -> q.equalsIgnoreCase(topic)).findFirst().get();
     }
 
     @Test
