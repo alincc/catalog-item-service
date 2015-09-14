@@ -9,6 +9,7 @@ public class Metadata {
     private String compositeTitle;
     private TitleInfo titleInfo;
     private TitleInfo alternativeTitleInfo;
+    private String typeOfResource;
     private String summary;
     private List<Person> people;
     private Geographic geographic;
@@ -86,5 +87,13 @@ public class Metadata {
 
     public void setRecordInfo(RecordInfo recordInfo) {
         this.recordInfo = recordInfo;
+    }
+
+    public String getTypeOfResource() {
+        return typeOfResource;
+    }
+
+    public void setTypeOfResource(String typeOfResource) {
+        this.typeOfResource = typeOfResource;
     }
 }

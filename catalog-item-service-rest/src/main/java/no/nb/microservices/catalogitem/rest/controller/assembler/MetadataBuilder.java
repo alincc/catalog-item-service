@@ -36,6 +36,7 @@ public final class MetadataBuilder {
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
         metadata.setSummary(getSummary());
+        metadata.setTypeOfResource(getTypeOfResource());
         
         return metadata;
     }
@@ -54,6 +55,16 @@ public final class MetadataBuilder {
         } else {
             return null;
         }
+    }
+
+    private String getTypeOfResource() {
+        if (mods != null) {
+            return mods.getTypeOfResource();
+        }
+        else {
+            return null;
+        }
+
     }
     
 }
