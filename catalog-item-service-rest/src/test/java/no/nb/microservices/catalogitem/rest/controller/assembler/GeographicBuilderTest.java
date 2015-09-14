@@ -1,19 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.Geographic;
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
-import org.junit.Test;
-
-import java.util.Arrays;
-
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by andreasb on 14.09.15.
- */
+import org.junit.Test;
+
+import no.nb.microservices.catalogitem.rest.model.Geographic;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
+
 public class GeographicBuilderTest {
 
     @Test
