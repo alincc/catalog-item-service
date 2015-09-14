@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +20,6 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 
 public class ItemResultResourceAssemblerTest {
 
@@ -110,6 +103,44 @@ public class ItemResultResourceAssemblerTest {
 
         assertNotNull("Should not be null", itemResource.getMetadata().getOriginInfo());
         assertEquals("Publisher should be Banana Airlines", "Banana Airlines" ,itemResource.getMetadata().getOriginInfo().getPublisher());
+    }
+
+    @Test
+    public void testRecordInfo() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+
+        Mods mods = new Mods();
+        RecordInfo recordInfo = new RecordInfo();
+        RecordIdentifier recordIdentifier = new RecordIdentifier();
+        recordIdentifier.setValue("1888582");
+        recordIdentifier.setSource("mavis.nb.no");
+        recordInfo.setRecordIdentifier(recordIdentifier);
+        mods.setRecordInfo(recordInfo);
+
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource.getMetadata().getRecordInfo());
+        assertEquals("1888582", itemResource.getMetadata().getRecordInfo().getIdentifier());
+        assertEquals("mavis.nb.no", itemResource.getMetadata().getRecordInfo().getIdentifierSource());
+    }
+
+    @Test
+    public void testGeographic() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+
+        Mods mods = new Mods();
+        OriginInfo originInfo = new OriginInfo();
+        Place place = new Place();
+        place.setPlaceTerm("Norge;Telemark;Kviteseid;;;;;");
+        originInfo.setPlace(place);
+        mods.setOriginInfo(originInfo);
+
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource.getMetadata().getGeographic());
+        assertEquals("Publisher should be Banana Airlines", "Norge;Telemark;Kviteseid;;;;;", itemResource.getMetadata().getGeographic().getPlaceString());
     }
 
     @Test

@@ -29,10 +29,12 @@ public final class MetadataBuilder {
         metadata.setTitleInfo(standardTitleInfo);
         TitleInfo alternativeTitleInfo = titleInfoDirector.createTitleInfo(new AlternativeTitleInfoBuilder(), mods);
         metadata.setAlternativeTitleInfo(alternativeTitleInfo);
-        
+
         metadata.setPeople(new PersonsBuilder(mods.getNames()).buildList());
         metadata.setOriginInfo(new OriginInfoBuilder().mods(mods).build());
+        metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
+        metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
         metadata.setSummary(getSummary());
         
         return metadata;
