@@ -10,12 +10,15 @@ public class Metadata {
     private TitleInfo titleInfo;
     private TitleInfo alternativeTitleInfo;
     private TitleInfo uniformTitleInfo;
+    private String typeOfResource;
+    private String genre;
     private String summary;
     private List<Person> people;
     private Geographic geographic;
     private OriginInfo originInfo;
     private RecordInfo recordInfo;
     private Classification classification;
+    private List<String> notes;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -95,5 +98,29 @@ public class Metadata {
 
     public void setRecordInfo(RecordInfo recordInfo) {
         this.recordInfo = recordInfo;
+    }
+
+    public String getTypeOfResource() {
+        return typeOfResource;
+    }
+
+    public void setTypeOfResource(String typeOfResource) {
+        this.typeOfResource = typeOfResource;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public List<String> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<String> notes) {
+        this.notes = notes;
     }
 }

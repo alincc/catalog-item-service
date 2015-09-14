@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
@@ -36,6 +37,9 @@ public final class MetadataBuilder {
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
         metadata.setSummary(getSummary());
+        metadata.setTypeOfResource(getTypeOfResource());
+        metadata.setGenre(getGenre());
+        metadata.setNotes(getNotes());
         
         return metadata;
     }
@@ -52,6 +56,33 @@ public final class MetadataBuilder {
             List<Abstract> abstracts = mods.getAbstracts();
             return (abstracts != null && !abstracts.isEmpty()) ? abstracts.get(0).getValue() : "";
         } else {
+            return null;
+        }
+    }
+
+    private String getTypeOfResource() {
+        if (mods != null) {
+            return mods.getTypeOfResource();
+        }
+        else {
+            return null;
+        }
+    }
+
+    private String getGenre() {
+        if (mods != null) {
+            return mods.getGenre();
+        }
+        else {
+            return null;
+        }
+    }
+
+    private List<String> getNotes() {
+        if (mods != null) {
+            return mods.getNotes().stream().map(q -> q.getValue()).collect(Collectors.toList());
+        }
+        else {
             return null;
         }
     }
