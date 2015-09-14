@@ -13,6 +13,7 @@ public class Metadata {
     private List<Person> people;
     private Geographic geographic;
     private OriginInfo originInfo;
+    private RecordInfo recordInfo;
     private Classification classification;
 
     public String getCompositeTitle() {
@@ -79,4 +80,11 @@ public class Metadata {
         this.classification = classification;
     }
 
+    public RecordInfo getRecordInfo() {
+        return recordInfo;
+    }
+
+    public void setRecordInfo(RecordInfo recordInfo) {
+        this.recordInfo = recordInfo;
+    }
 }

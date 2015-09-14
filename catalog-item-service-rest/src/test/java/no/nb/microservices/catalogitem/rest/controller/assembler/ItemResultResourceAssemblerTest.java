@@ -106,6 +106,26 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
+    public void testRecordInfo() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+
+        Mods mods = new Mods();
+        RecordInfo recordInfo = new RecordInfo();
+        RecordIdentifier recordIdentifier = new RecordIdentifier();
+        recordIdentifier.setValue("1888582");
+        recordIdentifier.setSource("mavis.nb.no");
+        recordInfo.setRecordIdentifier(recordIdentifier);
+        mods.setRecordInfo(recordInfo);
+
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource.getMetadata().getRecordInfo());
+        assertEquals("1888582", itemResource.getMetadata().getRecordInfo().getIdentifier());
+        assertEquals("mavis.nb.no", itemResource.getMetadata().getRecordInfo().getIdentifierSource());
+    }
+
+    @Test
     public void testGeographic() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
 
