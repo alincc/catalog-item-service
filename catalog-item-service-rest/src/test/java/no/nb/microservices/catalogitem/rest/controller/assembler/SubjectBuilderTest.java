@@ -14,9 +14,8 @@ public class SubjectBuilderTest {
 
     @Test
     public void subjectTopicsTest() {
-        List<Subject> subjects = getSubjects();
         Mods mods = new Mods();
-        mods.setSubjects(subjects);
+        mods.setSubjects(createSubjects());
 
         SubjectBuilder builder = new SubjectBuilder(mods);
         no.nb.microservices.catalogitem.rest.model.Subject build = builder.build();
@@ -25,12 +24,6 @@ public class SubjectBuilderTest {
         assertEquals("Ski", getTopicFromResultIgnoreCase(build, "ski"));
         assertEquals("War", getTopicFromResultIgnoreCase(build, "war"));
         assertEquals("Europe", getTopicFromResultIgnoreCase(build, "Europe"));
-    }
-
-    private String getTopicFromResultIgnoreCase(
-            no.nb.microservices.catalogitem.rest.model.Subject build,
-            String topic) {
-        return build.getTopics().stream().filter(q -> q.equalsIgnoreCase(topic)).findFirst().get();
     }
 
     @Test
@@ -44,15 +37,15 @@ public class SubjectBuilderTest {
         assertEquals(0, build.getTopics().size());
     }
 
-    private List<Subject> getSubjects() {
+    private List<Subject> createSubjects() {
         Subject subject1 = new Subject();
-        subject1.setTopic(getTopics().subList(0, 2));
+        subject1.setTopic(createTopics().subList(0, 2));
         Subject subject2 = new Subject();
-        subject2.setTopic(getTopics().subList(2, 3));
+        subject2.setTopic(createTopics().subList(2, 3));
         return Arrays.asList(subject1, subject2);
     }
 
-    private List<Topic> getTopics() {
+    private List<Topic> createTopics() {
         Topic topic1 = new Topic();
         topic1.setValue("Ski");
         Topic topic2 = new Topic();
@@ -62,5 +55,11 @@ public class SubjectBuilderTest {
 
         return Arrays.asList(topic1, topic2, topic3);
 
+    }
+    
+    private String getTopicFromResultIgnoreCase(
+            no.nb.microservices.catalogitem.rest.model.Subject build,
+            String topic) {
+        return build.getTopics().stream().filter(q -> q.equalsIgnoreCase(topic)).findFirst().get();
     }
 }
