@@ -79,12 +79,11 @@ public final class MetadataBuilder {
     }
 
     private List<String> getNotes() {
-        if (mods != null) {
+        if (mods != null && mods.getNotes() != null) {
             return mods.getNotes().stream().map(q -> q.getValue()).collect(Collectors.toList());
         }
         else {
             return null;
         }
     }
-    
 }
