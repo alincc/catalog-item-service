@@ -10,6 +10,8 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
 
 public class MetadataBuilderTest {
 
@@ -18,6 +20,9 @@ public class MetadataBuilderTest {
         String id = "id1";
         Mods mods = new Mods();
         createTitleInfo(mods);
+        
+        mods.setOriginInfo(createPlace());
+        
         FieldResource fields = new FieldResource();
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
         
@@ -25,6 +30,15 @@ public class MetadataBuilderTest {
         
         assertNotNull("Should have standard title", metadata.getTitleInfo());
         assertNotNull("Should have alternative title", metadata.getAlternativeTitleInfo());
+        assertNotNull("Should have placeString", metadata.getGeographic().getPlaceString());
+    }
+
+    private OriginInfo createPlace() {
+        Place place = new Place();
+        place.setPlaceTerm("Norge;Telemark;Kviteseid;;;;;");
+        OriginInfo originInfo = new OriginInfo();
+        originInfo.setPlace(place);
+        return originInfo;
     }
 
     private void createTitleInfo(Mods mods) {
