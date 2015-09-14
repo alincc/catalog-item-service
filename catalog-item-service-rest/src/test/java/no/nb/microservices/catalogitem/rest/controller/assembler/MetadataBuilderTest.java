@@ -2,13 +2,16 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
@@ -22,6 +25,7 @@ public class MetadataBuilderTest {
         createTitleInfo(mods);
         
         mods.setOriginInfo(createPlace());
+        mods.setAbstracts(createtSummary());
         
         FieldResource fields = new FieldResource();
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
@@ -41,6 +45,14 @@ public class MetadataBuilderTest {
         return originInfo;
     }
 
+    private List<Abstract> createtSummary() {
+        List<Abstract> abstracts = new ArrayList<>();
+        Abstract summary = new Abstract();
+        summary.setValue("It's a summary");
+        abstracts.add(summary);
+        return abstracts;
+    }
+    
     private void createTitleInfo(Mods mods) {
         mods.setTitleInfos(Arrays.asList(createStandardTitleInfo(), createAlternativeTitleInfo()));
     }
