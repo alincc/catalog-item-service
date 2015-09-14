@@ -36,6 +36,7 @@ public final class MetadataBuilder {
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
+        metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
@@ -81,6 +82,15 @@ public final class MetadataBuilder {
     private List<String> getNotes() {
         if (mods != null && mods.getNotes() != null) {
             return mods.getNotes().stream().map(q -> q.getValue()).collect(Collectors.toList());
+        }
+        else {
+            return null;
+        }
+    }
+
+    private List<String> getMediaTypes() {
+        if (field != null) {
+            return field.getMediaTypes();
         }
         else {
             return null;

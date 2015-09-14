@@ -11,6 +11,7 @@ public class Metadata {
     private TitleInfo alternativeTitleInfo;
     private TitleInfo uniformTitleInfo;
     private String typeOfResource;
+    private List<String> mediaTypes;
     private String genre;
     private String summary;
     private List<Person> people;
@@ -122,5 +123,13 @@ public class Metadata {
 
     public void setNotes(List<String> notes) {
         this.notes = notes;
+    }
+
+    public List<String> getMediaTypes() {
+        return mediaTypes;
+    }
+
+    public void setMediaTypes(List<String> mediaTypes) {
+        this.mediaTypes = mediaTypes;
     }
 }
