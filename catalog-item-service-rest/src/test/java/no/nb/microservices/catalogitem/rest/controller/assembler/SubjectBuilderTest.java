@@ -30,8 +30,8 @@ public class SubjectBuilderTest {
     public void subjectTopicsEmptyTest() {
         Mods mods = new Mods();
         mods.setSubjects(null);
-
         SubjectBuilder builder = new SubjectBuilder(mods);
+
         no.nb.microservices.catalogitem.rest.model.Subject build = builder.build();
 
         assertEquals(0, build.getTopics().size());
@@ -52,9 +52,7 @@ public class SubjectBuilderTest {
         topic2.setValue("War");
         Topic topic3 = new Topic();
         topic3.setValue("Europe");
-
         return Arrays.asList(topic1, topic2, topic3);
-
     }
     
     private String getTopicFromResultIgnoreCase(
