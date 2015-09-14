@@ -1,8 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.OriginInfo;
 import no.nb.microservices.catalogitem.rest.model.RecordInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class RecordInfoBuilder {
@@ -42,8 +40,9 @@ public class RecordInfoBuilder {
     }
 
     private String getCreated() {
+        if (recordInfo.getCreationDate() != null) {
+            return recordInfo.getCreationDate().toString();
+        }
         return null;
     }
-
-    
 }
