@@ -54,7 +54,7 @@ public final class MetadataBuilder {
     private String getSummary() {
         if (mods != null) {
             List<Abstract> abstracts = mods.getAbstracts();
-            return (abstracts != null && !abstracts.isEmpty()) ? abstracts.get(0).getValue() : "";
+            return (abstracts != null && !abstracts.isEmpty()) ? abstracts.get(0).getValue() : null;
         } else {
             return null;
         }
