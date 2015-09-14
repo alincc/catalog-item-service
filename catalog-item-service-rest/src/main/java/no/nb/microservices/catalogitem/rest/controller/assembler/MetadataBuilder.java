@@ -37,6 +37,7 @@ public final class MetadataBuilder {
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
+        metadata.setGenre(getGenre());
         
         return metadata;
     }
@@ -64,7 +65,15 @@ public final class MetadataBuilder {
         else {
             return null;
         }
+    }
 
+    private String getGenre() {
+        if (mods != null) {
+            return mods.getGenre();
+        }
+        else {
+            return null;
+        }
     }
     
 }

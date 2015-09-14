@@ -10,6 +10,7 @@ public class Metadata {
     private TitleInfo titleInfo;
     private TitleInfo alternativeTitleInfo;
     private String typeOfResource;
+    private String genre;
     private String summary;
     private List<Person> people;
     private Geographic geographic;
@@ -95,5 +96,13 @@ public class Metadata {
 
     public void setTypeOfResource(String typeOfResource) {
         this.typeOfResource = typeOfResource;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }
