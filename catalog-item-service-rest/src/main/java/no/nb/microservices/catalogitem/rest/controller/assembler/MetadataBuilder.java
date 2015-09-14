@@ -36,6 +36,7 @@ public final class MetadataBuilder {
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
+        metadata.setSubject(new SubjectBuilder(mods).build());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());

@@ -20,6 +20,7 @@ public class Metadata {
     private RecordInfo recordInfo;
     private Classification classification;
     private List<String> notes;
+    private Subject subject;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -131,5 +132,13 @@ public class Metadata {
 
     public void setMediaTypes(List<String> mediaTypes) {
         this.mediaTypes = mediaTypes;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 }
