@@ -20,14 +20,13 @@ public class MetadataBuilderTest {
         String id = "id1";
         Mods mods = new Mods();
         createTitleInfo(mods);
-        
         mods.setOriginInfo(createPlace());
         mods.setAbstracts(createtSummary());
         mods.setNotes(createNotes());
         mods.setTypeOfResource("still image");
         mods.setGenre("drama");
         mods.setGenre("drama");
-
+        mods.setSubjects(createSubjects());
         FieldResource fields = new FieldResource();
         fields.setMediaTypes(createMediaTypes());
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
@@ -43,6 +42,7 @@ public class MetadataBuilderTest {
         assertEquals("still image", metadata.getTypeOfResource());
         assertEquals("drama", metadata.getGenre());
         assertEquals(1, metadata.getNotes().size());
+        assertNotNull("Should have subject", metadata.getSubject());
     }
 
     private List<Note> createNotes() {
@@ -87,5 +87,18 @@ public class MetadataBuilderTest {
         standardTitleInfo.setTitle("Oasis");
         return standardTitleInfo;
     }
+    
+    private List<Subject> createSubjects() {
+        Subject subject = new Subject();
+        subject.setTopic(createTopics());
+        return Arrays.asList(subject);
+    }
+
+    private List<Topic> createTopics() {
+        Topic topic = new Topic();
+        topic.setValue("Ski");
+        return Arrays.asList(topic);
+    }
+    
 
 }
