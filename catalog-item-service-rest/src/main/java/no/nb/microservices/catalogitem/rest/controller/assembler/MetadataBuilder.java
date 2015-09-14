@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
@@ -38,6 +39,7 @@ public final class MetadataBuilder {
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
+        metadata.setNotes(getNotes());
         
         return metadata;
     }
@@ -70,6 +72,15 @@ public final class MetadataBuilder {
     private String getGenre() {
         if (mods != null) {
             return mods.getGenre();
+        }
+        else {
+            return null;
+        }
+    }
+
+    private List<String> getNotes() {
+        if (mods != null) {
+            return mods.getNotes().stream().map(q -> q.getValue()).collect(Collectors.toList());
         }
         else {
             return null;

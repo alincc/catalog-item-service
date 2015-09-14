@@ -17,6 +17,7 @@ public class Metadata {
     private OriginInfo originInfo;
     private RecordInfo recordInfo;
     private Classification classification;
+    private List<String> notes;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -104,5 +105,13 @@ public class Metadata {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public List<String> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<String> notes) {
+        this.notes = notes;
     }
 }
