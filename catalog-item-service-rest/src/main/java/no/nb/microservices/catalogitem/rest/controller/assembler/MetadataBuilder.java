@@ -9,6 +9,7 @@ import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 
 public final class MetadataBuilder {
 
@@ -42,6 +43,7 @@ public final class MetadataBuilder {
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
         metadata.setNotes(getNotes());
+        metadata.setStatementOfResponsibility(getStatementOfResponsibility());
         
         return metadata;
     }
@@ -80,10 +82,20 @@ public final class MetadataBuilder {
         }
     }
 
-    private List<String> getNotes() {
+    private List<String> getStatementOfResponsibility() {
         if (mods != null && mods.getNotes() != null) {
-            return mods.getNotes().stream().map(q -> q.getValue()).collect(Collectors.toList());
+            return mods.getNotes().stream().filter(q -> (q.getType() != null && q.getType().equalsIgnoreCase("statement of responsibility"))).map(q -> q.getValue()).collect(Collectors.toList());
+            }
+        else {
+            return null;
         }
+            
+    }
+
+    private List<String> getNotes() {
+        if (mods != null && mods.getNotes() != null && mods.getNotes().get(0).getType() == null) {
+            return mods.getNotes().stream().filter(q -> q.getType() == null).map(q -> q.getValue()).collect(Collectors.toList());
+            }
         else {
             return null;
         }

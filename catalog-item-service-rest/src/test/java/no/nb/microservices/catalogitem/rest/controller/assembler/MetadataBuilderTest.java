@@ -22,7 +22,11 @@ public class MetadataBuilderTest {
         createTitleInfo(mods);
         mods.setOriginInfo(createPlace());
         mods.setAbstracts(createtSummary());
-        mods.setNotes(createNotes());
+
+        List<Note> notes = createNotes();
+        notes.addAll(createNotesStatement());
+
+        mods.setNotes(notes);
         mods.setTypeOfResource("still image");
         mods.setGenre("drama");
         mods.setGenre("drama");
@@ -43,12 +47,24 @@ public class MetadataBuilderTest {
         assertEquals("drama", metadata.getGenre());
         assertEquals(1, metadata.getNotes().size());
         assertNotNull("Should have subject", metadata.getSubject());
+        assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
     }
 
     private List<Note> createNotes() {
         Note note1 = new Note();
         note1.setValue("Tittelinformasjon er hentet fra tilhørende dokumentasjonsmateriale. Widerøe Flyfoto A/S solgte i 1983 disse fotografiene til Kviteseid kommune.");
-        return Arrays.asList(note1);
+        List<Note> notes = new ArrayList<>();
+        notes.add(note1);
+       return notes;
+    }
+
+    private List<Note> createNotesStatement() {
+        Note note1 = new Note();
+        note1.setValue("Tittelinformasjon er hentet fra tilhørende dokumentasjonsmateriale. Widerøe Flyfoto A/S solgte i 1983 disse fotografiene til Kviteseid kommune.");
+        note1.setType("statement of responsibility");
+        List<Note> notes = new ArrayList<>();
+        notes.add(note1);
+        return notes;
     }
 
     private List<String> createMediaTypes() {

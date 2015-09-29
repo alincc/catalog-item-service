@@ -21,6 +21,7 @@ public class Metadata {
     private Classification classification;
     private List<String> notes;
     private Subject subject;
+    private List<String> statementOfResponsibility;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -141,4 +142,14 @@ public class Metadata {
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
+
+    public List<String> getStatementOfResponsibility() {
+        return statementOfResponsibility;
+    }
+
+    public void setStatementOfResponsibility(List<String> statementOfResponsibility) {
+        this.statementOfResponsibility = statementOfResponsibility;
+    }
+
+   
 }
