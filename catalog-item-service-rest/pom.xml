@@ -33,7 +33,7 @@
         <dependency>
             <groupId>no.nb.microservices</groupId>
             <artifactId>catalog-metadata-model</artifactId>
-            <version>0.0.1-93</version>
+            <version>0.0.1-109</version>
         </dependency>
 
         <dependency>
