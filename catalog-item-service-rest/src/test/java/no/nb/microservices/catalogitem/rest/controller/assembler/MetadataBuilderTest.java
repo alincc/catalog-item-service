@@ -29,8 +29,8 @@ public class MetadataBuilderTest {
         mods.setNotes(notes);
         mods.setTypeOfResource("still image");
         mods.setGenre("drama");
-        mods.setGenre("drama");
         mods.setSubjects(createSubjects());
+        mods.setLanguages(createLanguages());
         FieldResource fields = new FieldResource();
         fields.setMediaTypes(createMediaTypes());
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
@@ -48,6 +48,7 @@ public class MetadataBuilderTest {
         assertEquals(1, metadata.getNotes().size());
         assertNotNull("Should have subject", metadata.getSubject());
         assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
+        assertNotNull("Should have language", metadata.getLanguage());
     }
 
     private List<Note> createNotes() {
@@ -65,6 +66,18 @@ public class MetadataBuilderTest {
         List<Note> notes = new ArrayList<>();
         notes.add(note1);
         return notes;
+    }
+
+    private List<Language> createLanguages() {
+        Language language = new Language();
+        language.setLanguageTerms(createLanguageTerm());
+        return Arrays.asList(language);
+    }
+
+    private List<LanguageTerm> createLanguageTerm() {
+        LanguageTerm languageTerm = new LanguageTerm();
+        languageTerm.setValue("eng");
+        return Arrays.asList(languageTerm);
     }
 
     private List<String> createMediaTypes() {

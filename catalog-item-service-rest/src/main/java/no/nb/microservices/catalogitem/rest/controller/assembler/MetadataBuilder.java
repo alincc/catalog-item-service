@@ -9,7 +9,6 @@ import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 
 public final class MetadataBuilder {
 
@@ -44,7 +43,8 @@ public final class MetadataBuilder {
         metadata.setGenre(getGenre());
         metadata.setNotes(getNotes());
         metadata.setStatementOfResponsibility(getStatementOfResponsibility());
-        
+        metadata.setLanguage(new LanguageBuilder(mods).build());
+
         return metadata;
     }
     
@@ -109,4 +109,5 @@ public final class MetadataBuilder {
             return null;
         }
     }
+
 }
