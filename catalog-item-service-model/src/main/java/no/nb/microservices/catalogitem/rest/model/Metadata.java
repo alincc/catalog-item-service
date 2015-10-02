@@ -21,6 +21,7 @@ public class Metadata {
     private OriginInfo originInfo;
     private RecordInfo recordInfo;
     private Classification classification;
+    private Identifiers identifiers;
     private List<String> notes;
     private Subject subject;
     private List<String> statementOfResponsibility;
@@ -96,6 +97,14 @@ public class Metadata {
 
     public void setClassification(Classification classification) {
         this.classification = classification;
+    }
+
+    public Identifiers getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Identifiers identifiers) {
+        this.identifiers = identifiers;
     }
 
     public RecordInfo getRecordInfo() {
