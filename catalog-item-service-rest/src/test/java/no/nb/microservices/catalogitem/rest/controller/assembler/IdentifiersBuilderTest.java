@@ -30,4 +30,17 @@ public class IdentifiersBuilderTest {
 
         assertTrue("urn list should be empty not null", identifiers.getUrns().isEmpty());
     }
+
+    @Test
+    public void sesamIdTest() {
+        FieldResource field = new FieldResource();
+        field.setSesamId("7e8cb1ea2f5d198e6f1b51e3e835c203");
+        IdentifiersBuilder builder = new IdentifiersBuilder(field);
+
+        Identifiers identifiers = builder.build();
+
+        assertTrue("sesamId should not be empty", !identifiers.getSesamId().isEmpty());
+        assertEquals("7e8cb1ea2f5d198e6f1b51e3e835c203", identifiers.getSesamId());
+    }
+
 }

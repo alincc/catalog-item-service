@@ -14,6 +14,7 @@ public class IdentifiersBuilder {
     public Identifiers build() {
         Identifiers identifiers = new Identifiers();
         identifiers.setUrns(field.getUrns());
+        identifiers.setSesamId(field.getSesamId());
 
         return identifiers;
     }
