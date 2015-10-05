@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
@@ -9,6 +10,7 @@ import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 
 public final class MetadataBuilder {
 
@@ -42,8 +44,8 @@ public final class MetadataBuilder {
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
-        metadata.setNotes(getNotes());
-        metadata.setStatementOfResponsibility(getStatementOfResponsibility());
+        metadata.setNotes(getNotes(getNotesPredicate()));
+        metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
         metadata.setLanguage(new LanguageBuilder(mods).build());
 
         return metadata;
@@ -56,6 +58,14 @@ public final class MetadataBuilder {
         return null;
     }
 
+    private List<String> getMediaTypes() {
+        if (field != null) {
+            return field.getMediaTypes();
+        } else {
+            return null;
+        }
+    }
+    
     private String getSummary() {
         if (mods != null) {
             List<Abstract> abstracts = mods.getAbstracts();
@@ -68,8 +78,7 @@ public final class MetadataBuilder {
     private String getTypeOfResource() {
         if (mods != null) {
             return mods.getTypeOfResource();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -77,38 +86,28 @@ public final class MetadataBuilder {
     private String getGenre() {
         if (mods != null) {
             return mods.getGenre();
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    private List<String> getStatementOfResponsibility() {
+    private List<String> getNotes(Predicate<? super Note> predicate) {
         if (mods != null && mods.getNotes() != null) {
-            return mods.getNotes().stream().filter(q -> (q.getType() != null && q.getType().equalsIgnoreCase("statement of responsibility"))).map(q -> q.getValue()).collect(Collectors.toList());
-            }
-        else {
-            return null;
-        }
-            
-    }
-
-    private List<String> getNotes() {
-        if (mods != null && mods.getNotes() != null && mods.getNotes().get(0).getType() == null) {
-            return mods.getNotes().stream().filter(q -> q.getType() == null).map(q -> q.getValue()).collect(Collectors.toList());
-            }
-        else {
+            return mods.getNotes()
+                    .stream().filter(predicate)
+                    .map(q -> q.getValue())
+                    .collect(Collectors.toList());
+        } else {
             return null;
         }
     }
 
-    private List<String> getMediaTypes() {
-        if (field != null) {
-            return field.getMediaTypes();
-        }
-        else {
-            return null;
-        }
+    private Predicate<? super Note> getNotesPredicate() {
+        return q -> q.getType() == null;
+    }
+    
+    private Predicate<? super Note> getStatementOfResponsibilityPredicate() {
+        return q -> "statement of responsibility".equalsIgnoreCase(q.getType());
     }
 
 }
