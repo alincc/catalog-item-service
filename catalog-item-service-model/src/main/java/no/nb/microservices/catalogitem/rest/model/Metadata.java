@@ -25,7 +25,7 @@ public class Metadata {
     private List<String> notes;
     private Subject subject;
     private List<String> statementOfResponsibility;
-    private Language language;
+    private List<String> languages;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -162,8 +162,13 @@ public class Metadata {
     public void setStatementOfResponsibility(List<String> statementOfResponsibility) {
         this.statementOfResponsibility = statementOfResponsibility; }
 
-    public Language getLanguage() { return language; }
+    public List<String> getLanguages() {
+        return languages;
+    }
 
-    public void setLanguage(Language language) { this.language = language; }
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+
 
 }

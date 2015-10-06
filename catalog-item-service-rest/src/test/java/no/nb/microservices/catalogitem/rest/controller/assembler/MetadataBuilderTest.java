@@ -30,7 +30,7 @@ public class MetadataBuilderTest {
         mods.setTypeOfResource("still image");
         mods.setGenre("drama");
         mods.setSubjects(createSubjects());
-        mods.setLanguages(createLanguages());
+        mods.setLanguages(createLanguages("nob", "eng"));
         FieldResource fields = new FieldResource();
         fields.setMediaTypes(createMediaTypes());
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
@@ -48,7 +48,7 @@ public class MetadataBuilderTest {
         assertEquals(1, metadata.getNotes().size());
         assertNotNull("Should have subject", metadata.getSubject());
         assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
-        assertNotNull("Should have language", metadata.getLanguage());
+        assertTrue("Should have language", metadata.getLanguages().equals(Arrays.asList("nob", "eng")));
     }
 
     private List<Note> createNotes() {
@@ -68,16 +68,18 @@ public class MetadataBuilderTest {
         return notes;
     }
 
-    private List<Language> createLanguages() {
-        Language language = new Language();
-        language.setLanguageTerms(createLanguageTerm());
-        return Arrays.asList(language);
-    }
-
-    private List<LanguageTerm> createLanguageTerm() {
-        LanguageTerm languageTerm = new LanguageTerm();
-        languageTerm.setValue("eng");
-        return Arrays.asList(languageTerm);
+    private List<Language> createLanguages(String... codes) {
+        List<Language> languages = new ArrayList<>(); 
+        for(String code : codes) {
+            Language language = new Language();
+            LanguageTerm languageTerm = new LanguageTerm();
+            languageTerm.setType("code");
+            languageTerm.setValue(code);
+            languageTerm.setAuthority("iso639-2b");
+            language.setLanguageTerms(Arrays.asList(languageTerm));
+            languages.add(language);
+        }
+        return languages;
     }
 
     private List<String> createMediaTypes() {
