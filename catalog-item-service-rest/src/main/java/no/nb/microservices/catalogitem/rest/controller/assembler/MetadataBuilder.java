@@ -46,7 +46,7 @@ public final class MetadataBuilder {
         metadata.setGenre(getGenre());
         metadata.setNotes(getNotes(getNotesPredicate()));
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
-        metadata.setLanguage(new LanguageBuilder(mods).build());
+        metadata.setLanguages(new LanguageBuilder(mods).build());
 
         return metadata;
     }
