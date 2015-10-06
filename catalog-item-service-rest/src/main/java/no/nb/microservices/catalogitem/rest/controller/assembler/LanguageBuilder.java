@@ -27,7 +27,9 @@ public class LanguageBuilder {
                 }
                 codes.addAll(language.getLanguageTerm()
                         .stream()
-                        .filter(q -> "code".equalsIgnoreCase(q.getType()) && "iso639-2b".equals(q.getAuthority()))
+                        .filter(q -> language.getObjectPart() == null 
+                            && "code".equalsIgnoreCase(q.getType()) 
+                            && "iso639-2b".equals(q.getAuthority()))
                         .map(q -> q.getValue())
                         .collect(Collectors.toList()));
             }
