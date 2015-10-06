@@ -21,10 +21,10 @@ public class LanguageBuilder {
     public List<String> build() {
         List<String> codes = null;
         for (Language language : languages) {
-            if (codes == null) {
-                codes = new ArrayList<>();
-            }
             if (language.getLanguageTerm() != null) {
+                if (codes == null) {
+                    codes = new ArrayList<>();
+                }
                 codes.addAll(language.getLanguageTerm()
                         .stream()
                         .filter(q -> "code".equalsIgnoreCase(q.getType()) && "iso639-2b".equals(q.getAuthority()))
