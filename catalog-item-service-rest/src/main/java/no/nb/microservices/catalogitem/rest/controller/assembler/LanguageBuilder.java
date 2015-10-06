@@ -24,11 +24,13 @@ public class LanguageBuilder {
             if (codes == null) {
                 codes = new ArrayList<>();
             }
-            codes.addAll(language.getLanguageTerm()
-                    .stream()
-                    .filter(q -> "code".equalsIgnoreCase(q.getType()) && "iso639-2b".equals(q.getAuthority()))
-                    .map(q -> q.getValue())
-                    .collect(Collectors.toList()));
+            if (language.getLanguageTerm() != null) {
+                codes.addAll(language.getLanguageTerm()
+                        .stream()
+                        .filter(q -> "code".equalsIgnoreCase(q.getType()) && "iso639-2b".equals(q.getAuthority()))
+                        .map(q -> q.getValue())
+                        .collect(Collectors.toList()));
+            }
         }        
 
         return codes;
