@@ -43,4 +43,16 @@ public class IdentifiersBuilderTest {
         assertEquals("7e8cb1ea2f5d198e6f1b51e3e835c203", identifiers.getSesamId());
     }
 
+    @Test
+    public void oaiIdTest() {
+        FieldResource field = new FieldResource();
+        field.setOaiId("oai:bibsys.no:biblio:112327400");
+        IdentifiersBuilder builder = new IdentifiersBuilder(field);
+
+        Identifiers identifiers = builder.build();
+
+        assertTrue("oaiId should not be empty", !identifiers.getOaiId().isEmpty());
+        assertEquals("oai:bibsys.no:biblio:112327400", identifiers.getOaiId());
+    }
+
 }
