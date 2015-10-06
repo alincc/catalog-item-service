@@ -1,13 +1,18 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.Identifiers;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import org.junit.Test;
-
-import java.util.Arrays;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
+import no.nb.microservices.catalogitem.rest.model.Identifiers;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class IdentifiersBuilderTest {
 
@@ -37,17 +42,25 @@ public class IdentifiersBuilderTest {
 
     @Test
     public void sesamIdTest() {
-        FieldResource field = new FieldResource();
-        field.setSesamId("7e8cb1ea2f5d198e6f1b51e3e835c203");
-
-        
+        Mods mods = createDefaultMods();
         
         Identifiers identifiers = new IdentifiersBuilder()
-                .withField(field)
+                .withMods(mods)
                 .build();
 
         assertTrue("sesamId should not be empty", !identifiers.getSesamId().isEmpty());
         assertEquals("7e8cb1ea2f5d198e6f1b51e3e835c203", identifiers.getSesamId());
+    }
+
+    private Mods createDefaultMods() {
+        Mods mods = new Mods();
+        List<Identifier> identifiers = new ArrayList<>();
+        Identifier identifier = new Identifier();
+        identifier.setType("sesamid");
+        identifier.setValue("7e8cb1ea2f5d198e6f1b51e3e835c203");
+        identifiers.add(identifier);
+        mods.setIdentifiers(identifiers);
+        return mods;
     }
 
 }

@@ -1,5 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import java.util.List;
+
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
@@ -22,11 +24,18 @@ public class IdentifiersBuilder {
 
     public Identifiers build() {
         Identifiers identifiers = new Identifiers();
-        identifiers.setUrns(field.getUrns());
+        identifiers.setUrns(getUrns());
         String sesamid = getSesamid();
         identifiers.setSesamId(sesamid);
 
         return identifiers;
+    }
+
+    private List<String> getUrns() {
+        if (field != null) {
+            return field.getUrns();
+        }
+        return null;
     }
 
     private String getSesamid() {
