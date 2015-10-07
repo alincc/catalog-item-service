@@ -26,8 +26,13 @@ eureka:
 zipkin:
     collector-hostname: localhost
 
+---
+spring:
+    profiles: dev
+
 ni:
-  servers: localhost:7654
+  servers: 
+    - localhost:7654
 
 ---
 spring:
@@ -44,7 +49,8 @@ eureka:
       defaultZone: http://discovery:8761/eureka/    
 
 ni:
-  servers: niserver:7654
+  servers:
+    - niserver:7654
   
 zipkin:
     collector-hostname: zipkinCollector
