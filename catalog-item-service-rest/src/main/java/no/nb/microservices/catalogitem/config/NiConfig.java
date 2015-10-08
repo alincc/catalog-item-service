@@ -7,11 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-/**
- * 
- * @author ronnymikalsen
- *
- */
 @Configuration
 @Profile({"docker", "dev"})
 public class NiConfig {
