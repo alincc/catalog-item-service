@@ -41,9 +41,9 @@ public class IdentifiersBuilderTest {
     }
 
     @Test
-    public void sesamIdTest() {
+    public void getSesamIdTest() {
         Mods mods = createDefaultMods();
-        
+
         Identifiers identifiers = new IdentifiersBuilder()
                 .withMods(mods)
                 .build();
@@ -52,6 +52,19 @@ public class IdentifiersBuilderTest {
         assertEquals("7e8cb1ea2f5d198e6f1b51e3e835c203", identifiers.getSesamId());
     }
 
+    @Test
+    public void getOaiIdTest() {
+        Mods mods = createDefaultMods();
+
+        Identifiers identifiers = new IdentifiersBuilder()
+                .withMods(mods)
+                .build();
+
+        assertTrue("oaiId should not be empty", !identifiers.getOaiId().isEmpty());
+        assertEquals("oai:mavis.nb.no:1512271", identifiers.getOaiId());
+    }
+
+
     private Mods createDefaultMods() {
         Mods mods = new Mods();
         List<Identifier> identifiers = new ArrayList<>();
@@ -59,6 +72,10 @@ public class IdentifiersBuilderTest {
         identifier.setType("sesamid");
         identifier.setValue("7e8cb1ea2f5d198e6f1b51e3e835c203");
         identifiers.add(identifier);
+        Identifier identifier2 = new Identifier();
+        identifier2.setType("oaiid");
+        identifier2.setValue("oai:mavis.nb.no:1512271");
+        identifiers.add(identifier2);
         mods.setIdentifiers(identifiers);
         return mods;
     }

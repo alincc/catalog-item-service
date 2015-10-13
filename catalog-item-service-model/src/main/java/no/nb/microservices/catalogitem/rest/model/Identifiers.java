@@ -13,6 +13,7 @@ public class Identifiers {
     private List<String> isbn13 = new ArrayList<>();
     private List<String> issn = new ArrayList<>();
     private String sesamId;
+    private String oaiId;
 
     public List<String> getUrns() {
         return urns;
@@ -48,5 +49,13 @@ public class Identifiers {
 
     public void setIssn(List<String> issn) {
         this.issn = issn;
+    }
+
+    public String getOaiId() {
+        return oaiId;
+    }
+
+    public void setOaiId(String oaiid) {
+        this.oaiId = oaiid;
     }
 }

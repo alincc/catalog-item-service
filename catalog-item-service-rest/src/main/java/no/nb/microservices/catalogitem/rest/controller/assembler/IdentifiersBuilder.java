@@ -25,9 +25,10 @@ public class IdentifiersBuilder {
     public Identifiers build() {
         Identifiers identifiers = new Identifiers();
         identifiers.setUrns(getUrns());
-        String sesamid = getSesamid();
+        String sesamid = getIdentifierByType("sesamid");
         identifiers.setSesamId(sesamid);
-
+        String oaiid = getIdentifierByType("oaiid");
+        identifiers.setOaiId(oaiid);
         return identifiers;
     }
 
@@ -38,15 +39,16 @@ public class IdentifiersBuilder {
         return null;
     }
 
-    private String getSesamid() {
-        String sesamid = null;
+    private String getIdentifierByType(String type) {
+        String idByType = null;
         if (mods != null && mods.getIdentifiers() != null) {
             for(Identifier identifier : mods.getIdentifiers()) {
-                if ("sesamid".equalsIgnoreCase(identifier.getType())) {
-                    sesamid = identifier.getValue();
+                if (type.equalsIgnoreCase(identifier.getType())) {
+                    idByType = identifier.getValue();
                 }
             }
         }
-        return sesamid;
+        return idByType;
     }
+
 }
