@@ -5,6 +5,7 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class NoStreamableStrategy implements StreamingInfoStrategy {
 
+    @Override
     public StreamingInfo getStreamingInfo(Mods mods) {
         return null;
     }

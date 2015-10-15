@@ -23,9 +23,13 @@ public class Identifiers {
         this.urns = urns;
     }
 
-    public String getSesamId() { return sesamId; }
+    public String getSesamId() {
+        return sesamId; 
+    }
 
-    public void setSesamId(String sesamId) { this.sesamId = sesamId; }
+    public void setSesamId(String sesamId) {
+        this.sesamId = sesamId;
+    }
 
     public List<String> getIsbn10() {
         return isbn10;

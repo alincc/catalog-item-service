@@ -59,7 +59,7 @@ public final class MetadataBuilder {
 
     private String getFirstMediatype() {
         List<String> mediaTypes = getMediaTypes();
-        if (mediaTypes != null && mediaTypes.size() > 0) {
+        if (mediaTypes != null && !mediaTypes.isEmpty()) {
             return mediaTypes.get(0);
         } else {
             return null;

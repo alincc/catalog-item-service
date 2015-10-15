@@ -1,7 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import no.nb.microservices.catalogitem.rest.model.StreamingInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Extent;

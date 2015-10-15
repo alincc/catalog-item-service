@@ -1,6 +1,10 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 public class StreamingInfoFactory {
+    
+    private StreamingInfoFactory() {
+        super();
+    }
 
     public static StreamingInfoStrategy getStreamingInfoStrategy(String mediatype) {
         if ("musikk".equalsIgnoreCase(mediatype) ||

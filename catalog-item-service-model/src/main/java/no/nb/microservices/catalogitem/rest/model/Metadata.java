@@ -161,7 +161,8 @@ public class Metadata {
     }
 
     public void setStatementOfResponsibility(List<String> statementOfResponsibility) {
-        this.statementOfResponsibility = statementOfResponsibility; }
+        this.statementOfResponsibility = statementOfResponsibility; 
+    }
 
     public List<String> getLanguages() {
         return languages;
