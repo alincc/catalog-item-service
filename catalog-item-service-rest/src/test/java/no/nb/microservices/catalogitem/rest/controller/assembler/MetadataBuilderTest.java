@@ -1,17 +1,30 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Language;
+import no.nb.microservices.catalogmetadata.model.mods.v3.LanguageTerm;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class MetadataBuilderTest {
 
@@ -49,6 +62,35 @@ public class MetadataBuilderTest {
         assertNotNull("Should have subject", metadata.getSubject());
         assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
         assertTrue("Should have language", metadata.getLanguages().equals(Arrays.asList("nob", "eng")));
+
+    }
+    
+    @Test
+    public void testStreamingInfo() {
+        Mods mods = TestMods.aDefaultRadioProgramMods().build();
+        FieldResource fields = TestFields.aDefaultReadioFields().build();
+        Item item = new Item.ItemBuilder("id1")
+                .mods(mods)
+                .fields(fields)
+                .build();
+        
+        Metadata metadata = new MetadataBuilder(item).build();
+        
+        assertNotNull("Should have a streamingInfo", metadata.getStreamingInfo());
+    }
+
+    @Test
+    public void testMediatypeWithoutStreamingInfo() {
+        Mods mods = TestMods.aDefaultBookMods().build();
+        FieldResource fields = TestFields.aDefaultBookFields().build();
+        Item item = new Item.ItemBuilder("id1")
+                .mods(mods)
+                .fields(fields)
+                .build();
+        
+        Metadata metadata = new MetadataBuilder(item).build();
+        
+        assertNull("Should not have a streamingInfo", metadata.getStreamingInfo());
     }
 
     private List<Note> createNotes() {

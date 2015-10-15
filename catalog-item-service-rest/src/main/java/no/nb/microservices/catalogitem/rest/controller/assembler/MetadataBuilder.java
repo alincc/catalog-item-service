@@ -50,8 +50,20 @@ public final class MetadataBuilder {
         metadata.setNotes(getNotes(getNotesPredicate()));
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
         metadata.setLanguages(new LanguageBuilder(mods).build());
+        
+        StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());
+        metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
 
         return metadata;
+    }
+
+    private String getFirstMediatype() {
+        List<String> mediaTypes = getMediaTypes();
+        if (mediaTypes != null && mediaTypes.size() > 0) {
+            return mediaTypes.get(0);
+        } else {
+            return null;
+        }
     }
     
     private String getTitle() {

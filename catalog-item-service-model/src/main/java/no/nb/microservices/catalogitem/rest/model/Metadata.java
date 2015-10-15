@@ -26,6 +26,7 @@ public class Metadata {
     private Subject subject;
     private List<String> statementOfResponsibility;
     private List<String> languages;
+    private StreamingInfo streamingInfo;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -168,6 +169,14 @@ public class Metadata {
 
     public void setLanguages(List<String> languages) {
         this.languages = languages;
+    }
+
+    public StreamingInfo getStreamingInfo() {
+        return streamingInfo;
+    }
+
+    public void setStreamingInfo(StreamingInfo streamingInfo) {
+        this.streamingInfo = streamingInfo;
     }
 
 
