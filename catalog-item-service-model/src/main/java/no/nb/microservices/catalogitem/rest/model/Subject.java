@@ -1,13 +1,12 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-/**
- * Created by andreasb on 14.09.15.
- */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Subject {
     private List<String> topics;
 
