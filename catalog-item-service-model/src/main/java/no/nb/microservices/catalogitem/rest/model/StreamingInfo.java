@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -14,8 +15,13 @@ public class StreamingInfo {
     private Integer offset;
     private Integer extent;
 
-    public StreamingInfo(String identifier, Integer offset, Integer extent) {
+    @JsonCreator
+    public StreamingInfo() {
         super();
+    }
+    
+    public StreamingInfo(String identifier, Integer offset, Integer extent) {
+        this();
         this.identifier = identifier;
         this.offset = offset;
         this.extent = extent;
