@@ -1,21 +1,24 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.Geographic;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import no.nb.microservices.catalogitem.rest.model.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
+import no.nb.microservices.catalogmetadata.test.mods.v3.DateModsBuilder;
+import no.nb.microservices.catalogmetadata.test.mods.v3.ModsBuilder;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class OriginInfoBuilderTest {
 
     @Test
     public void whenOriginInfoIsValidTest() {
-        OriginInfo originInfo = new OriginInfo();
+        no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo = new no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo();
         originInfo.setPublisher("Publisher");
         originInfo.setIssuance("Issuance");
         originInfo.setFrequency("Frequency");
@@ -37,8 +40,7 @@ public class OriginInfoBuilderTest {
         Mods mods = new Mods();
         mods.setOriginInfo(originInfo);
 
-        OriginInfoBuilder builder = new OriginInfoBuilder().mods(mods);
-        no.nb.microservices.catalogitem.rest.model.OriginInfo build = builder.build();
+        OriginInfo build = new OriginInfoBuilder().mods(mods).build();
 
         assertEquals("1969-04-01", build.getCaptured());
         assertEquals("1969-04-01", build.getCreated());
@@ -48,4 +50,74 @@ public class OriginInfoBuilderTest {
         assertEquals("1969-04-01", build.getIssued());
         assertEquals("Publisher", build.getPublisher());
     }
+    
+    @Test
+    public void testW3cdtfFormat() {
+        DateMods noEncoding = new DateModsBuilder()
+                .withValue("2008")
+                .build();
+        DateMods w3cdtf = new DateModsBuilder()
+                .withEncoding("w3cdtf")
+                .withValue("2009")
+                .build();
+        DateMods marc = new DateModsBuilder()
+                .withEncoding("marc")
+                .withValue("2010")
+                .build();
+        Mods mods = new ModsBuilder()
+                .withOriginInfo(new no.nb.microservices.catalogmetadata.test.mods.v3.OriginInfoBuilder()
+                        .withDateIssued(noEncoding, w3cdtf, marc)
+                        .build())
+                .build();
+        
+        OriginInfo originInfo = new OriginInfoBuilder()
+                .mods(mods)
+                .build();        
+        
+        assertEquals("2009", originInfo.getIssued());
+    }
+    
+    @Test
+    public void testMarchFormat() {
+        DateMods noEncoding = new DateModsBuilder()
+                .withValue("2008")
+                .build();
+        DateMods marc = new DateModsBuilder()
+                .withEncoding("marc")
+                .withValue("2009")
+                .build();
+        DateMods w3cdtf = new DateModsBuilder()
+                .withValue("2010")
+                .build();
+        Mods mods = new ModsBuilder()
+                .withOriginInfo(new no.nb.microservices.catalogmetadata.test.mods.v3.OriginInfoBuilder()
+                        .withDateIssued(noEncoding, w3cdtf, marc)
+                        .build())
+                .build();
+        
+        OriginInfo originInfo = new OriginInfoBuilder()
+                .mods(mods)
+                .build();        
+        
+        assertEquals("2009", originInfo.getIssued());
+    }
+
+    @Test
+    public void testNoEncodingFormat() {
+        DateMods noEncoding = new DateModsBuilder()
+                .withValue("2009")
+                .build();
+        Mods mods = new ModsBuilder()
+                .withOriginInfo(new no.nb.microservices.catalogmetadata.test.mods.v3.OriginInfoBuilder()
+                        .withDateIssued(noEncoding)
+                        .build())
+                .build();
+        
+        OriginInfo originInfo = new OriginInfoBuilder()
+                .mods(mods)
+                .build();        
+        
+        assertEquals("2009", originInfo.getIssued());
+    }
+    
 }
