@@ -25,6 +25,9 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         resource.add(createSelfLink(item));
         resource.add(createModsLink(item));
         resource.add(createPresentationLink(item));
+        resource.add(createEnwLink(item));
+        resource.add(createRisLink(item));
+        resource.add(createWikiLink(item));
     }
 
     private Link createSelfLink(Item item) {
@@ -38,5 +41,16 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     private Link createPresentationLink(Item item) {
         return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, item.getId()).withRel("presentation");
     }
+
+    private Link createEnwLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.ENW, item.getId()).withRel("enw");
+    }
     
+    private Link createRisLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.RIS, item.getId()).withRel("ris");
+    }
+
+    private Link createWikiLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.WIKI, item.getId()).withRel("wiki");
+    }
 }
