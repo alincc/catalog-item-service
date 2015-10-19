@@ -1,16 +1,14 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.validator.routines.DateValidator;
 
 import no.nb.microservices.catalogitem.rest.model.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class OriginInfoBuilder {
 
@@ -94,24 +92,32 @@ public class OriginInfoBuilder {
             Optional<DateMods> date = dateIssueds.stream()
                 .filter(predicate)
                 .findFirst();
-            if (date.isPresent()) {
+            if (date.isPresent() ) {
                 dateIssued = date.get().getValue();
             }
         }
-        return dateIssued;
+        
+        if (isValidDate(dateIssued)) {
+            return dateIssued;
+        } else {
+            return null;
+        }
     }
     
     private String getNotEncodedDateValue() {
-         String date = getEncodedDateValue(d -> d != null && d.getPoint() == null);
-         if (date != null) {
+         return getEncodedDateValue(d -> d != null && d.getPoint() == null);
+    }
+
+    private boolean isValidDate(String date) {
+        if (date != null) {
              DateValidator validator = DateValidator.getInstance();
              if(validator.isValid(date,"yyyy")
                      || validator.isValid(date,"yyyy-MM")
                      || validator.isValid(date,"yyyy-MM-dd")) {
-                 return date;
+                 return true;
              }
          }
-         return null;
+        return false;
     }
 
     private String getDateModified() {

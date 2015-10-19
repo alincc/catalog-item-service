@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -77,7 +78,7 @@ public final class MetadataBuilder {
         if (field != null) {
             return field.getMediaTypes();
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
     
@@ -113,7 +114,7 @@ public final class MetadataBuilder {
                     .map(q -> q.getValue())
                     .collect(Collectors.toList());
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 

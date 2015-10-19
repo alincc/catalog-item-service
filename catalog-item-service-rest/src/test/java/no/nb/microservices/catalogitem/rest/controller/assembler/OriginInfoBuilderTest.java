@@ -103,6 +103,29 @@ public class OriginInfoBuilderTest {
     }
 
     @Test
+    public void testIllegalEncodingFormat() {
+        DateMods noEncoding = new DateModsBuilder()
+                .withValue("2008")
+                .build();
+        DateMods marc = new DateModsBuilder()
+                .withEncoding("marc")
+                .withValue("uuuu")
+                .build();
+
+        Mods mods = new ModsBuilder()
+                .withOriginInfo(new no.nb.microservices.catalogmetadata.test.mods.v3.OriginInfoBuilder()
+                        .withDateIssued(noEncoding, marc)
+                        .build())
+                .build();
+        
+        OriginInfo originInfo = new OriginInfoBuilder()
+                .mods(mods)
+                .build();        
+        
+        assertEquals("2008", originInfo.getIssued());
+    }
+
+    @Test
     public void testNoEncodingFormat() {
         DateMods noEncoding = new DateModsBuilder()
                 .withValue("2009")
