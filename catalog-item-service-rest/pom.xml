@@ -21,7 +21,7 @@
         <java.version>1.8</java.version>
         <docker.image.prefix>nb</docker.image.prefix>
         <ni.version>3.27</ni.version>
-        <catalog-metadata-service.version>0.0.1-119</catalog-metadata-service.version>
+        <catalog-metadata-service.version>0.0.1-121</catalog-metadata-service.version>
     </properties>
 
     <dependencies>
