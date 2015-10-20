@@ -1,8 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
