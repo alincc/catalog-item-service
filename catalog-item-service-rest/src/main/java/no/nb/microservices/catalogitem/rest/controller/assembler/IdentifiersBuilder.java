@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
@@ -90,7 +91,7 @@ public class IdentifiersBuilder {
         if (field != null) {
             return field.getUrns();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private String getIdentifierByType(String type) {

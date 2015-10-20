@@ -63,6 +63,30 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
+    public void testEnwRefererLink() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a enw-referential link element", "enw", itemResource.getLink("enw").getRel());
+    }
+
+    @Test
+    public void testRisRefererLink() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a ris-referential link element", "ris", itemResource.getLink("ris").getRel());
+    }
+
+    @Test
+    public void testWikiRefererLink() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a wiki-referential link element", "wiki", itemResource.getLink("wiki").getRel());
+    }
+
+    @Test
     public void testMetadata() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Mods mods = new Mods();

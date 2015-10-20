@@ -27,6 +27,7 @@ public class Metadata {
     private List<String> statementOfResponsibility;
     private List<String> languages;
     private StreamingInfo streamingInfo;
+    private RelatedItem relatedItems;
 
     public String getCompositeTitle() {
         return compositeTitle;
@@ -180,5 +181,11 @@ public class Metadata {
         this.streamingInfo = streamingInfo;
     }
 
+    public RelatedItem getRelatedItems() {
+        return relatedItems;
+    }
 
+    public void setRelatedItems(RelatedItem relatedItems) {
+        this.relatedItems = relatedItems;
+    }
 }

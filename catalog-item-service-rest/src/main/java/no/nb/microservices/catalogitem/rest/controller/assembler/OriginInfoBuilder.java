@@ -1,8 +1,14 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import org.apache.commons.validator.routines.DateValidator;
+
+import no.nb.microservices.catalogitem.rest.model.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogitem.rest.model.OriginInfo;
 
 public class OriginInfoBuilder {
 
@@ -68,16 +74,52 @@ public class OriginInfoBuilder {
         return null;
     }
     private String getDateIssued() {
-        if (originInfo.getDateIssuedList() != null && !originInfo.getDateIssuedList().isEmpty()) {
-            for (DateMods dateMods : originInfo.getDateIssuedList()) {
-                if (dateMods.getEncoding() == null && dateMods.getPoint() == null) {
-                    return dateMods.getValue();
-                }
+        String dateIssued = null;
+        dateIssued = getEncodedDateValue(d -> "w3cdtf".equals(d.getEncoding()));
+        if (dateIssued == null) {
+            dateIssued = getEncodedDateValue(d -> "marc".equals(d.getEncoding()));
+        }
+        if (dateIssued == null) {
+            dateIssued = getNotEncodedDateValue();
+        }
+        return dateIssued;
+    }
+
+    private String getEncodedDateValue(Predicate<? super DateMods> predicate) {
+        String dateIssued = null;
+        List<DateMods> dateIssueds = originInfo.getDateIssuedList();
+        if (dateIssueds != null) {
+            Optional<DateMods> date = dateIssueds.stream()
+                .filter(predicate)
+                .findFirst();
+            if (date.isPresent() ) {
+                dateIssued = date.get().getValue();
             }
         }
-        return null;
+        
+        if (isValidDate(dateIssued)) {
+            return dateIssued;
+        } else {
+            return null;
+        }
     }
     
+    private String getNotEncodedDateValue() {
+         return getEncodedDateValue(d -> d != null && d.getPoint() == null);
+    }
+
+    private boolean isValidDate(String date) {
+        if (date != null) {
+             DateValidator validator = DateValidator.getInstance();
+             if(validator.isValid(date,"yyyy")
+                     || validator.isValid(date,"yyyy-MM")
+                     || validator.isValid(date,"yyyy-MM-dd")) {
+                 return true;
+             }
+         }
+        return false;
+    }
+
     private String getDateModified() {
         if (originInfo.getDateModified() != null) {
             return originInfo.getDateModified().getValue();
