@@ -8,40 +8,40 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RelatedItem {
-    private List<Metadata> hosts;
-    private List<Metadata> constituents;
-    private Metadata preceding;
-    private Metadata succeding;
+    private List<ItemResource> hosts;
+    private List<ItemResource> constituents;
+    private ItemResource preceding;
+    private ItemResource succeding;
 
-    public List<Metadata> getHosts() {
+    public List<ItemResource> getHosts() {
         return hosts;
     }
 
-    public void setHosts(List<Metadata> hosts) {
+    public void setHosts(List<ItemResource> hosts) {
         this.hosts = hosts;
     }
 
-    public List<Metadata> getConstituents() {
+    public List<ItemResource> getConstituents() {
         return constituents;
     }
 
-    public void setConstituents(List<Metadata> constituents) {
+    public void setConstituents(List<ItemResource> constituents) {
         this.constituents = constituents;
     }
 
-    public Metadata getPreceding() {
+    public ItemResource getPreceding() {
         return preceding;
     }
 
-    public void setPreceding(Metadata preceding) {
+    public void setPreceding(ItemResource preceding) {
         this.preceding = preceding;
     }
 
-    public Metadata getSucceding() {
+    public ItemResource getSucceding() {
         return succeding;
     }
 
-    public void setSucceding(Metadata succeding) {
+    public void setSucceding(ItemResource succeding) {
         this.succeding = succeding;
     }
 }
