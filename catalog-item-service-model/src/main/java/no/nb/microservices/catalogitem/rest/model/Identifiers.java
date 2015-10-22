@@ -1,12 +1,10 @@
 package no.nb.microservices.catalogitem.rest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Identifiers {
 
@@ -25,13 +23,9 @@ public class Identifiers {
         this.urns = urns;
     }
 
-    public String getSesamId() {
-        return sesamId; 
-    }
+    public String getSesamId() { return sesamId; }
 
-    public void setSesamId(String sesamId) {
-        this.sesamId = sesamId;
-    }
+    public void setSesamId(String sesamId) { this.sesamId = sesamId; }
 
     public List<String> getIsbn10() {
         return isbn10;

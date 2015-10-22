@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
@@ -42,42 +43,63 @@ public class IdentifiersBuilderTest {
 
     @Test
     public void getSesamIdTest() {
-        Mods mods = createDefaultMods();
+        Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withMods(mods)
                 .build();
 
         assertTrue("sesamId should not be empty", !identifiers.getSesamId().isEmpty());
-        assertEquals("7e8cb1ea2f5d198e6f1b51e3e835c203", identifiers.getSesamId());
+        assertEquals("f17f2bf12cc19b377f7ce992faa40a0c", identifiers.getSesamId());
     }
 
     @Test
     public void getOaiIdTest() {
-        Mods mods = createDefaultMods();
+        Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withMods(mods)
                 .build();
 
         assertTrue("oaiId should not be empty", !identifiers.getOaiId().isEmpty());
-        assertEquals("oai:mavis.nb.no:1512271", identifiers.getOaiId());
+        assertEquals("oai:bibsys.no:biblio:96192845x", identifiers.getOaiId());
     }
 
 
-    private Mods createDefaultMods() {
-        Mods mods = new Mods();
-        List<Identifier> identifiers = new ArrayList<>();
-        Identifier identifier = new Identifier();
-        identifier.setType("sesamid");
-        identifier.setValue("7e8cb1ea2f5d198e6f1b51e3e835c203");
-        identifiers.add(identifier);
-        Identifier identifier2 = new Identifier();
-        identifier2.setType("oaiid");
-        identifier2.setValue("oai:mavis.nb.no:1512271");
-        identifiers.add(identifier2);
-        mods.setIdentifiers(identifiers);
-        return mods;
+    @Test
+    public void getIsbn13Test() {
+        Mods mods = TestMods.aDefaultBookMods().build();
+
+        Identifiers identifiers = new IdentifiersBuilder()
+                .withMods(mods)
+                .build();
+
+        assertTrue("isbn13 should not be empty", !identifiers.getIsbn13().isEmpty());
+        assertEquals("9788203341091", identifiers.getIsbn13().get(1));
+    }
+
+    @Test
+    public void getIsbn10Test() {
+        Mods mods = TestMods.aDefaultBookMods().build();
+
+        Identifiers identifiers = new IdentifiersBuilder()
+                .withMods(mods)
+                .build();
+
+        assertTrue("isbn10 should not be empty", !identifiers.getIsbn10().isEmpty());
+        assertEquals("9788203341", identifiers.getIsbn10().get(0));
+    }
+
+    @Test
+    public void getIssnTest() {
+        Mods mods = TestMods.aDefaultBookMods().build();
+
+        Identifiers identifiers = new IdentifiersBuilder()
+                .withMods(mods)
+                .build();
+
+        assertTrue("isbn10 should not be empty", !identifiers.getIssn().isEmpty());
+        assertEquals("97882033", identifiers.getIssn().get(0));
     }
 
 }
