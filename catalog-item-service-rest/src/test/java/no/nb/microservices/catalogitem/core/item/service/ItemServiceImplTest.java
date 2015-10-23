@@ -1,16 +1,11 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,15 +18,15 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import no.nb.commons.web.util.UserUtils;
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceImplTest {
@@ -45,49 +40,45 @@ public class ItemServiceImplTest {
     @Mock
     SecurityRepository securityRepository;
 
+    @Mock
+    IndexService indexService;
+
     @Before
     public void setup() {
         mockRequest();
     }
 
     @Test
-    public void whenGetItemByIdThenReturnItem() {
+    public void testGetItem() {
         String id = "id1";
-        String title = "Supersonic";
-        String compositeTitle = title + " ct";
-        
-        Mods mods = new Mods();
-        List<TitleInfo> titleInfos = new ArrayList<>();
-        TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle(title);
-        titleInfos.add(titleInfo);
-        mods.setTitleInfos(titleInfos);
-
-        Name name = new Name();
-        name.setType("personal");
-        Namepart namepart = new Namepart();
-        namepart.setValue("Kurt Josef");
-        Role role = new Role();
-        role.setRoleTerms(Arrays.asList("creator"));
-        name.setRole(Arrays.asList(role));
-        name.setNameParts(Arrays.asList(namepart));
-        mods.setNames(Arrays.asList(name));
-
-        FieldResource fields = new FieldResource();
-        fields.setTitle("Supersonic ct");
-        fields.setDigital(true);
-        fields.setContentClasses(Arrays.asList("restricted", "public"));
-        
+        Mods mods = TestMods.aDefaultBookMods().build();
+        FieldResource fields = TestFields.aDefaultBook().build();
         when(metadataRepository.getModsById(eq(id), anyString(), anyString(), anyString(), anyString())).thenReturn(mods);
         when(metadataRepository.getFieldsById(eq(id), anyString(), anyString(), anyString(), anyString())).thenReturn(fields);
         when(securityRepository.hasAccess(eq(id), anyString(), anyString())).thenReturn(true);
         
-        Item item = itemService.getItemById(id);
+        Item item = itemService.getItemById(id, null);
         
         assertNotNull("Item should not be null", item);
         assertNotNull("Item should have mods", item.getMods());
         assertNotNull("Item should have field", item.getField());
         assertNotNull("Item should have access", item.hasAccess());
+    }
+
+    @Test
+    public void testExpandRelatedItems() {
+        String id = "id1";
+        Mods mods = TestMods.aDefaultMusicAlbum().build();
+        FieldResource fields = TestFields.aDefaultMusic().build();
+        SearchResult searchResult = new SearchResult(Arrays.asList("id1"), 1, null);
+        when(metadataRepository.getModsById(eq(id), anyString(), anyString(), anyString(), anyString())).thenReturn(mods);
+        when(metadataRepository.getFieldsById(eq(id), anyString(), anyString(), anyString(), anyString())).thenReturn(fields);
+        when(securityRepository.hasAccess(eq(id), anyString(), anyString())).thenReturn(true);
+        when(indexService.search(anyString(), anyObject())).thenReturn(searchResult);
+
+        Item item = itemService.getItemById(id, "relatedItems");
+        
+        assertNotNull("Item should have consitutents in relatedItems", item.getRelatedItems().getConstituents());
     }
     
     private void mockRequest() {

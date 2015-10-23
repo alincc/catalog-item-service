@@ -1,5 +1,9 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.htrace.Trace;
@@ -12,8 +16,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import no.nb.commons.web.util.UserUtils;
 import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import static no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
+import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
@@ -30,38 +37,51 @@ public class ItemServiceImpl implements ItemService {
     
     final MetadataRepository metadatRepository;
     final SecurityRepository securityRepository;
+    final IndexService indexService;
 
     @Autowired
     public ItemServiceImpl(MetadataRepository metadatRepository, 
-            SecurityRepository securityRepository) {
+            SecurityRepository securityRepository,
+            IndexService indexService) {
         super();
         this.metadatRepository = metadatRepository;
         this.securityRepository = securityRepository;
+        this.indexService = indexService;
     }
 
     @Override
-    public Item getItemById(String id) {
+    public Item getItemById(String id, String expand) {
+        SecurityInfo securityInfo = getSecurityInfo();
+        return getItemById(id, expand, securityInfo);
+    }
+    
+    public Item getItemById(String id, String expand, SecurityInfo securityInfo) {
 
         try {
-            SecurityInfo securityInfo = getSecurityInfo();
-
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
             Stream<Item> resp = Streams.zip(getModsById(tracableId), getFieldsById(tracableId), hasAccess(tracableId),
                 (Tuple3<Mods, FieldResource, Boolean> tup) -> {
                     Mods mods = tup.getT1();
                     FieldResource fields = tup.getT2();
                     Boolean hasAccess = tup.getT3();
+
+                    RelatedItems relatedItems = null;
+                    if ("relatedItems".equalsIgnoreCase(expand)) {
+                        List<Item> constituents = getItemByRelatedItemType("constituent", mods, securityInfo);
+                        List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
+                        relatedItems = new RelatedItems(constituents, hosts);
+                    }
                     
-                    ItemBuilder itemBuilder = new ItemBuilder(id)
+                   return new ItemBuilder(id)
                             .mods(mods)
                             .fields(fields)
-                            .hasAccess(hasAccess);
-                    return itemBuilder.build();
-                    
+                            .hasAccess(hasAccess)
+                            .withRelatedItems(relatedItems)
+                            .build();
                 });
 
             return resp.next().await();
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             LOG.warn("Failed getting item for id " + id, ex);
         }
         return null;
@@ -78,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
         return securityInfo;
     }
 
-    public Stream<Mods> getModsById(TracableId id) {
+    private Stream<Mods> getModsById(TracableId id) {
         Environment env = new Environment();
         return Streams.just(id).dispatchOn(env)
                 .map(new Function<TracableId, Mods>() {
@@ -91,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    public Stream<FieldResource> getFieldsById(TracableId id) {
+    private Stream<FieldResource> getFieldsById(TracableId id) {
         Environment env = new Environment();
         return Streams.just(id).dispatchOn(env)
                 .map(new Function<TracableId, FieldResource>() {
@@ -104,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
 
-    public Stream<Boolean> hasAccess(TracableId id) {
+    private Stream<Boolean> hasAccess(TracableId id) {
         Environment env = new Environment();
         return Streams.just(id).dispatchOn(env)
                 .map(new Function<TracableId, Boolean>() {
@@ -117,5 +137,22 @@ public class ItemServiceImpl implements ItemService {
                 });
     }
     
+    private List<Item> getItemByRelatedItemType(String type, Mods mods, SecurityInfo securityInfo) {
+        List<Item> items = new ArrayList<>();
+        List<String> oaiids = mods.getRelatedItems()
+            .stream()
+            .filter(r -> type.equalsIgnoreCase(r.getType()))
+            .map(r -> r.getRecordInfo().getRecordIdentifier().getValue())
+            .collect(Collectors.toList());
+        
+        oaiids.forEach(oaiid -> {
+            String q = "oaiid:\"oai:mavis.nb.no:" + oaiid + "\"";
+            SearchResult searchResult = indexService.search(q, securityInfo);
+            String id = searchResult.getIds().get(0);
+            items.add(getItemById(id, null, securityInfo));
+        });
+        return items;
+    }
 
 }
+

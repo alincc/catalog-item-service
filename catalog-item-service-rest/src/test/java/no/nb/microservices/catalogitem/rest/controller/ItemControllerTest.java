@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.item.service.ItemService;
-import no.nb.microservices.catalogmetadata.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,18 +35,31 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testItem() throws Exception {
         Item item = new ItemBuilder("id1")
                 .mods(TestMods.aDefaultBookMods().build())
-                .fields(TestFields.aDefaultBookFields().build())
+                .fields(TestFields.aDefaultBook().build())
                 .hasAccess(true)
                 .build();
 
-        when(itemService.getItemById("id1")).thenReturn(item);
+        when(itemService.getItemById("id1", null)).thenReturn(item);
 
         mockMvc.perform(get("/catalog/items/id1"))
             .andExpect(status().is2xxSuccessful());
+    }
 
+    @Test
+    public void testItemExpandRelatedItems() throws Exception {
+        Item item = new ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .fields(TestFields.aDefaultMusic().build())
+                .hasAccess(true)
+                .build();
+
+        when(itemService.getItemById("id1", null)).thenReturn(item);
+
+        mockMvc.perform(get("/catalog/items/id1"))
+            .andExpect(status().is2xxSuccessful());
     }
 
 }

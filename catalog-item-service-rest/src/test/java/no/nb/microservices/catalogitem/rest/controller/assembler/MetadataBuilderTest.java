@@ -12,9 +12,9 @@ import java.util.List;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Language;
 import no.nb.microservices.catalogmetadata.model.mods.v3.LanguageTerm;
@@ -24,7 +24,9 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestRelatedItem;
 
 public class MetadataBuilderTest {
 
@@ -68,7 +70,7 @@ public class MetadataBuilderTest {
     @Test
     public void testStreamingInfo() {
         Mods mods = TestMods.aDefaultRadioProgramMods().build();
-        FieldResource fields = TestFields.aDefaultReadioFields().build();
+        FieldResource fields = TestFields.aDefaultRadio().build();
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
                 .fields(fields)
@@ -82,7 +84,7 @@ public class MetadataBuilderTest {
     @Test
     public void testMediatypeWithoutStreamingInfo() {
         Mods mods = TestMods.aDefaultBookMods().build();
-        FieldResource fields = TestFields.aDefaultBookFields().build();
+        FieldResource fields = TestFields.aDefaultBook().build();
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
                 .fields(fields)
@@ -93,6 +95,22 @@ public class MetadataBuilderTest {
         assertNull("Should not have a streamingInfo", metadata.getStreamingInfo());
     }
 
+    @Test
+    public void testHosts() {
+        Item host = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .build();
+        RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicTrack().build())
+                .withRelatedItems(relatedItems)
+                .build();
+
+        Metadata metadata = new MetadataBuilder(item).build();
+        
+        assertNotNull("Should have hosts", metadata.getRelatedItems().getHosts());
+    }
+    
     private List<Note> createNotes() {
         Note note1 = new Note();
         note1.setValue("Tittelinformasjon er hentet fra tilhørende dokumentasjonsmateriale. Widerøe Flyfoto A/S solgte i 1983 disse fotografiene til Kviteseid kommune.");

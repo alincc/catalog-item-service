@@ -12,7 +12,7 @@ public class StreamingInfoBuilderTest {
 
     @Test
     public void testFromLocation() {
-        Mods mods = TestMods.aDefaultMusicMods().build();
+        Mods mods = TestMods.aDefaultMusicTrack().build();
         StreamingInfo expected = new StreamingInfo(getFirstUrnLocation(mods), null, null);
         
         StreamingInfo result = new StreamingInfoBuilder()

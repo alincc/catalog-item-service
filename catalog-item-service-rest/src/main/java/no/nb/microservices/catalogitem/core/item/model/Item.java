@@ -11,12 +11,14 @@ public class Item implements Identifiable<String> {
     private Mods mods; 
     private FieldResource field;
     private boolean hasAccess;
+    private RelatedItems relatedItems;
 
-    private Item(String id, Mods mods, FieldResource field, boolean hasAccess) {
+    private Item(String id, Mods mods, FieldResource field, boolean hasAccess, RelatedItems relatedItems) {
         this.id = id;
         this.mods = mods;
         this.field = field;
         this.hasAccess = hasAccess;
+        this.relatedItems = relatedItems;
     }
 
     @Override
@@ -42,11 +44,16 @@ public class Item implements Identifiable<String> {
         return hasAccess;
     }
 
+    public RelatedItems getRelatedItems() {
+        return relatedItems;
+    }
+    
     public static class ItemBuilder  {
         private final String id;
         private Mods mods; 
         private FieldResource fields;
         private boolean hasAccess;
+        private RelatedItems relatedItems;
         
         public ItemBuilder(final String id) {
             this.id = id;
@@ -67,8 +74,13 @@ public class Item implements Identifiable<String> {
             return this;
         }
 
+        public ItemBuilder withRelatedItems(final RelatedItems relatedItems) {
+            this.relatedItems = relatedItems;
+            return this;
+        }
+
         public Item build() {
-            return new Item(id, mods, fields, hasAccess);
+            return new Item(id, mods, fields, hasAccess, relatedItems);
         }
 
     }

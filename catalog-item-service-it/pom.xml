@@ -33,9 +33,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>no.nb.microservices</groupId>
+            <artifactId>catalog-metadata-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>no.nb.sesam.ni</groupId>
             <artifactId>niclient</artifactId>
             <version>${ni.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nb.sesam.ni</groupId>
@@ -67,7 +73,6 @@
             <version>2.4.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wordnik.swagger.annotations.Api;
@@ -23,8 +24,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @RequestMapping(value = "/catalog/items")
 @Api(value = "/catalog/items", description = "Home api")
 public class ItemController {
-
-    ItemService itemService;
+    private ItemService itemService;
     
     @Autowired
     public ItemController(ItemService itemService) {
@@ -36,12 +36,11 @@ public class ItemController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
     @Traceable(description="item")
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id) {
-        Item item = itemService.getItemById(id);
+    public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id,
+            @RequestParam(required=false) String expand) {
+        Item item = itemService.getItemById(id, expand);
         
         ItemResource resource = new ItemResultResourceAssembler().toResource(item);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
-    
-    
 }

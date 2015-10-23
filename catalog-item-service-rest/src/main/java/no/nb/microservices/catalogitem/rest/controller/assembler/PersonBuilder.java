@@ -60,7 +60,9 @@ public class PersonBuilder {
                 if (role.getRoleTerms() == null) {
                     continue;
                 }
-                roleTerms.addAll(role.getRoleTerms().stream().collect(Collectors.toList()));
+                roleTerms.addAll(role.getRoleTerms().stream()
+                        .map(r -> r.getValue())
+                        .collect(Collectors.toList()));
             }
         }
         return roleTerms;

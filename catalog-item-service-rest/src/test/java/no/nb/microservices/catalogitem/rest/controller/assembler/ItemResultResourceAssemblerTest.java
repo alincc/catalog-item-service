@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,18 +16,27 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RecordIdentifier;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RoleTerm;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 
 public class ItemResultResourceAssemblerTest {
 
     @Before
     public void init() {
-        
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/id1");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
-
         RequestContextHolder.setRequestAttributes(attributes);
     }
 
@@ -191,7 +199,9 @@ public class ItemResultResourceAssemblerTest {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
 
         Mods mods = new Mods();
-        mods.setNames(Arrays.asList(createName("Bob Roger", "1990-", Arrays.asList("creator")),
+        RoleTerm creator = new RoleTerm();
+        creator.setValue("creator");
+        mods.setNames(Arrays.asList(createName("Bob Roger", "1990-", Arrays.asList(creator)),
                 createName("Kurt Josef", null, null)));
         
         Item item = new Item.ItemBuilder("id1").mods(mods).build();        
@@ -240,7 +250,7 @@ public class ItemResultResourceAssemblerTest {
 
     
     private Name createName(String value, String birthAndDeath,
-            List<String> roleTerms) {
+            List<RoleTerm> roleTerms) {
         Name name = new Name();
         name.setType("personal");
         List<Namepart> nameParts = new ArrayList<>();
