@@ -1,13 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,21 +11,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RecordIdentifier;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RoleTerm;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class ItemResultResourceAssemblerTest {
 
@@ -201,8 +187,9 @@ public class ItemResultResourceAssemblerTest {
         Mods mods = new Mods();
         RoleTerm creator = new RoleTerm();
         creator.setValue("creator");
-        mods.setNames(Arrays.asList(createName("Bob Roger", "1990-", Arrays.asList(creator)),
-                createName("Kurt Josef", null, null)));
+        mods.setNames(Arrays.asList(
+                createName("Bob Roger", "1990-", Arrays.asList(creator), "personal"),
+                createName("Kurt Josef", null, null, "personal")));
         
         Item item = new Item.ItemBuilder("id1").mods(mods).build();        
         ItemResource itemResource = resource.toResource(item);
@@ -212,6 +199,20 @@ public class ItemResultResourceAssemblerTest {
         assertEquals("First element should be \"Bob Roger\"", "Bob Roger", itemResource.getMetadata().getPeople().get(0).getName());
         assertEquals("First element should have date \"1990-\"", "1990-", itemResource.getMetadata().getPeople().get(0).getDate());
         assertEquals("First element should have role \"creator\"", "creator", itemResource.getMetadata().getPeople().get(0).getRoles().get(0).getName());
+    }
+
+    @Test
+    public void testCorporate() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+
+        Mods mods = new Mods();
+        mods.setNames(Arrays.asList(createName("Det Norske teatret", null, null, "corporate")));
+        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        ItemResource itemResource = resource.toResource(item);
+
+        assertNotNull("Should not be null", itemResource);
+        assertNotNull("Should have list of corporates", itemResource.getMetadata().getCorporates());
+        assertEquals("First element should be \"Det Norske teatret\"", "Det Norske teatret", itemResource.getMetadata().getCorporates().get(0).getName());
     }
 
     @Test
@@ -249,10 +250,9 @@ public class ItemResultResourceAssemblerTest {
     }
 
     
-    private Name createName(String value, String birthAndDeath,
-            List<RoleTerm> roleTerms) {
+    private Name createName(String value, String birthAndDeath, List<RoleTerm> roleTerms, String type) {
         Name name = new Name();
-        name.setType("personal");
+        name.setType(type);
         List<Namepart> nameParts = new ArrayList<>();
         
         Namepart namepart = new Namepart();

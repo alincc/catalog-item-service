@@ -39,6 +39,7 @@ public class Person {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+<<<<<<< HEAD
     
     @Override
     public int hashCode(){
@@ -72,4 +73,6 @@ public class Person {
           toString();
       }    
 
+=======
+>>>>>>> ac4ffc835b946fac41f7bbbed1b2e7753adcebed
 }
