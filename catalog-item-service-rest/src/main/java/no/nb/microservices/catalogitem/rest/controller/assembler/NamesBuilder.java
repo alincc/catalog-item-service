@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NamesBuilder {
-
+    private static final String PERSONAL = "personal";
+    private static final String CORPORATE = "corporate";
     private List<Name> names;
-    
+
     public NamesBuilder(final List<Name> names) {
         this.names = names;
     }
-    
+
     public List<Person> buildPersonList() {
         return getPersonalNames();
     }
@@ -27,20 +28,22 @@ public class NamesBuilder {
     private List<Person> getPersonalNames() {
         if (names != null) {
             return names.stream()
-                .filter(name -> "personal".equalsIgnoreCase(name.getType()))
-                .map(name -> new NameBuilder(name).createPerson())
-                .collect(Collectors.toList());
+                    .filter(name -> PERSONAL.equalsIgnoreCase(name.getType()))
+                    .map(name -> new NameBuilder(name).createPerson())
+                    .collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
     private List<Corporates> getCorporateName() {
+        List<Corporates> corporates = null;
         if (names != null) {
-            return names.stream()
-                    .filter(name -> "corporate".equalsIgnoreCase(name.getType()))
-                    .map(name -> new NameBuilder(name).createCorporate())
-                    .collect(Collectors.toList());
+            for (Name name : names) {
+                if (CORPORATE.equalsIgnoreCase(name.getType())) {
+                    corporates = new NameBuilder(name).createCorporate();
+                }
+            }
         }
-        return new ArrayList<>();
+        return corporates;
     }
 }

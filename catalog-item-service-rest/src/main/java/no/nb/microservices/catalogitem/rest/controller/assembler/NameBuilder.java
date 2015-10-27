@@ -26,8 +26,14 @@ public class NameBuilder {
         return person;
     }
 
-    public Corporates createCorporate() {
-        return new Corporates(getName(), getDateOfBirthAndDeath(), getRoles());
+    public List<Corporates> createCorporate() {
+        List<Corporates> corporates = new ArrayList<>();
+        for (Namepart namepart : name.getNameParts()) {
+            if (namepart.getValue() != null) {
+                corporates.add(new Corporates(namepart.getValue(), getDateOfBirthAndDeath(), getRoles()));
+            }
+        }
+        return corporates;
     }
 
     private String getName() {

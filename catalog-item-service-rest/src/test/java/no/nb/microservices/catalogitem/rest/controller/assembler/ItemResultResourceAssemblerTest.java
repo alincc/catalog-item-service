@@ -205,14 +205,23 @@ public class ItemResultResourceAssemblerTest {
     public void testCorporate() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
 
+        List<Namepart> nameparts = new ArrayList<>();
+        nameparts.add(createNamePart("Det Norske teatret", null));
+        nameparts.add(createNamePart("Centralteatret", null));
+
+        Name name = new Name();
+        name.setNameParts(nameparts);
+        name.setType("corporate");
+
         Mods mods = new Mods();
-        mods.setNames(Arrays.asList(createName("Det Norske teatret", null, null, "corporate")));
+        mods.setNames(Arrays.asList(name));
         Item item = new Item.ItemBuilder("id1").mods(mods).build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
-        assertNotNull("Should have list of corporates", itemResource.getMetadata().getCorporates());
+        assertEquals("List of corporates should have 2 elements", 2, itemResource.getMetadata().getCorporates().size());
         assertEquals("First element should be \"Det Norske teatret\"", "Det Norske teatret", itemResource.getMetadata().getCorporates().get(0).getName());
+        assertEquals("Second element should be \"Centralteatret\"", "Centralteatret", itemResource.getMetadata().getCorporates().get(1).getName());
     }
 
     @Test
@@ -247,6 +256,13 @@ public class ItemResultResourceAssemblerTest {
         classification.setAuthority("udc");
         classification.setValue(value);
         return classification;
+    }
+
+    private Namepart createNamePart(String value, String type) {
+        Namepart namepart = new Namepart();
+        namepart.setValue(value);
+        namepart.setType(type);
+        return namepart;
     }
 
     
