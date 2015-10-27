@@ -3,17 +3,14 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class IdentifiersBuilderTest {
 
@@ -87,7 +84,8 @@ public class IdentifiersBuilderTest {
                 .build();
 
         assertTrue("isbn10 should not be empty", !identifiers.getIsbn10().isEmpty());
-        assertEquals("9788203341", identifiers.getIsbn10().get(0));
+        assertTrue(identifiers.getIsbn10().contains("9788203340"));
+        assertTrue(identifiers.getIsbn10().contains("9788203341"));
     }
 
     @Test
