@@ -1,22 +1,23 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import no.nb.microservices.catalogitem.rest.model.Corporates;
+import no.nb.microservices.catalogitem.rest.model.Person;
+import no.nb.microservices.catalogitem.rest.model.Role;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nb.microservices.catalogitem.rest.model.Person;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
-import no.nb.microservices.catalogitem.rest.model.Role;
-
-public class PersonBuilder {
+public class NameBuilder {
 
     private Name name;
-    
-    public PersonBuilder(final Name name) {
+
+    public NameBuilder(final Name name) {
         this.name = name;
     }
-    
+
     public Person createPerson() {
         Person person = new Person();
         person.setName(getName());
@@ -24,7 +25,11 @@ public class PersonBuilder {
         person.setRoles(getRoles());
         return person;
     }
-    
+
+    public Corporates createCorporate() {
+        return new Corporates(getName(), getDateOfBirthAndDeath(), getRoles());
+    }
+
     private String getName() {
         for (Namepart namepart : name.getNameParts()) {
             if (namepart.getType() == null) {
@@ -44,15 +49,15 @@ public class PersonBuilder {
         }
         return null;
     }
-    
+
     private List<Role> getRoles() {
         List<Role> roles = new ArrayList<>();
-        for(String roleTerm : getRoleTerms()) {
+        for (String roleTerm : getRoleTerms()) {
             roles.add(new Role(roleTerm));
         }
         return roles;
     }
-    
+
     private List<String> getRoleTerms() {
         List<String> roleTerms = new ArrayList<>();
         if (name.getRole() != null) {
@@ -66,6 +71,6 @@ public class PersonBuilder {
             }
         }
         return roleTerms;
-    }    
-    
+    }
+
 }

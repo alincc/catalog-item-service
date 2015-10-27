@@ -17,6 +17,7 @@ public class Metadata {
     private String genre;
     private String summary;
     private List<Person> people;
+    private List<Corporates> corporates;
     private Geographic geographic;
     private OriginInfo originInfo;
     private RecordInfo recordInfo;
@@ -75,6 +76,14 @@ public class Metadata {
 
     public void setPeople(List<Person> people) {
         this.people = people;
+    }
+
+    public List<Corporates> getCorporates() {
+        return corporates;
+    }
+
+    public void setCorporates(List<Corporates> corporates) {
+        this.corporates = corporates;
     }
 
     public Geographic getGeographic() {

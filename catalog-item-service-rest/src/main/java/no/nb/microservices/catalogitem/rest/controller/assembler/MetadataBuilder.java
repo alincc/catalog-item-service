@@ -1,10 +1,5 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
@@ -13,6 +8,11 @@ import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class MetadataBuilder {
 
@@ -41,7 +41,8 @@ public final class MetadataBuilder {
         TitleInfo alternativeTitleInfo = titleInfoDirector.createTitleInfo(new AlternativeTitleInfoBuilder(), mods);
         metadata.setAlternativeTitleInfo(alternativeTitleInfo);
 
-        metadata.setPeople(new PersonsBuilder(mods.getNames()).buildList());
+        metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
+        metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
         metadata.setOriginInfo(new OriginInfoBuilder().mods(mods).build());
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
