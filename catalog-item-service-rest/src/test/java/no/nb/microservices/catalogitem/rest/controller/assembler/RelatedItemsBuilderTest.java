@@ -66,5 +66,37 @@ public class RelatedItemsBuilderTest {
 
         assertNotNull("RelatedItems should have consititutens", relatedItems.getConstituents());
     }
+
+    @Test
+    public void testPreceding() {
+        Item item = new ItemBuilder("id")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .fields(TestFields.aDefaultMusic().build())
+                .hasAccess(true)
+                .build();
+        RelatedItems relatedItems = new RelatedItems(null, null, item, null);
+
+        RelatedItem relatedItem = new RelatedItemsBuilder()
+                .withRelatedItems(relatedItems)
+                .build();
+
+        assertNotNull("RelatedItems should have preceding", relatedItem.getPreceding());
+    }
+
+    @Test
+    public void testSucceeding() {
+        Item item = new ItemBuilder("id")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .fields(TestFields.aDefaultMusic().build())
+                .hasAccess(true)
+                .build();
+        RelatedItems relatedItems = new RelatedItems(null, null, null, item);
+
+        RelatedItem relatedItem = new RelatedItemsBuilder()
+                .withRelatedItems(relatedItems)
+                .build();
+
+        assertNotNull("RelatedItems should have succeeding", relatedItem.getSucceding());;
+    }
     
 }

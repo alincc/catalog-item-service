@@ -79,6 +79,8 @@ public class ItemServiceImplTest {
         Item item = itemService.getItemById(id, "relatedItems");
         
         assertNotNull("Item should have consitutents in relatedItems", item.getRelatedItems().getConstituents());
+        assertNotNull("Item should have preceding in relatedItems", item.getRelatedItems().getPreceding());
+        assertNotNull("Item should have succeeding in relatedItems", item.getRelatedItems().getSucceding());
     }
     
     private void mockRequest() {

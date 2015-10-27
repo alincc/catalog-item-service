@@ -20,7 +20,7 @@
         <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
-        <catalog-metadata-service.version>0.0.1-124</catalog-metadata-service.version>
+        <catalog-metadata-service.version>0.0.1-125</catalog-metadata-service.version>
     </properties>
 
     <dependencyManagement>

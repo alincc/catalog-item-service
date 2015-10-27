@@ -69,7 +69,11 @@ public class ItemServiceImpl implements ItemService {
                     if ("relatedItems".equalsIgnoreCase(expand)) {
                         List<Item> constituents = getItemByRelatedItemType("constituent", mods, securityInfo);
                         List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
-                        relatedItems = new RelatedItems(constituents, hosts);
+                        List<Item> preceding = getItemByRelatedItemType("preceding", mods, securityInfo);
+                        List<Item> succeeding = getItemByRelatedItemType("succeeding", mods, securityInfo);
+                        relatedItems = new RelatedItems(constituents, hosts,
+                                (preceding.size() > 0) ? preceding.get(0) : null,
+                                (succeeding.size() > 0 ? succeeding.get(0) : null));
                     }
                     
                    return new ItemBuilder(id)

@@ -11,11 +11,15 @@ import no.nb.microservices.catalogitem.rest.model.RelatedItem;
 public class RelatedItemsBuilder {
     private List<Item> constituents = Collections.emptyList();
     private List<Item> hosts = Collections.emptyList();
+    private Item preceding;
+    private Item succeding;
 
     public RelatedItemsBuilder withRelatedItems(RelatedItems relatedItems) {
         if (relatedItems != null) {
             constituents = relatedItems.getConstituents();
             hosts = relatedItems.getHosts();
+            preceding = relatedItems.getPreceding();
+            succeding = relatedItems.getSucceding();
         }
         return this;
     }
@@ -30,7 +34,14 @@ public class RelatedItemsBuilder {
             ItemResource itemResource = new ItemResultResourceAssembler().toResource(item);
             relatedItem.getHosts().add(itemResource);
         }
-        
+
+        if (preceding != null) {
+            relatedItem.setPreceding(new ItemResultResourceAssembler().toResource(preceding));
+        }
+        if (succeding != null) {
+            relatedItem.setSucceding(new ItemResultResourceAssembler().toResource(succeding));
+        }
+
         return relatedItem;
     }
 
