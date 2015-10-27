@@ -36,11 +36,11 @@ public class NamesBuilder {
     }
 
     private List<Corporates> getCorporateName() {
-        List<Corporates> corporates = null;
+        List<Corporates> corporates = new ArrayList<>();
         if (names != null) {
             for (Name name : names) {
                 if (CORPORATE.equalsIgnoreCase(name.getType())) {
-                    corporates = new NameBuilder(name).createCorporate();
+                    corporates.addAll(new NameBuilder(name).createCorporate());
                 }
             }
         }

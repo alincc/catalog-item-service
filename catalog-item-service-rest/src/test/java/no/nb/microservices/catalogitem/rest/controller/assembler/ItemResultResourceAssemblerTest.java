@@ -213,15 +213,21 @@ public class ItemResultResourceAssemblerTest {
         name.setNameParts(nameparts);
         name.setType("corporate");
 
+        RoleTerm roleTerm = new RoleTerm();
+        roleTerm.setValue("Rettighetshaver");
         Mods mods = new Mods();
-        mods.setNames(Arrays.asList(name));
+        mods.setNames(Arrays.asList(
+                name,
+                createName("Nordland Teater", null, Arrays.asList(roleTerm), "corporate")));
         Item item = new Item.ItemBuilder("id1").mods(mods).build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
-        assertEquals("List of corporates should have 2 elements", 2, itemResource.getMetadata().getCorporates().size());
+        assertEquals("List of corporates should have 3 elements", 3, itemResource.getMetadata().getCorporates().size());
         assertEquals("First element should be \"Det Norske teatret\"", "Det Norske teatret", itemResource.getMetadata().getCorporates().get(0).getName());
         assertEquals("Second element should be \"Centralteatret\"", "Centralteatret", itemResource.getMetadata().getCorporates().get(1).getName());
+        assertEquals("Third element should be \"Nordland Teater\"", "Nordland Teater", itemResource.getMetadata().getCorporates().get(2).getName());
+        assertEquals("Third element should have role \"Rettighetshaver\"", "Rettighetshaver", itemResource.getMetadata().getCorporates().get(2).getRoles().get(0).getName());
     }
 
     @Test
