@@ -1,8 +1,15 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import no.nb.microservices.catalogitem.rest.model.Person;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RoleTerm;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
+import no.nb.microservices.catalogmetadata.test.mods.v3.NamepartBuilder;
+import no.nb.microservices.catalogmetadata.test.mods.v3.RoleTermBuilder;
+
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -13,12 +20,11 @@ import static org.junit.Assert.assertEquals;
 public class SubjectBuilderTest {
 
     @Test
-    public void subjectTopicsTest() {
+    public void testTopics() {
         Mods mods = new Mods();
         mods.setSubjects(createSubjects());
 
-        SubjectBuilder builder = new SubjectBuilder(mods);
-        no.nb.microservices.catalogitem.rest.model.Subject build = builder.build();
+        no.nb.microservices.catalogitem.rest.model.Subject build = new SubjectBuilder(mods).build();
 
         assertEquals(3, build.getTopics().size());
         assertEquals("Ski", getTopicFromResultIgnoreCase(build, "ski"));
@@ -27,14 +33,23 @@ public class SubjectBuilderTest {
     }
 
     @Test
-    public void subjectTopicsEmptyTest() {
+    public void testEmptyTopics() {
         Mods mods = new Mods();
-        mods.setSubjects(null);
-        SubjectBuilder builder = new SubjectBuilder(mods);
 
-        no.nb.microservices.catalogitem.rest.model.Subject build = builder.build();
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new SubjectBuilder(mods).build();
 
-        assertEquals(0, build.getTopics().size());
+        assertEquals(0, subject.getTopics().size());
+    }
+    
+    @Test
+    public void testPersonal() {
+        Mods mods = new Mods();
+        mods.setSubjects(createSubjects());
+
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new SubjectBuilder(mods).build();
+
+        assertEquals(1, subject.getPersons().size());
+        
     }
 
     private List<Subject> createSubjects() {
@@ -42,7 +57,11 @@ public class SubjectBuilderTest {
         subject1.setTopic(createTopics().subList(0, 2));
         Subject subject2 = new Subject();
         subject2.setTopic(createTopics().subList(2, 3));
-        return Arrays.asList(subject1, subject2);
+        
+        Subject subject3 = new Subject();
+        subject3.setNames(Arrays.asList(createPerson()));
+        
+        return Arrays.asList(subject1, subject2, subject3);
     }
 
     private List<Topic> createTopics() {
@@ -60,4 +79,26 @@ public class SubjectBuilderTest {
             String topic) {
         return build.getTopics().stream().filter(q -> q.equalsIgnoreCase(topic)).findFirst().get();
     }
+    
+    private Name createPerson() {
+        Namepart name = new NamepartBuilder()
+                .withValue("Ola")
+                .build();
+        Namepart birthAndDeath = new NamepartBuilder()
+                .withType("date")
+                .withValue("1960-")
+                .build();
+        RoleTerm creator = new RoleTermBuilder()
+                .withAuthority("marcrelator")
+                .withType("code")
+                .withValue("cre")
+                .build();
+        Name person = new no.nb.microservices.catalogmetadata.test.mods.v3.NameBuilder()
+            .withType("personal")
+            .withNameParts(name, birthAndDeath)
+            .withRoleTerms(creator)
+            .build();
+        return person;
+    }
+    
 }
