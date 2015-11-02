@@ -88,11 +88,6 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     }
     
     private List<Link> createThumbnailLinks(Item item) {
-        List<Link> links = new ArrayList<>();
-        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 512).withRel("thumbnail_xlarge"));
-        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 256).withRel("thumbnail_large"));
-        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 128).withRel("thumbnail_medium"));
-        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 64).withRel("thumbnail_small"));
-        return links;
+        return new ThumbnailBuilder(item).build();
     }
 }

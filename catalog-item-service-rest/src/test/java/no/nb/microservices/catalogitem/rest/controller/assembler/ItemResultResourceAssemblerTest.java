@@ -108,6 +108,7 @@ public class ItemResultResourceAssemblerTest {
         assertEquals("Should have a playlist link element", "playlist", itemResource.getLink("playlist").getRel());
     }
 
+    @Test
     public void testThumbnailLinks() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
