@@ -10,20 +10,12 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Identifiers {
 
-    private List<String> urns = new ArrayList<>();
     private List<String> isbn10 = new ArrayList<>();
     private List<String> isbn13 = new ArrayList<>();
     private List<String> issn = new ArrayList<>();
     private String sesamId;
     private String oaiId;
-
-    public List<String> getUrns() {
-        return urns;
-    }
-
-    public void setUrns(List<String> urns) {
-        this.urns = urns;
-    }
+    private String urn;
 
     public String getSesamId() {
         return sesamId;
@@ -64,4 +56,13 @@ public class Identifiers {
     public void setOaiId(String oaiid) {
         this.oaiId = oaiid;
     }
+
+    public String getUrn() {
+        return urn;
+    }
+
+    public void setUrn(String urn) {
+        this.urn = urn;
+    }
+
 }

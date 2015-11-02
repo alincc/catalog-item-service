@@ -1,41 +1,38 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
 
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class IdentifiersBuilderTest {
 
     @Test
-    public void whenUrnsIsPresentTest() {
-        FieldResource field = new FieldResource();
-        field.setUrns(Arrays.asList("URN:NBN:no-nb_digibok_2014070158006"));
-        
+    public void urnIsEmptyTest() {
+        Mods mods = new Mods();
+
         Identifiers identifiers = new IdentifiersBuilder()
-                .withField(field)
+                .withMods(mods)
                 .build();
 
-        assertTrue("urns should not be empty", !identifiers.getUrns().isEmpty());
-        assertEquals("URN:NBN:no-nb_digibok_2014070158006", identifiers.getUrns().get(0));
+        assertNull("urn should be empty not null", identifiers.getUrn());
     }
 
     @Test
-    public void whenUrnsIsEmptyTest() {
-        FieldResource field = new FieldResource();
-        
+    public void getUrnTest() {
+        Mods mods = TestMods.aDefaultBookMods().build();
+
         Identifiers identifiers = new IdentifiersBuilder()
-                .withField(field)
+                .withMods(mods)
                 .build();
 
-        assertTrue("urn list should be empty not null", identifiers.getUrns().isEmpty());
+        assertTrue("URN should not be empty", !identifiers.getUrn().isEmpty());
+        assertEquals("URN:NBN:no-nb_digibok_2014070158006", identifiers.getUrn());
     }
 
     @Test

@@ -1,26 +1,18 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.math.NumberUtils;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 
 public class IdentifiersBuilder {
-    private FieldResource field;
     private Mods mods;
-
-    public IdentifiersBuilder withField(final FieldResource field) {
-        this.field = field;
-        return this;
-    }
 
     public IdentifiersBuilder withMods(final Mods mods) {
         this.mods = mods;
@@ -29,22 +21,15 @@ public class IdentifiersBuilder {
 
     public Identifiers build() {
         Identifiers identifiers = new Identifiers();
-        identifiers.setUrns(getUrns());
         identifiers.setIsbn10(getIsbn10());
         identifiers.setIsbn13(getIsbn13());
         identifiers.setSesamId(getIdentifierByType("sesamid"));
         identifiers.setOaiId(getIdentifierByType("oaiid"));
         identifiers.setIssn(getMultipleIdentifierByType("issn"));
+        identifiers.setUrn(getIdentifierByType("urn"));
         return identifiers;
     }
 
-    private List<String> getUrns() {
-        if (field != null) {
-            return field.getUrns();
-        }
-        return Collections.emptyList();
-    }
-    
     private List<String> getIsbn10(){
         List<String> isbns = getMultipleIdentifierByType("isbn");
         return filterIsbnByLength(isbns, 10);
