@@ -81,6 +81,15 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
+    public void testThumbnailLinks() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
+        assertEquals("Should have a thumbnail_small link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());
+    }
+
+    @Test
     public void testMetadata() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Mods mods = new Mods();

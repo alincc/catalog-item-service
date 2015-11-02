@@ -5,8 +5,9 @@ public enum ResourceTemplateLink {
     PRESENTATION ("/catalog/iiif/{id}/manifest"),
     ENW ("/catalog/reference/{id}/enw"),
     RIS ("/catalog/reference/{id}/ris"),
-    WIKI ("/catalog/reference/{id}/wiki");
-    
+    WIKI ("/catalog/reference/{id}/wiki"),
+    THUMBNAIL("http://www.nb.no/services/image/resolver/{id}/full/{height},0/0/native.jpg");
+
     private final String resourceLink;
 
     ResourceTemplateLink(String resourceLink) {
