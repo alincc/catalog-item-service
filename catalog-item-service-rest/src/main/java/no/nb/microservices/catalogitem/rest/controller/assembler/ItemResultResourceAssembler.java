@@ -2,12 +2,16 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceAssembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
 public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
 
@@ -22,12 +26,17 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
     }
 
     private void createLinks(Item item, ItemResource resource) {
+        StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype(item));
         resource.add(createSelfLink(item));
         resource.add(createModsLink(item));
         resource.add(createPresentationLink(item));
         resource.add(createEnwLink(item));
         resource.add(createRisLink(item));
         resource.add(createWikiLink(item));
+        
+        if (streamingInfoStrategy.hasStreamingLink()) {
+            resource.add(createPlaylistLink(item));
+        }
     }
 
     private Link createSelfLink(Item item) {
@@ -52,5 +61,26 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
 
     private Link createWikiLink(Item item) {
         return ResourceLinkBuilder.linkTo(ResourceTemplateLink.WIKI, item.getId()).withRel("wiki");
+    }
+
+    private Link createPlaylistLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PLAYLIST, item.getId()).withRel("playlist");
+    }
+
+    private String getFirstMediatype(Item item) {
+        List<String> mediaTypes = getMediaTypes(item.getField());
+        if (mediaTypes != null && !mediaTypes.isEmpty()) {
+            return mediaTypes.get(0);
+        } else {
+            return null;
+        }
+    }
+    
+    private List<String> getMediaTypes(FieldResource field) {
+        if (field != null) {
+            return field.getMediaTypes();
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

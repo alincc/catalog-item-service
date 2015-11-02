@@ -4,6 +4,9 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.*;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +81,17 @@ public class ItemResultResourceAssemblerTest {
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a wiki-referential link element", "wiki", itemResource.getLink("wiki").getRel());
+    }
+
+    @Test
+    public void testPlaylistLink() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicTrack().build())
+                .fields(TestFields.aDefaultMusic().build())
+                .build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a playlist link element", "playlist", itemResource.getLink("playlist").getRel());
     }
 
     @Test

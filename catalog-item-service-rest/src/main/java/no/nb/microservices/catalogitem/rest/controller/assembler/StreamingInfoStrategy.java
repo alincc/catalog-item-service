@@ -7,4 +7,6 @@ public interface StreamingInfoStrategy {
 
     StreamingInfo getStreamingInfo(Mods mods);
     
+    boolean hasStreamingLink();
+    
 }

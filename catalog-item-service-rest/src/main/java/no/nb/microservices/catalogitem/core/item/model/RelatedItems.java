@@ -1,12 +1,10 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-
 import java.util.Collections;
 import java.util.List;
 
 public class RelatedItems {
-
+    
     private List<Item> constituents;
     private List<Item> hosts;
     private Item preceding;

@@ -10,4 +10,9 @@ public class NoStreamableStrategy implements StreamingInfoStrategy {
         return null;
     }
 
+    @Override
+    public boolean hasStreamingLink() {
+        return false;
+    }
+
 }

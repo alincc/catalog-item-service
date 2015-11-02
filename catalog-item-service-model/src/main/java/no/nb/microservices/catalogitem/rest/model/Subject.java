@@ -21,26 +21,26 @@ public class Subject {
     }
 
     public List<String> getTopics() {
-    	if (topics == null) {
-    		return Collections.emptyList();
-    	} else {
-    		return topics;
-    	}
+        if (topics == null) {
+            return Collections.emptyList();
+        } else {
+            return topics;
+        }
     }
 
     public void setTopics(List<String> topics) {
         this.topics = topics;
     }
 
-	public List<Person> getPersons() {
-		if (persons == null) {
-			return Collections.emptyList();
-		} else {
-			return persons;
-		}
-	}
+    public List<Person> getPersons() {
+        if (persons == null) {
+            return Collections.emptyList();
+        } else {
+            return persons;
+        }
+    }
 
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
 }

@@ -30,7 +30,7 @@ public class SubjectBuilder {
         return subject;
     }
 
-	private List<String> getTopics() {
+    private List<String> getTopics() {
         List<String> topics = new ArrayList<>();
         if (subjects != null && !subjects.isEmpty()) {
             for (Subject subject : subjects.stream().filter(q -> q.getTopic() != null).collect(Collectors.toList())) {
@@ -41,7 +41,7 @@ public class SubjectBuilder {
         return topics;
     }
 
-	private List<Person> getPersons() {
+    private List<Person> getPersons() {
         List<Person> persons = new ArrayList<>();
         if (subjects != null && !subjects.isEmpty()) {
             for (Subject subject : subjects) {
@@ -57,7 +57,6 @@ public class SubjectBuilder {
         }
 
         return persons;
-	}
-
+    }
 
 }

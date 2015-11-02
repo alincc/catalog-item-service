@@ -12,4 +12,9 @@ public class StreamableStrategy implements StreamingInfoStrategy {
                 .build();
     }
 
+    @Override
+    public boolean hasStreamingLink() {
+        return true;
+    }
+
 }
