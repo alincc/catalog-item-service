@@ -130,7 +130,7 @@ public class ItemControllerIntegrationTest {
                 .getMetadata());
         assertNotNull("Response should have links", entity.getBody().getLinks());
         assertEquals("Title should be \"Villanden\"", "Villanden",
-                entity.getBody().getMetadata().getTitleInfo().getTitle());
+                entity.getBody().getMetadata().getTitleInfos().get(0).getTitle());
         assertTrue("isDigital should be true", entity.getBody().getAccessInfo()
                 .isDigital());
         assertTrue("isPublicDomain should be true", entity.getBody()
@@ -194,7 +194,7 @@ public class ItemControllerIntegrationTest {
         Metadata metadata = entity.getBody().getMetadata();
         assertTrue("Status code should be 200 ", entity.getStatusCode()
                 .is2xxSuccessful());
-        assertNotNull("Should have relateditems", metadata.getRelatedItems());
+        assertNotNull("Should have relateditems", entity.getBody().getRelatedItems());
     }
     
     private HttpHeaders defaultHeaders() {

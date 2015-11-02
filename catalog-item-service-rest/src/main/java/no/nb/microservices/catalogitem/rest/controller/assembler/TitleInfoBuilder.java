@@ -1,38 +1,33 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.rest.model.TitleInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
-public abstract class TitleInfoBuilder {
-    protected Mods mods;
+public class TitleInfoBuilder {
+    private String title;
+    private String type;
+    private String partNumber;
     
-    public void setMods(Mods mods) {
-        this.mods = mods;
+    public TitleInfoBuilder withTitle(String title) {
+        this.title = title;
+        return this;
     }
 
-    protected abstract String getTitle();
+    public TitleInfoBuilder withType(String type) {
+        this.type = type;
+        return this;
+    }
 
-    public TitleInfo createTitleInfo() {
-        String title = getTitle();
-        if (title != null) {
-            TitleInfo titleInfo = new TitleInfo();
-            titleInfo.setTitle(title);
-            return titleInfo;
-        } else {
-            return null;
-        }
+    public TitleInfoBuilder withPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+        return this;
     }
     
-    protected String getTitleByType(String type) {
-        if (mods.getTitleInfos() != null) {
-            for (no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo title : mods.getTitleInfos()) {
-                if (type.equalsIgnoreCase(title.getType())) {
-                    return title.getTitle();
-                }
-            }
-        }
-        return null;
+    public TitleInfo build() {
+        TitleInfo titleInfo = new TitleInfo();
+        titleInfo.setTitle(title);
+        titleInfo.setType(type);
+        titleInfo.setPartNumber(partNumber);
+        return titleInfo;
     }
-    
     
 }

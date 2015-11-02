@@ -1,13 +1,12 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.*;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,11 +15,24 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
+import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RecordIdentifier;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RoleTerm;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class ItemResultResourceAssemblerTest {
 
@@ -122,8 +134,7 @@ public class ItemResultResourceAssemblerTest {
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
-        assertEquals("Title shoud be \"Supersonic\"", "Supersonic", itemResource.getMetadata().getTitleInfo().getTitle());
-        assertEquals("AlternativeTitle shoud be \"Supersonic alt\"", "Supersonic alt", itemResource.getMetadata().getAlternativeTitleInfo().getTitle());
+        assertTrue("Title shoud be \"Supersonic\"", !itemResource.getMetadata().getTitleInfos().isEmpty());
         assertEquals("CompositeTitle shoud be \"Supersonic ct\"", "Supersonic ct", itemResource.getMetadata().getCompositeTitle());
         
     }

@@ -54,8 +54,7 @@ public class MetadataBuilderTest {
 
         assertEquals("Bøker",  metadata.getMediaTypes().get(0));
         assertEquals("Aviser", metadata.getMediaTypes().get(1));
-        assertNotNull("Should have standard title", metadata.getTitleInfo());
-        assertNotNull("Should have alternative title", metadata.getAlternativeTitleInfo());
+        assertTrue("Should have titles", !metadata.getTitleInfos().isEmpty());
         assertNotNull("Should have placeString", metadata.getGeographic().getPlaceString());
         assertEquals("It's a summary", metadata.getSummary());
         assertEquals("still image", metadata.getTypeOfResource());

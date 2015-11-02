@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
@@ -27,12 +26,10 @@ public final class MetadataBuilder {
     public Metadata build() {
         Metadata metadata = new Metadata();
         metadata.setCompositeTitle(getTitle());
-        
-        TitleInfoDirector titleInfoDirector = new TitleInfoDirector();
-        TitleInfo standardTitleInfo = titleInfoDirector.createTitleInfo(new StandardTitleInfoBuilder(), mods);
-        metadata.setTitleInfo(standardTitleInfo);
-        TitleInfo alternativeTitleInfo = titleInfoDirector.createTitleInfo(new AlternativeTitleInfoBuilder(), mods);
-        metadata.setAlternativeTitleInfo(alternativeTitleInfo);
+
+        metadata.setTitleInfos(new TitleInfosBuilder()
+            .withTitleInfos(mods.getTitleInfos())
+            .build());
 
         metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
         metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
@@ -40,7 +37,6 @@ public final class MetadataBuilder {
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
-                .withField(field)
                 .withMods(mods)
                 .build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());

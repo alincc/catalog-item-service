@@ -3,15 +3,14 @@ package no.nb.microservices.catalogitem.rest.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Collections;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Metadata {
     private String compositeTitle;
-    private TitleInfo titleInfo;
-    private TitleInfo alternativeTitleInfo;
-    private TitleInfo uniformTitleInfo;
+    private List<TitleInfo> titleInfos;
     private String typeOfResource;
     private List<String> mediaTypes;
     private String genre;
@@ -37,30 +36,18 @@ public class Metadata {
         this.compositeTitle = compositeTitle;
     }
     
-    public TitleInfo getTitleInfo() {
-        return titleInfo;
+    public List<TitleInfo> getTitleInfos() {
+        if (titleInfos == null) {
+            return Collections.emptyList();
+        } else {
+            return titleInfos;
+        }
     }
 
-    public void setTitleInfo(TitleInfo titleInfo) {
-        this.titleInfo = titleInfo;
+    public void setTitleInfos(List<TitleInfo> titleInfos) {
+        this.titleInfos = titleInfos;
     }
 
-    public TitleInfo getAlternativeTitleInfo() {
-        return alternativeTitleInfo;
-    }
-    
-    public void setAlternativeTitleInfo(TitleInfo alternativeTitleInfo) {
-        this.alternativeTitleInfo = alternativeTitleInfo;
-    }
-    
-    public TitleInfo getUniformTitleInfo() {
-        return uniformTitleInfo;
-    }
-    
-    public void setUniformTitleInfo(TitleInfo uniformTitleInfo) {
-        this.uniformTitleInfo = uniformTitleInfo;
-    }
-    
     public String getSummary() {
         return summary;
     }
