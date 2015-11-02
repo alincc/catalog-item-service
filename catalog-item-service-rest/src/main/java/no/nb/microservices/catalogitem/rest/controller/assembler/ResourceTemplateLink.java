@@ -8,7 +8,7 @@ public enum ResourceTemplateLink {
     WIKI ("/catalog/reference/{id}/wiki"),
     PLAYLIST("/catalog/playlist/{id}/jwplayer.rss"),
     THUMBNAIL("http://www.nb.no/services/image/resolver/{id}/full/{height},0/0/native.jpg");
-    
+
     private final String resourceLink;
 
     ResourceTemplateLink(String resourceLink) {

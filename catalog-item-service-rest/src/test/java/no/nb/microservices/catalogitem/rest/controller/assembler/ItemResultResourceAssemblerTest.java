@@ -90,8 +90,16 @@ public class ItemResultResourceAssemblerTest {
                 .mods(TestMods.aDefaultMusicTrack().build())
                 .fields(TestFields.aDefaultMusic().build())
                 .build();
-        ItemResource itemResource = resource.toResource(item );
+        ItemResource itemResource = resource.toResource(item);
         assertEquals("Should have a playlist link element", "playlist", itemResource.getLink("playlist").getRel());
+    }
+
+    public void testThumbnailLinks() {
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        Item item = new Item.ItemBuilder("id1").build();
+        ItemResource itemResource = resource.toResource(item );
+        assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
+        assertEquals("Should have a thumbnail_small link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());
     }
 
     @Test

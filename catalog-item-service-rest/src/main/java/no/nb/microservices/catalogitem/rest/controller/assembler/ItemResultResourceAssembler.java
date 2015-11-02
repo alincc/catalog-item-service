@@ -13,6 +13,9 @@ import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
 
     @Override
@@ -33,6 +36,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         resource.add(createEnwLink(item));
         resource.add(createRisLink(item));
         resource.add(createWikiLink(item));
+        resource.add(createThumbnailLinks(item));
         
         if (streamingInfoStrategy.hasStreamingLink()) {
             resource.add(createPlaylistLink(item));
@@ -82,5 +86,14 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         } else {
             return Collections.emptyList();
         }
+    }
+    
+    private List<Link> createThumbnailLinks(Item item) {
+        List<Link> links = new ArrayList<>();
+        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 512).withRel("thumbnail_xlarge"));
+        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 256).withRel("thumbnail_large"));
+        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 128).withRel("thumbnail_medium"));
+        links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getId(), 64).withRel("thumbnail_small"));
+        return links;
     }
 }

@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
                         List<Item> succeeding = getItemByRelatedItemType("succeeding", mods, securityInfo);
                         relatedItems = new RelatedItems(constituents, hosts,
                                 !preceding.isEmpty() ? preceding.get(0) : null,
-                                !succeeding.isEmpty() ? succeeding.get(0) : null));
+                                !succeeding.isEmpty() ? succeeding.get(0) : null);
                     }
                     
                    return new ItemBuilder(id)
