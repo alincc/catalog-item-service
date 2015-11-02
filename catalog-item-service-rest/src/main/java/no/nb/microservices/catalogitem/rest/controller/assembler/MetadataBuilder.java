@@ -47,7 +47,6 @@ public final class MetadataBuilder {
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
-                .withField(field)
                 .withMods(mods)
                 .build());
         metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
