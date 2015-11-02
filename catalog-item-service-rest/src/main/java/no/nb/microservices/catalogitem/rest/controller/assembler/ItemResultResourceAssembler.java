@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,9 +14,6 @@ import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
 
     @Override
@@ -23,8 +21,9 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         ItemResource resource = new ItemResource(item.getId());
         createLinks(item, resource);
         resource.setAccessInfo(new AccessInfoBuilder().fields(item.getField()).access(item.hasAccess()).build());
-        resource.setMetadata(new MetadataBuilder(item).withRelatedItems(item.getRelatedItems()).build());
-        
+        resource.setMetadata(new MetadataBuilder(item).build());
+        resource.setRelatedItems(new RelatedItemsBuilder().withRelatedItems(item.getRelatedItems()).build());
+
         return resource;
     }
 

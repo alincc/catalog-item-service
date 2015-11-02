@@ -95,22 +95,6 @@ public class MetadataBuilderTest {
         assertNull("Should not have a streamingInfo", metadata.getStreamingInfo());
     }
 
-    @Test
-    public void testHosts() {
-        Item host = new Item.ItemBuilder("id1")
-                .mods(TestMods.aDefaultMusicAlbum().build())
-                .build();
-        RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
-        Item item = new Item.ItemBuilder("id1")
-                .mods(TestMods.aDefaultMusicTrack().build())
-                .withRelatedItems(relatedItems)
-                .build();
-
-        Metadata metadata = new MetadataBuilder(item).build();
-        
-        assertNotNull("Should have hosts", metadata.getRelatedItems().getHosts());
-    }
-    
     private List<Note> createNotes() {
         Note note1 = new Note();
         note1.setValue("Tittelinformasjon er hentet fra tilhørende dokumentasjonsmateriale. Widerøe Flyfoto A/S solgte i 1983 disse fotografiene til Kviteseid kommune.");

@@ -15,6 +15,7 @@ public class ItemResource extends ResourceSupport {
     private String id;
     private Metadata metadata;
     private AccessInfo accessInfo;
+    private RelatedItem relatedItems;
 
     @JsonCreator
     public ItemResource() {
@@ -46,4 +47,12 @@ public class ItemResource extends ResourceSupport {
         this.accessInfo = accessInfo;
     }
 
+    public RelatedItem getRelatedItems() {
+        return relatedItems;
+    }
+
+    public void setRelatedItems(RelatedItem relatedItems) {
+        this.relatedItems = relatedItems;
+    }
+    
 }

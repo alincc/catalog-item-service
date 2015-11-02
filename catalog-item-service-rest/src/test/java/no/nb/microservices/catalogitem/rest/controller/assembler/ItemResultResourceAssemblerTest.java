@@ -1,7 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
@@ -125,6 +127,41 @@ public class ItemResultResourceAssemblerTest {
         assertEquals("CompositeTitle shoud be \"Supersonic ct\"", "Supersonic ct", itemResource.getMetadata().getCompositeTitle());
         
     }
+    
+    @Test
+    public void testHosts() {
+        Item host = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .build();
+        RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicTrack().build())
+                .withRelatedItems(relatedItems)
+                .build();
+
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        ItemResource itemResource = resource.toResource(item );
+        
+        assertTrue("Should have hosts", !itemResource.getRelatedItems().getHosts().isEmpty());
+    }
+    
+    @Test
+    public void testConstitutent() {
+        Item track = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicTrack().build())
+                .build();
+        RelatedItems relatedItems = new RelatedItems(Arrays.asList(track), null);
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .withRelatedItems(relatedItems)
+                .build();
+
+        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
+        ItemResource itemResource = resource.toResource(item );
+        
+        assertTrue("Should have constituents", !itemResource.getRelatedItems().getConstituents().isEmpty());
+    }
+
 
     @Test
     public void testOriginInfo() {
