@@ -25,6 +25,8 @@ import no.nb.microservices.catalogitem.core.metadata.repository.MetadataReposito
 import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 import reactor.Environment;
 import reactor.fn.Function;
 import reactor.fn.tuple.Tuple3;
@@ -143,19 +145,28 @@ public class ItemServiceImpl implements ItemService {
     
     private List<Item> getItemByRelatedItemType(String type, Mods mods, SecurityInfo securityInfo) {
         List<Item> items = new ArrayList<>();
-        List<String> oaiids = mods.getRelatedItems()
+        List<RelatedItem> relatedItem = mods.getRelatedItems()
             .stream()
             .filter(r -> type.equalsIgnoreCase(r.getType()))
-            .map(r -> r.getRecordInfo().getRecordIdentifier().getValue())
             .collect(Collectors.toList());
         
-        oaiids.forEach(oaiid -> {
-            String q = "oaiid:\"oai:mavis.nb.no:" + oaiid + "\"";
+        relatedItem.forEach(r -> {
+            String q = "oaiid:\"oai:mavis.nb.no:" + r.getRecordInfo().getRecordIdentifier().getValue() + "\"";
             SearchResult searchResult = indexService.search(q, securityInfo);
             String id = searchResult.getIds().get(0);
-            items.add(getItemById(id, null, securityInfo));
+            Item item = getItemById(id, null, securityInfo);
+            addPartNumber(r, item);
+            items.add(item);
         });
         return items;
+    }
+
+    private void addPartNumber(RelatedItem r, Item item) {
+        if (item != null) {
+            for(TitleInfo titleInfo : item.getMods().getTitleInfos()) {
+                titleInfo.setPartNumber(r.getTitleInfo().get(0).getPartNumber());
+            }
+        }
     }
 
 }

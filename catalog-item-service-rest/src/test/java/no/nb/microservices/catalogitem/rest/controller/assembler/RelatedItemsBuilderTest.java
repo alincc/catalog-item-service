@@ -15,7 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.rest.model.RelatedItem;
+import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
@@ -43,7 +43,7 @@ public class RelatedItemsBuilderTest {
         List<Item> constitutens = Arrays.asList(constituten);
         RelatedItems items = new RelatedItems(constitutens, null);
         
-        RelatedItem relatedItems = new RelatedItemsBuilder()
+        RelatedItemResource relatedItems = new RelatedItemsBuilder()
             .withRelatedItems(items)
             .build();
 
@@ -60,7 +60,7 @@ public class RelatedItemsBuilderTest {
         List<Item> hosts = Arrays.asList(host);
         RelatedItems items = new RelatedItems(hosts, null);
         
-        RelatedItem relatedItems = new RelatedItemsBuilder()
+        RelatedItemResource relatedItems = new RelatedItemsBuilder()
             .withRelatedItems(items)
             .build();
 
@@ -76,7 +76,7 @@ public class RelatedItemsBuilderTest {
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, null, item, null);
 
-        RelatedItem relatedItem = new RelatedItemsBuilder()
+        RelatedItemResource relatedItem = new RelatedItemsBuilder()
                 .withRelatedItems(relatedItems)
                 .build();
 
@@ -92,7 +92,7 @@ public class RelatedItemsBuilderTest {
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, null, null, item);
 
-        RelatedItem relatedItem = new RelatedItemsBuilder()
+        RelatedItemResource relatedItem = new RelatedItemsBuilder()
                 .withRelatedItems(relatedItems)
                 .build();
 

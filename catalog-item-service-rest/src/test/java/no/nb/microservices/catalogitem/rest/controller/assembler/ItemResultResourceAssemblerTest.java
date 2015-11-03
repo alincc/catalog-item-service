@@ -17,6 +17,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.rest.controller.assembler.AccessInfoBuilder;
+import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
@@ -108,6 +110,7 @@ public class ItemResultResourceAssemblerTest {
         assertEquals("Should have a playlist link element", "playlist", itemResource.getLink("playlist").getRel());
     }
 
+    @Test
     public void testThumbnailLinks() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
