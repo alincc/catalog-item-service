@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -109,6 +110,7 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
+    @Ignore
     public void testThumbnailLinks() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
