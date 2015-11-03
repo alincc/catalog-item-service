@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -118,7 +117,7 @@ public class ItemResultResourceAssemblerTest {
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
         assertEquals("Should have a thumbnail_medium link element", "thumbnail_medium", itemResource.getLink("thumbnail_medium").getRel());
-        assertEquals("Should have a thumbnail_large link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());
+        assertEquals("Should have a thumbnail_large link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());    
     }
 
     @Test

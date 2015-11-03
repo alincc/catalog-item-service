@@ -62,4 +62,18 @@ public class ItemControllerTest {
             .andExpect(status().is2xxSuccessful());
     }
 
+    @Test
+    public void testRelatedItems() throws Exception {
+        Item item = new ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .fields(TestFields.aDefaultMusic().build())
+                .hasAccess(true)
+                .build();
+
+        when(itemService.getItemById("id1", "relatedItems")).thenReturn(item);
+
+        mockMvc.perform(get("/catalog/items/id1/relatedItems"))
+            .andExpect(status().is2xxSuccessful());
+    }
+    
 }

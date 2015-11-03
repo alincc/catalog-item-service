@@ -6,16 +6,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({"expand", "id", "_links", "accessInfo", "metadata" })
 public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
     private String id;
+    private String expand;
     private Metadata metadata;
     private AccessInfo accessInfo;
-    private RelatedItem relatedItems;
+    private RelatedItemResource relatedItems;
 
     @JsonCreator
     public ItemResource() {
@@ -31,6 +34,14 @@ public class ItemResource extends ResourceSupport {
         return id;
     }
 
+    public String getExpand() {
+        return expand;
+    }
+    
+    public void setExpand(String expand) {
+        this.expand = expand;
+    }
+    
     public Metadata getMetadata() {
         return metadata;
     }
@@ -47,12 +58,12 @@ public class ItemResource extends ResourceSupport {
         this.accessInfo = accessInfo;
     }
 
-    public RelatedItem getRelatedItems() {
+    public RelatedItemResource getRelatedItems() {
         return relatedItems;
     }
 
-    public void setRelatedItems(RelatedItem relatedItems) {
+    public void setRelatedItems(RelatedItemResource relatedItems) {
         this.relatedItems = relatedItems;
     }
-    
+
 }

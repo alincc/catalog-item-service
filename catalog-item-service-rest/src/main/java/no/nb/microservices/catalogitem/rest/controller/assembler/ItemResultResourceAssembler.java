@@ -2,24 +2,32 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 
-public class ItemResultResourceAssembler implements ResourceAssembler<Item, ItemResource> {
+public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
+
+    public ItemResultResourceAssembler() {
+        super(ItemController.class, ItemResource.class);
+    }
 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
         createLinks(item, resource);
+        
+        if (item.getMods() != null && item.getMods().getRelatedItems() != null) {
+            resource.setExpand("relatedItems");
+        }
+        
         resource.setAccessInfo(new AccessInfoBuilder().fields(item.getField()).access(item.hasAccess()).build());
         resource.setMetadata(new MetadataBuilder(item).build());
         resource.setRelatedItems(new RelatedItemsBuilder().withRelatedItems(item.getRelatedItems()).build());
@@ -36,6 +44,7 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
         resource.add(createRisLink(item));
         resource.add(createWikiLink(item));
         resource.add(createThumbnailLinks(item));
+        resource.add(createRelatedItemsLink(item));
         
         if (streamingInfoStrategy.hasStreamingLink()) {
             resource.add(createPlaylistLink(item));
@@ -68,6 +77,10 @@ public class ItemResultResourceAssembler implements ResourceAssembler<Item, Item
 
     private Link createPlaylistLink(Item item) {
         return ResourceLinkBuilder.linkTo(ResourceTemplateLink.PLAYLIST, item.getId()).withRel("playlist");
+    }
+
+    private Link createRelatedItemsLink(Item item) {
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.RELATED_ITEMS, item.getId()).withRel("relatedItems");
     }
 
     private String getFirstMediatype(Item item) {
