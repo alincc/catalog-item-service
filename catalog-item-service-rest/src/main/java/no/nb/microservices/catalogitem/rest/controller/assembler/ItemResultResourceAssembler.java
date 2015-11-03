@@ -1,17 +1,16 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
 

@@ -1,9 +1,5 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.net.URI;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.hateoas.core.LinkBuilderSupport;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
@@ -12,6 +8,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 
 class ResourceLinkBuilder extends LinkBuilderSupport<ResourceLinkBuilder> {
     

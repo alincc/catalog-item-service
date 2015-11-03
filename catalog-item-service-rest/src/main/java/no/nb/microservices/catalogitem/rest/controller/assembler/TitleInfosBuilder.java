@@ -1,10 +1,10 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import no.nb.microservices.catalogitem.rest.model.TitleInfo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 
 public class TitleInfosBuilder {
     List<no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo> titleInfos;

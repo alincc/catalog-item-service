@@ -1,11 +1,11 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import no.nb.microservices.catalogitem.rest.model.Classification;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import no.nb.microservices.catalogitem.rest.model.Classification;
 
 public class ClassificationBuilder {
 

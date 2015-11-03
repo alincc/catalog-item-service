@@ -1,14 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang.math.NumberUtils;
-
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import org.apache.commons.lang.math.NumberUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class IdentifiersBuilder {

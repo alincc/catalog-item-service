@@ -1,11 +1,11 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * copy of https://github.com/spring-projects/spring-hateoas/blob/master/src/main/java/org/springframework/hateoas/mvc/ForwardedHeader.java

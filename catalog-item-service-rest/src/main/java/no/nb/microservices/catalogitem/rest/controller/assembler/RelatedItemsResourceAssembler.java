@@ -1,12 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 public class RelatedItemsResourceAssembler extends ResourceAssemblerSupport<Item, RelatedItemResource> {
