@@ -1,22 +1,24 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.List;
-
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Location;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Url;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.hateoas.Link;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Location;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Url;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class ThumbnailBuilderTest {
 
@@ -99,8 +101,10 @@ public class ThumbnailBuilderTest {
 
     @Test
     public void buildStandardThumbnailsTest() {
+        FieldResource fields = new FieldResource();
+        fields.setThumbnailUrl("URN:NBN:no-nb_digibok_2014062307158_C1");
         Mods mods = new Mods();
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields).build();
 
         List<Link> links = new ThumbnailBuilder(item).build();
         assertEquals(3, links.size());
@@ -113,5 +117,16 @@ public class ThumbnailBuilderTest {
 
         Link small = links.stream().filter(q -> q.getRel().equalsIgnoreCase("thumbnail_small")).findAny().get();
         assertEquals("thumbnail_small", small.getRel());
+    }
+
+    @Test
+    public void buildEmptyThumbnailsTest() {
+        FieldResource fields = new FieldResource();
+        fields.setThumbnailUrl("");
+        Mods mods = new Mods();
+        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields).build();
+
+        List<Link> links = new ThumbnailBuilder(item).build();
+        assertEquals(0, links.size());
     }
 }

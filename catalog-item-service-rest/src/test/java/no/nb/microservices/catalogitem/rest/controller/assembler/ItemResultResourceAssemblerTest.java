@@ -1,8 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
@@ -36,8 +36,12 @@ import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class ItemResultResourceAssemblerTest {
 
+    private ItemResultResourceAssembler resource = null;
+    
     @Before
     public void init() {
+        resource = new ItemResultResourceAssembler();
+        
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/id1");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
@@ -50,7 +54,6 @@ public class ItemResultResourceAssemblerTest {
     
     @Test
     public void testSelfLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertNotNull("Links should not be null", itemResource.getLinks());
@@ -59,7 +62,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testModsLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a mods-referential link element", "mods", itemResource.getLink("mods").getRel());
@@ -67,7 +69,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testPresentationLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a presentation-referential link element", "presentation", itemResource.getLink("presentation").getRel());
@@ -75,7 +76,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testEnwRefererLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a enw-referential link element", "enw", itemResource.getLink("enw").getRel());
@@ -83,7 +83,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testRisRefererLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a ris-referential link element", "ris", itemResource.getLink("ris").getRel());
@@ -99,7 +98,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testPlaylistLink() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicTrack().build())
                 .fields(TestFields.aDefaultMusic().build())
@@ -112,17 +110,43 @@ public class ItemResultResourceAssemblerTest {
     public void testThumbnailLinks() {
         FieldResource fields = new FieldResource();
         fields.setThumbnailUrl("URN:NBN:no-nb_digibok_2014062307158_C1");
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Item item = new Item.ItemBuilder("id1").fields(fields).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
         assertEquals("Should have a thumbnail_medium link element", "thumbnail_medium", itemResource.getLink("thumbnail_medium").getRel());
         assertEquals("Should have a thumbnail_large link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());    
     }
+    
+    @Test
+    public void testRelatedItemsLink() {
+        Item host = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicAlbum().build())
+                .build();
+        RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultMusicTrack().build())
+                .withRelatedItems(relatedItems)
+                .build();
+
+        
+        ItemResource itemResource = resource.toResource(item );
+        
+        assertThat(itemResource.getLink("relatedItems").getHref(), is("http://localhost/catalog/items/id1/relatedItems"));
+    }
+
+    @Test
+    public void testNoRelatedItemsLink() {
+        Item item = new Item.ItemBuilder("id1")
+                .mods(TestMods.aDefaultBookMods().build())
+                .build();
+        
+        ItemResource itemResource = resource.toResource(item );
+        
+        assertNull(itemResource.getLink("relatedItems"));
+    }
 
     @Test
     public void testMetadata() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         Mods mods = new Mods();
         TitleInfo titleInfo = new TitleInfo();
         titleInfo.setTitle("Supersonic");
@@ -154,7 +178,6 @@ public class ItemResultResourceAssemblerTest {
                 .withRelatedItems(relatedItems)
                 .build();
 
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         ItemResource itemResource = resource.toResource(item );
         
         assertTrue("Should have hosts", !itemResource.getRelatedItems().getHosts().isEmpty());
@@ -171,7 +194,6 @@ public class ItemResultResourceAssemblerTest {
                 .withRelatedItems(relatedItems)
                 .build();
 
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
         ItemResource itemResource = resource.toResource(item );
         
         assertTrue("Should have constituents", !itemResource.getRelatedItems().getConstituents().isEmpty());
@@ -180,8 +202,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testOriginInfo() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        
         Mods mods = new Mods();
         OriginInfo originInfo = new OriginInfo();
         DateMods dateCreated = new DateMods();
@@ -199,8 +219,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testRecordInfo() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-
         Mods mods = new Mods();
         RecordInfo recordInfo = new RecordInfo();
         RecordIdentifier recordIdentifier = new RecordIdentifier();
@@ -219,8 +237,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testGeographic() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-
         Mods mods = new Mods();
         OriginInfo originInfo = new OriginInfo();
         Place place = new Place();
@@ -237,8 +253,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testAccessInfo() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        
         FieldResource fields = new FieldResource();
         fields.setContentClasses(Arrays.asList("restricted", "public"));
         fields.setDigital(true);
@@ -256,8 +270,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testPeople() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-
         Mods mods = new Mods();
         RoleTerm creator = new RoleTerm();
         creator.setValue("creator");
@@ -277,8 +289,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testCorporate() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-
         List<Namepart> nameparts = new ArrayList<>();
         nameparts.add(createNamePart("Det Norske teatret", null));
         nameparts.add(createNamePart("Centralteatret", null));
@@ -306,8 +316,6 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testClassification() {
-        ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-
         Mods mods = new Mods();
         List<no.nb.microservices.catalogmetadata.model.mods.v3.Classification> classifications = new ArrayList<>();
         classifications.add(createDdcClassification("123[S]"));

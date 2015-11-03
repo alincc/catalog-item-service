@@ -24,7 +24,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         ItemResource resource = new ItemResource(item.getId());
         createLinks(item, resource);
         
-        if (item.getMods() != null && item.getMods().getRelatedItems() != null) {
+        if (hasRelatedItems(item)) {
             resource.setExpand("relatedItems");
         }
         
@@ -44,11 +44,17 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         resource.add(createRisLink(item));
         resource.add(createWikiLink(item));
         resource.add(createThumbnailLinks(item));
-        resource.add(createRelatedItemsLink(item));
+        if (hasRelatedItems(item)) {
+            resource.add(createRelatedItemsLink(item));
+        }
         
         if (streamingInfoStrategy.hasStreamingLink()) {
             resource.add(createPlaylistLink(item));
         }
+    }
+
+    private boolean hasRelatedItems(Item item) {
+        return item.getMods() != null && item.getMods().getRelatedItems() != null;
     }
 
     private Link createSelfLink(Item item) {
