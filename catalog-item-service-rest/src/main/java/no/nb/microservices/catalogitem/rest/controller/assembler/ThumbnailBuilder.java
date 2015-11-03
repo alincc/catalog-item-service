@@ -1,9 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Url;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.hateoas.Link;
 
