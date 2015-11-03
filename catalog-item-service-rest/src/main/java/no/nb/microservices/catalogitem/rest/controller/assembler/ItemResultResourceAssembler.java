@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
