@@ -31,10 +31,6 @@ public class RelatedItemResource extends ResourceSupport {
         this.id = id;
     }
 
-    public String getId() {
-        return this.id;
-    }
-    
     public RelatedItemResource(List<ItemResource> hosts,
             List<ItemResource> constituents, ItemResource preceding,
             ItemResource succeding) {
@@ -43,6 +39,10 @@ public class RelatedItemResource extends ResourceSupport {
         this.constituents = constituents;
         this.preceding = preceding;
         this.succeding = succeding;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public List<ItemResource> getHosts() {
