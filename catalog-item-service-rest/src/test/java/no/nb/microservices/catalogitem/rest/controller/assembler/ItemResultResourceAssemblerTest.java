@@ -110,13 +110,15 @@ public class ItemResultResourceAssemblerTest {
     }
 
     @Test
-    @Ignore
     public void testThumbnailLinks() {
+        FieldResource fields = new FieldResource();
+        fields.setThumbnailUrl("URN:NBN:no-nb_digibok_2014062307158_C1");
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").fields(fields).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
-        assertEquals("Should have a thumbnail_small link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());
+        assertEquals("Should have a thumbnail_medium link element", "thumbnail_medium", itemResource.getLink("thumbnail_medium").getRel());
+        assertEquals("Should have a thumbnail_large link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());
     }
 
     @Test
