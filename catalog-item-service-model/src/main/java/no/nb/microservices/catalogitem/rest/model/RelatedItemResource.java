@@ -41,7 +41,7 @@ public class RelatedItemResource extends ResourceSupport {
         this.succeding = succeding;
     }
 
-    public String getId() {
+    public String getItemId() {
         return this.id;
     }
 
