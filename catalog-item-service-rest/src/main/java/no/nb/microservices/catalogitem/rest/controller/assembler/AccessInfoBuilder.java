@@ -1,9 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.List;
-
 import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+
+import java.util.List;
 
 public final class AccessInfoBuilder {
     public static final String VIEWABILITY_ALL = "ALL";

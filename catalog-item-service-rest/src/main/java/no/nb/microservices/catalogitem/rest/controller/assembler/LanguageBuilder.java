@@ -1,11 +1,11 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
+import no.nb.microservices.catalogmetadata.model.mods.v3.Language;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import no.nb.microservices.catalogmetadata.model.mods.v3.Language;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class LanguageBuilder {
 

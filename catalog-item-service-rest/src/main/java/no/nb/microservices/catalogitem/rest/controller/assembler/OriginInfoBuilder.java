@@ -1,14 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import org.apache.commons.validator.routines.DateValidator;
-
 import no.nb.microservices.catalogitem.rest.model.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import org.apache.commons.validator.routines.DateValidator;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class OriginInfoBuilder {
 

@@ -1,12 +1,12 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RelatedItemsBuilder {
     private RelatedItems relatedItems;

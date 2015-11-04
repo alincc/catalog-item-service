@@ -1,14 +1,14 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import no.nb.microservices.catalogitem.rest.model.Person;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SubjectBuilder {
 

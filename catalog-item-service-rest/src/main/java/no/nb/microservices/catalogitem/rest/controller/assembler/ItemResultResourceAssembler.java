@@ -1,17 +1,16 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
 
@@ -54,7 +53,18 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     }
 
     private boolean hasRelatedItems(Item item) {
-        return item.getMods() != null && item.getMods().getRelatedItems() != null;
+        long count = 0;
+        if(item.getMods() != null && item.getMods().getRelatedItems() != null) {
+           count = item.getMods().getRelatedItems().stream()
+               .filter(r -> ("constituent".equals(r.getType()) 
+                       || "host".equals(r.getType()) 
+                       || "preceding".equals(r.getType()) 
+                       || "succeeding".equals(r.getType())) 
+                       && r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
+               .count();
+           
+        }
+        return count > 0 ? true :false;
     }
 
     private Link createSelfLink(Item item) {

@@ -90,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         } catch (Exception ex) {
             LOG.warn("Failed getting item for id " + id, ex);
         }
-        return null;
+        return new ItemBuilder(id).build();
     }
 
     private SecurityInfo getSecurityInfo() {
@@ -151,12 +151,14 @@ public class ItemServiceImpl implements ItemService {
             .collect(Collectors.toList());
         
         relatedItem.forEach(r -> {
-            String q = "oaiid:\"oai:mavis.nb.no:" + r.getRecordInfo().getRecordIdentifier().getValue() + "\"";
-            SearchResult searchResult = indexService.search(q, securityInfo);
-            String id = searchResult.getIds().get(0);
-            Item item = getItemById(id, null, securityInfo);
-            addPartNumber(r, item);
-            items.add(item);
+            if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
+                String q = "oaiid:\"oai:"+r.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getRecordInfo().getRecordIdentifier().getValue() + "\"";
+                SearchResult searchResult = indexService.search(q, securityInfo);
+                String id = searchResult.getIds().get(0);
+                Item item = getItemById(id, null, securityInfo);
+                addPartNumber(r, item);
+                items.add(item);
+            }
         });
         return items;
     }

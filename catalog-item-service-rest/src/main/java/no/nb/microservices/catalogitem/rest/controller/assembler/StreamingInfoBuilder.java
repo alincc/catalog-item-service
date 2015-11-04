@@ -1,13 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.Optional;
-
 import no.nb.microservices.catalogitem.rest.model.StreamingInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Extent;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Location;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Offset;
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
+
+import java.util.Optional;
 
 public class StreamingInfoBuilder {
 
@@ -72,7 +68,7 @@ public class StreamingInfoBuilder {
                 .filter(i -> "urn".equals(i.getType()))
                 .findFirst();
              
-             if (urn != null) {
+             if (urn.isPresent()) {
                  identifier = urn.get().getValue();
              }
         }
