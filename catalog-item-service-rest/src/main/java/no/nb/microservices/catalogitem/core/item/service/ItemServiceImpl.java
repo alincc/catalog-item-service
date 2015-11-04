@@ -67,18 +67,7 @@ public class ItemServiceImpl implements ItemService {
                     FieldResource fields = tup.getT2();
                     Boolean hasAccess = tup.getT3();
 
-                    RelatedItems relatedItems = null;
-                    if ("relatedItems".equalsIgnoreCase(expand)) {
-                        List<Item> constituents = getItemByRelatedItemType("constituent", mods, securityInfo);
-                        List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
-                        List<Item> preceding = getItemByRelatedItemType("preceding", mods, securityInfo);
-                        List<Item> succeeding = getItemByRelatedItemType("succeeding", mods, securityInfo);
-                        Item series = getSeries(mods, securityInfo);
-                        relatedItems = new RelatedItems(constituents, hosts,
-                                !preceding.isEmpty() ? preceding.get(0) : null,
-                                !succeeding.isEmpty() ? succeeding.get(0) : null,
-                                series);
-                    }
+                    RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods);
                     
                    return new ItemBuilder(id)
                             .mods(mods)
@@ -93,6 +82,23 @@ public class ItemServiceImpl implements ItemService {
             LOG.warn("Failed getting item for id " + id, ex);
         }
         return new ItemBuilder(id).build();
+    }
+
+    private RelatedItems getRelatedItems(String expand,
+            SecurityInfo securityInfo, Mods mods) {
+        RelatedItems relatedItems = null;
+        if ("relatedItems".equalsIgnoreCase(expand)) {
+            List<Item> constituents = getItemByRelatedItemType("constituent", mods, securityInfo);
+            List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
+            List<Item> preceding = getItemByRelatedItemType("preceding", mods, securityInfo);
+            List<Item> succeeding = getItemByRelatedItemType("succeeding", mods, securityInfo);
+            Item series = getSeries(mods, securityInfo);
+            relatedItems = new RelatedItems(constituents, hosts,
+                    !preceding.isEmpty() ? preceding.get(0) : null,
+                    !succeeding.isEmpty() ? succeeding.get(0) : null,
+                    series);
+        }
+        return relatedItems;
     }
 
     private Item getSeries(Mods mods, SecurityInfo securityInfo) {
@@ -158,28 +164,13 @@ public class ItemServiceImpl implements ItemService {
             .collect(Collectors.toList());
         
         relatedItem.forEach(r -> {
-            String q = null;
-            if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
-                String source = null;
-                String identifier = null;
-                source = r.getRecordInfo().getRecordIdentifier().getSource(); 
-                if (source == null) {
-                    if (mods.getRecordInfo() != null && mods.getRecordInfo().getRecordIdentifier() != null) {
-                        source = mods.getRecordInfo().getRecordIdentifier().getSource();
-                    }
-                }
-                identifier = r.getRecordInfo().getRecordIdentifier().getValue();
-                q = "oaiid:\"oai:"+source+":" + identifier + "\"";
-            } else if (r.getIdentifier() != null) {
-                if ("oaiid".equals(r.getIdentifier().getType())) {
-                    q = "oaiid:\""+r.getIdentifier().getValue()  + "\"";
-                } else if ("local".equals(r.getIdentifier().getType())) {
-                    q = "oaiid:\"oai:"+mods.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getIdentifier().getValue() + "\"";
-                }
+            String query = getQueryFromRecordIdentifier(mods, r); 
+            if (query == null) {
+                query = getQueryFromIdentifier(mods, r);
             }
              
-            if (q != null) {
-                SearchResult searchResult = indexService.search(q, securityInfo);
+            if (query != null) {
+                SearchResult searchResult = indexService.search(query, securityInfo);
                 if (!searchResult.getIds().isEmpty()) {
                     String id = searchResult.getIds().get(0);
                     Item item = getItemById(id, null, securityInfo);
@@ -189,6 +180,33 @@ public class ItemServiceImpl implements ItemService {
             }
         });
         return items;
+    }
+
+    private String getQueryFromIdentifier(Mods mods, RelatedItem r) {
+        String query = null;
+        if (r.getIdentifier() != null) {
+            if ("oaiid".equals(r.getIdentifier().getType())) {
+                query = "oaiid:\""+r.getIdentifier().getValue()  + "\"";
+            } else if ("local".equals(r.getIdentifier().getType())) {
+                query = "oaiid:\"oai:"+mods.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getIdentifier().getValue() + "\"";
+            }
+        }
+        return query;
+    }
+
+    private String getQueryFromRecordIdentifier(Mods mods, RelatedItem r) {
+        String query = null;
+        if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
+            String source = null;
+            String identifier = null;
+            source = r.getRecordInfo().getRecordIdentifier().getSource(); 
+            if (source == null && mods.getRecordInfo() != null && mods.getRecordInfo().getRecordIdentifier() != null) {
+                source = mods.getRecordInfo().getRecordIdentifier().getSource();
+            }
+            identifier = r.getRecordInfo().getRecordIdentifier().getValue();
+            query = "oaiid:\"oai:"+source+":" + identifier + "\"";
+        }
+        return query;
     }
 
     private void addPartNumber(RelatedItem r, Item item) {

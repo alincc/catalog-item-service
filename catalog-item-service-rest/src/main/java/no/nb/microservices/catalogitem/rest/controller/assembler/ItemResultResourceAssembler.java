@@ -4,6 +4,8 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -56,17 +58,24 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         long count = 0;
         if(item.getMods() != null && item.getMods().getRelatedItems() != null) {
            count = item.getMods().getRelatedItems().stream()
-               .filter(r -> ("constituent".equals(r.getType()) 
-                       || "host".equals(r.getType()) 
-                       || "preceding".equals(r.getType()) 
-                       || "succeeding".equals(r.getType())
-                       || "series".equals(r.getType())) 
-                       && ((r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
-                               || r.getIdentifier() != null))
+               .filter(r -> isSupportedRelatedItems(r) && hasRelatedItemIdentifier(r))
                .count();
            
         }
         return count > 0 ? true :false;
+    }
+
+    private boolean isSupportedRelatedItems(RelatedItem r) {
+        return "constituent".equals(r.getType()) 
+                   || "host".equals(r.getType()) 
+                   || "preceding".equals(r.getType()) 
+                   || "succeeding".equals(r.getType())
+                   || "series".equals(r.getType());
+    }
+
+    private boolean hasRelatedItemIdentifier(RelatedItem r) {
+        return (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
+                   || r.getIdentifier() != null;
     }
 
     private Link createSelfLink(Item item) {
