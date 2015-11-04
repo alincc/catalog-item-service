@@ -8,42 +8,44 @@ import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 import org.junit.Test;
 
+import java.util.List;
+
 public class StreamingInfoBuilderTest {
 
     @Test
     public void testFromLocation() {
         Mods mods = TestMods.aDefaultMusicTrack().build();
         StreamingInfo expected = new StreamingInfo(getFirstUrnLocation(mods), null, null);
-        
-        StreamingInfo result = new StreamingInfoBuilder()
+
+        List<StreamingInfo> result = new StreamingInfoBuilder()
             .withMods(mods)
             .build();
         
-        assertEquals(expected, result);
+        assertEquals(expected, result.get(0));
     }
 
     @Test
     public void testFromIdentifier() {
         Mods mods = TestMods.aDefaultRadioHourMods().build();
         StreamingInfo expected = new StreamingInfo(getFirstUrnIdentifier(mods), null, null);
-        
-        StreamingInfo result = new StreamingInfoBuilder()
+
+        List<StreamingInfo> result = new StreamingInfoBuilder()
             .withMods(mods)
             .build();
         
-        assertEquals(expected, result);
+        assertEquals(expected, result.get(0));
     }
     
     @Test
     public void testFromExtension() {
         Mods mods = TestMods.aDefaultRadioProgramMods().build();
         StreamingInfo expected = new StreamingInfo(getUrnFromExtension(mods), 100, 200);
-        
-        StreamingInfo result = new StreamingInfoBuilder()
+
+        List<StreamingInfo> result = new StreamingInfoBuilder()
             .withMods(mods)
             .build();
         
-        assertEquals(expected, result);
+        assertEquals(expected, result.get(0));
     }
 
     private String getFirstUrnLocation(Mods mods) {
@@ -59,6 +61,6 @@ public class StreamingInfoBuilderTest {
     }
     
     private String getUrnFromExtension(Mods mods) {
-        return mods.getExtension().getStreamingInfo().getIdentifier().getValue();
+        return mods.getExtension().getStreamingInfos().get(0).getIdentifier().getValue();
     }
 }
