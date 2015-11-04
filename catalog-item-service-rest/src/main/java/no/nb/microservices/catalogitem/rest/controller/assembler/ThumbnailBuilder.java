@@ -32,7 +32,7 @@ public class ThumbnailBuilder {
         {
             String thumbnailUrl = "";
             String location = (item.getMods().getLocation().getUrls().stream()
-                    .filter(q -> q.getAccess() != null && "preview".equalsIgnoreCase(q.getAccess())).findAny()
+                    .filter(q -> "preview".equalsIgnoreCase(q.getAccess())).findAny()
                     .orElseGet(() -> item.getMods().getLocation().getUrls().get(0))).getValue();
             thumbnailUrl = location.startsWith("http://") ? location : "";
 
