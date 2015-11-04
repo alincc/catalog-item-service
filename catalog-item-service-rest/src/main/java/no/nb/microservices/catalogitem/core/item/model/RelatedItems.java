@@ -9,6 +9,7 @@ public class RelatedItems {
     private List<Item> hosts;
     private Item preceding;
     private Item succeding;
+    private Item series;
 
     public RelatedItems(List<Item> constituents, List<Item> hosts) {
         super();
@@ -16,11 +17,12 @@ public class RelatedItems {
         this.hosts = hosts;
     }
 
-    public RelatedItems(List<Item> constituents, List<Item> hosts, Item preceding, Item succeding) {
+    public RelatedItems(List<Item> constituents, List<Item> hosts, Item preceding, Item succeding, Item series) {
         this.constituents = constituents;
         this.hosts = hosts;
         this.preceding = preceding;
         this.succeding = succeding;
+        this.series = series;
     }
 
     public List<Item> getConstituents() {
@@ -45,5 +47,9 @@ public class RelatedItems {
 
     public Item getSucceding() {
         return succeding;
+    }
+
+    public Item getSeries() {
+        return series;
     }
 }

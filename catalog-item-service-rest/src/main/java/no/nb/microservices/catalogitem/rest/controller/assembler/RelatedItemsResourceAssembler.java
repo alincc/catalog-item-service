@@ -31,6 +31,9 @@ public class RelatedItemsResourceAssembler extends ResourceAssemblerSupport<Item
             if (relatedItems.getSucceding() != null) {
                 resource.setSucceding(assembler.toResource(relatedItems.getSucceding()));
             }
+            if (relatedItems.getSeries() != null) {
+                resource.setSeries(assembler.toResource(relatedItems.getSeries()));
+            }
         }
         return resource;
     }

@@ -73,9 +73,11 @@ public class ItemServiceImpl implements ItemService {
                         List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
                         List<Item> preceding = getItemByRelatedItemType("preceding", mods, securityInfo);
                         List<Item> succeeding = getItemByRelatedItemType("succeeding", mods, securityInfo);
+                        Item series = getSeries(mods, securityInfo);
                         relatedItems = new RelatedItems(constituents, hosts,
                                 !preceding.isEmpty() ? preceding.get(0) : null,
-                                !succeeding.isEmpty() ? succeeding.get(0) : null);
+                                !succeeding.isEmpty() ? succeeding.get(0) : null,
+                                series);
                     }
                     
                    return new ItemBuilder(id)
@@ -91,6 +93,11 @@ public class ItemServiceImpl implements ItemService {
             LOG.warn("Failed getting item for id " + id, ex);
         }
         return new ItemBuilder(id).build();
+    }
+
+    private Item getSeries(Mods mods, SecurityInfo securityInfo) {
+        List<Item> series = getItemByRelatedItemType("series", mods, securityInfo);
+        return !series.isEmpty() ? series.get(0) : null;
     }
 
     private SecurityInfo getSecurityInfo() {
@@ -151,13 +158,34 @@ public class ItemServiceImpl implements ItemService {
             .collect(Collectors.toList());
         
         relatedItem.forEach(r -> {
+            String q = null;
             if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
-                String q = "oaiid:\"oai:"+r.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getRecordInfo().getRecordIdentifier().getValue() + "\"";
+                String source = null;
+                String identifier = null;
+                source = r.getRecordInfo().getRecordIdentifier().getSource(); 
+                if (source == null) {
+                    if (mods.getRecordInfo() != null && mods.getRecordInfo().getRecordIdentifier() != null) {
+                        source = mods.getRecordInfo().getRecordIdentifier().getSource();
+                    }
+                }
+                identifier = r.getRecordInfo().getRecordIdentifier().getValue();
+                q = "oaiid:\"oai:"+source+":" + identifier + "\"";
+            } else if (r.getIdentifier() != null) {
+                if ("oaiid".equals(r.getIdentifier().getType())) {
+                    q = "oaiid:\""+r.getIdentifier().getValue()  + "\"";
+                } else if ("local".equals(r.getIdentifier().getType())) {
+                    q = "oaiid:\"oai:"+mods.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getIdentifier().getValue() + "\"";
+                }
+            }
+             
+            if (q != null) {
                 SearchResult searchResult = indexService.search(q, securityInfo);
-                String id = searchResult.getIds().get(0);
-                Item item = getItemById(id, null, securityInfo);
-                addPartNumber(r, item);
-                items.add(item);
+                if (!searchResult.getIds().isEmpty()) {
+                    String id = searchResult.getIds().get(0);
+                    Item item = getItemById(id, null, securityInfo);
+                    addPartNumber(r, item);
+                    items.add(item);
+                }
             }
         });
         return items;

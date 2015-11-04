@@ -59,8 +59,10 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
                .filter(r -> ("constituent".equals(r.getType()) 
                        || "host".equals(r.getType()) 
                        || "preceding".equals(r.getType()) 
-                       || "succeeding".equals(r.getType())) 
-                       && r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
+                       || "succeeding".equals(r.getType())
+                       || "series".equals(r.getType())) 
+                       && ((r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
+                               || r.getIdentifier() != null))
                .count();
            
         }

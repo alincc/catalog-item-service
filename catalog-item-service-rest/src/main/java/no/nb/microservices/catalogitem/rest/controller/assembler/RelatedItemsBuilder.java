@@ -22,9 +22,10 @@ public class RelatedItemsBuilder {
             List<ItemResource> hosts = getHosts();
             ItemResource preceding = createPreceding();
             ItemResource succeding = createSucceding();
+            ItemResource series = createSeries();
     
             if (!hosts.isEmpty() || !constituents.isEmpty() || preceding != null || succeding != null) {
-                return new RelatedItemResource(hosts, constituents, preceding, succeding);
+                return new RelatedItemResource(hosts, constituents, preceding, succeding, series);
             }
         }
         return null;
@@ -64,4 +65,11 @@ public class RelatedItemsBuilder {
         }
     }
 
+    private ItemResource createSeries() {
+        if (relatedItems.getSeries() != null) {
+            return new ItemResultResourceAssembler().toResource(relatedItems.getSeries());
+        } else {
+            return null;
+        }
+    }
 }

@@ -19,6 +19,7 @@ public class RelatedItemResource extends ResourceSupport {
     private List<ItemResource> constituents = new ArrayList<>();
     private ItemResource preceding;
     private ItemResource succeding;
+    private ItemResource series;
 
     @JsonCreator
     public RelatedItemResource() {
@@ -33,12 +34,14 @@ public class RelatedItemResource extends ResourceSupport {
 
     public RelatedItemResource(List<ItemResource> hosts,
             List<ItemResource> constituents, ItemResource preceding,
-            ItemResource succeding) {
+            ItemResource succeding,
+            ItemResource series) {
         this();
         this.hosts = hosts;
         this.constituents = constituents;
         this.preceding = preceding;
         this.succeding = succeding;
+        this.series = series;
     }
 
     public String getItemId() {
@@ -75,5 +78,13 @@ public class RelatedItemResource extends ResourceSupport {
 
     public void setSucceding(ItemResource succeding) {
         this.succeding = succeding;
+    }
+
+    public ItemResource getSeries() {
+        return series;
+    }
+
+    public void setSeries(ItemResource series) {
+        this.series = series;
     }
 }

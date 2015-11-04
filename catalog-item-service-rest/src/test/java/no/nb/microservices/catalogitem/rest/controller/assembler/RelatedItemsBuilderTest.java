@@ -74,7 +74,7 @@ public class RelatedItemsBuilderTest {
                 .fields(TestFields.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
-        RelatedItems relatedItems = new RelatedItems(null, null, item, null);
+        RelatedItems relatedItems = new RelatedItems(null, null, item, null, null);
 
         RelatedItemResource relatedItem = new RelatedItemsBuilder()
                 .withRelatedItems(relatedItems)
@@ -90,7 +90,7 @@ public class RelatedItemsBuilderTest {
                 .fields(TestFields.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
-        RelatedItems relatedItems = new RelatedItems(null, null, null, item);
+        RelatedItems relatedItems = new RelatedItems(null, null, null, item, null);
 
         RelatedItemResource relatedItem = new RelatedItemsBuilder()
                 .withRelatedItems(relatedItems)
