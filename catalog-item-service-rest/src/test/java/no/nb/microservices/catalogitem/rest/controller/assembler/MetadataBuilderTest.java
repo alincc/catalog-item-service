@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
@@ -26,7 +25,6 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestRelatedItem;
 
 public class MetadataBuilderTest {
 

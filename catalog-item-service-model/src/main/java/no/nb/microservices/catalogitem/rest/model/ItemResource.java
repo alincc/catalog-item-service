@@ -15,6 +15,7 @@ public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
     private String id;
+    private String title;
     private String expand;
     private Metadata metadata;
     private AccessInfo accessInfo;
@@ -32,6 +33,14 @@ public class ItemResource extends ResourceSupport {
     
     public String geItemtId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getExpand() {

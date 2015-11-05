@@ -1,7 +1,11 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +21,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
@@ -163,8 +166,19 @@ public class ItemResultResourceAssemblerTest {
         
         assertNotNull("Should not be null", itemResource);
         assertTrue("Title shoud be \"Supersonic\"", !itemResource.getMetadata().getTitleInfos().isEmpty());
-        assertEquals("CompositeTitle shoud be \"Supersonic ct\"", "Supersonic ct", itemResource.getMetadata().getCompositeTitle());
         
+    }
+    
+    @Test
+    public void testTitle() {
+        FieldResource fields = new FieldResource();
+        fields.setTitle("Supersonic");
+        Item item = new Item.ItemBuilder("id1")
+                .fields(fields).build();
+        
+        ItemResource itemResource = resource.toResource(item);
+        
+        assertEquals("Supersonic", itemResource.getTitle());
     }
     
     @Test

@@ -25,8 +25,6 @@ public final class MetadataBuilder {
     
     public Metadata build() {
         Metadata metadata = new Metadata();
-        metadata.setCompositeTitle(getTitle());
-
         metadata.setTitleInfos(new TitleInfosBuilder()
             .withTitleInfos(mods.getTitleInfos())
             .build());
@@ -64,13 +62,6 @@ public final class MetadataBuilder {
         }
     }
     
-    private String getTitle() {
-        if (field != null) {
-            return field.getTitle();
-        }
-        return null;
-    }
-
     private List<String> getMediaTypes() {
         if (field != null) {
             return field.getMediaTypes();
