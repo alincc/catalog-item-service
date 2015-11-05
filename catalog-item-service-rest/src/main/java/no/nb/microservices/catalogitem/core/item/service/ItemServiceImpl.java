@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.core.item.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,33 +22,28 @@ import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
-import no.nb.microservices.catalogitem.core.security.repository.SecurityRepository;
+import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
+import no.nb.microservices.catalogitem.core.security.service.SecurityService;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
-import reactor.Environment;
-import reactor.fn.Function;
-import reactor.fn.tuple.Tuple3;
-import reactor.rx.Stream;
-import reactor.rx.Streams;
 
 @Service
 public class ItemServiceImpl implements ItemService {
     private static final Logger LOG = LoggerFactory.getLogger(ItemServiceImpl.class);
     
-    final MetadataRepository metadatRepository;
-    final SecurityRepository securityRepository;
+    final MetadataService metadataService;
+    final SecurityService securityService;
     final IndexService indexService;
 
     @Autowired
-    public ItemServiceImpl(MetadataRepository metadatRepository, 
-            SecurityRepository securityRepository,
+    public ItemServiceImpl(MetadataService metadataService, 
+            SecurityService securityService,
             IndexService indexService) {
         super();
-        this.metadatRepository = metadatRepository;
-        this.securityRepository = securityRepository;
+        this.metadataService = metadataService;
+        this.securityService = securityService;
         this.indexService = indexService;
     }
 
@@ -61,23 +57,20 @@ public class ItemServiceImpl implements ItemService {
 
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
-            Stream<Item> resp = Streams.zip(getModsById(tracableId), getFieldsById(tracableId), hasAccess(tracableId),
-                (Tuple3<Mods, FieldResource, Boolean> tup) -> {
-                    Mods mods = tup.getT1();
-                    FieldResource fields = tup.getT2();
-                    Boolean hasAccess = tup.getT3();
-
-                    RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods);
-                    
-                   return new ItemBuilder(id)
-                            .mods(mods)
-                            .fields(fields)
-                            .hasAccess(hasAccess)
-                            .withRelatedItems(relatedItems)
-                            .build();
-                });
-
-            return resp.next().await();
+            Future<Mods> mods = metadataService.getModsById(tracableId);
+            Future<FieldResource> fields = metadataService.getFieldsById(tracableId);
+            Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
+            
+            while (!(mods.isDone() && fields.isDone() && hasAccess.isDone())) {
+                Thread.sleep(1);
+            }
+            RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
+            return new ItemBuilder(id)
+                    .mods(mods.get())
+                    .fields(fields.get())
+                    .hasAccess(hasAccess.get())
+                    .withRelatedItems(relatedItems)
+                    .build();
         } catch (Exception ex) {
             LOG.warn("Failed getting item for id " + id, ex);
         }
@@ -117,45 +110,6 @@ public class ItemServiceImpl implements ItemService {
         return securityInfo;
     }
 
-    private Stream<Mods> getModsById(TracableId id) {
-        Environment env = new Environment();
-        return Streams.just(id).dispatchOn(env)
-                .map(new Function<TracableId, Mods>() {
-                    @Override
-                    public Mods apply(TracableId id) {
-                        Trace.continueSpan(id.getSpan());
-                        SecurityInfo securityInfo = id.getSecurityInfo();
-                        return metadatRepository.getModsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-                    }
-                });
-    }
-
-    private Stream<FieldResource> getFieldsById(TracableId id) {
-        Environment env = new Environment();
-        return Streams.just(id).dispatchOn(env)
-                .map(new Function<TracableId, FieldResource>() {
-                    @Override
-                    public FieldResource apply(TracableId id) {
-                        Trace.continueSpan(id.getSpan());
-                        SecurityInfo securityInfo = id.getSecurityInfo();
-                        return metadatRepository.getFieldsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-                    }
-                });
-    }
-
-    private Stream<Boolean> hasAccess(TracableId id) {
-        Environment env = new Environment();
-        return Streams.just(id).dispatchOn(env)
-                .map(new Function<TracableId, Boolean>() {
-                    @Override
-                    public Boolean apply(TracableId id) {
-                        Trace.continueSpan(id.getSpan());
-                        SecurityInfo securityInfo = id.getSecurityInfo();
-                        return securityRepository.hasAccess(id.getId(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-                    }
-                });
-    }
-    
     private List<Item> getItemByRelatedItemType(String type, Mods mods, SecurityInfo securityInfo) {
         List<Item> items = new ArrayList<>();
         List<RelatedItem> relatedItem = mods.getRelatedItems()
