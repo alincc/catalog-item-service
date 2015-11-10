@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
@@ -15,6 +16,12 @@ import no.nb.microservices.catalogmetadata.test.mods.v3.ModsBuilder;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class OriginInfoBuilderTest {
+
+    @Test
+    public void whenNoOriginInfoItShouldReturnNull() {
+        OriginInfo originInfo = new OriginInfoBuilder().withOriginInfo(null).build();
+        assertNull("originInfo should be null", originInfo);
+    }
 
     @Test
     public void whenOriginInfoIsValidTest() {
