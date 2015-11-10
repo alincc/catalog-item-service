@@ -31,6 +31,6 @@ public class GeographicBuilderTest {
         GeographicBuilder builder = new GeographicBuilder(originInfo);
 
         Geographic build = builder.build();
-        assertEquals(null, build.getPlaceString());
+        assertEquals(null, build);
     }
 }
