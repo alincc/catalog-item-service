@@ -13,26 +13,23 @@ public class OriginInfoBuilder {
 
     private no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo;
     
-    public OriginInfoBuilder mods(final Mods mods) {
-        if (mods == null) {
-            this.originInfo = new no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo();
-        } else {
-            this.originInfo = mods.getOriginInfo() != null ? mods.getOriginInfo() : new no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo();
-        }
+    public OriginInfoBuilder withOriginInfo(final no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo) {
+        this.originInfo = originInfo;
         return this;
     }
     
     public OriginInfo build() {
-        OriginInfo originInfo = new OriginInfo();
-        originInfo.setPublisher(getPublisher());
-        originInfo.setCaptured(getDateCaptured());
-        originInfo.setCreated(getDateCreated());
-        originInfo.setEdition(getEdition());
-        originInfo.setFrequency(getFrequency());
-        originInfo.setIssued(getDateIssued());
-        originInfo.setModified(getDateModified());
-        
-        return originInfo;
+        if (originInfo == null) {
+            return null;
+        }
+        if (getPublisher() != null || getDateIssued() != null || getFrequency() != null
+                || getDateCreated() != null || getDateCaptured() != null || getDateCaptured() != null
+                || getDateModified() != null || getEdition() != null) {
+            OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
+                    getDateCreated(), getDateCaptured(), getDateModified(), getEdition());
+            return originInfo;
+        }
+        return null;
     }
     
     private String getPublisher() {

@@ -31,7 +31,7 @@ public final class MetadataBuilder {
 
         metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
         metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
-        metadata.setOriginInfo(new OriginInfoBuilder().mods(mods).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build());
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
         metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()

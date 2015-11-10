@@ -14,6 +14,16 @@ public class OriginInfo {
     private String modified;
     private String edition;
 
+    public OriginInfo(String publisher, String issued, String frequency, String created, String captured, String modified, String edition) {
+        this.publisher = publisher;
+        this.issued = issued;
+        this.frequency = frequency;
+        this.created = created;
+        this.captured = captured;
+        this.modified = modified;
+        this.edition = edition;
+    }
+
     public String getPublisher() {
         return publisher;
     }
