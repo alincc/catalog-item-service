@@ -8,11 +8,15 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-/**
- * Created by raymondk on 9/14/15.
- */
 public class RecordInfoBuilderTest {
+
+    @Test
+    public void whenNoRecordInfoItShouldReturnNull() {
+        RecordInfo recordInfo = new RecordInfoBuilder().withRecordInfo(null).build();
+        assertNull("recordInfo should be null", recordInfo);
+    }
 
     @Test
     public void whenRecordInfoIsvalid() {
