@@ -17,6 +17,15 @@ public class Identifiers {
     private String oaiId;
     private String urn;
 
+    public Identifiers(List<String> isbn10, List<String> isbn13, List<String> issn, String sesamId, String oaiId, String urn) {
+        this.isbn10 = isbn10;
+        this.isbn13 = isbn13;
+        this.issn = issn;
+        this.sesamId = sesamId;
+        this.oaiId = oaiId;
+        this.urn = urn;
+    }
+
     public String getSesamId() {
         return sesamId;
     }
