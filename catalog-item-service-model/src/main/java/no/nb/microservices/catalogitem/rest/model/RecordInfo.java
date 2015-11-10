@@ -10,6 +10,10 @@ public class RecordInfo {
     private String identifierSource;
     private String created;
 
+    public RecordInfo() {
+
+    }
+
     public RecordInfo(String identifier, String identifierSource, String created) {
         this.identifier = identifier;
         this.identifierSource = identifierSource;

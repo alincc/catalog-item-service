@@ -13,6 +13,7 @@ public class Subject {
     private List<Person> persons;
 
     public Subject() {
+
     }
 
     public Subject(List<String> topics, List<Person> persons) {
