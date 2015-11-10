@@ -23,7 +23,7 @@ public class RecordInfoBuilderTest {
         Mods mods = new Mods();
         mods.setRecordInfo(recordInfo);
 
-        RecordInfoBuilder builder = new RecordInfoBuilder().mods(mods);
+        RecordInfoBuilder builder = new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo());
         RecordInfo build = builder.build();
 
         assertEquals("111321352", build.getIdentifier());
