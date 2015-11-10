@@ -112,6 +112,9 @@ public class ItemServiceImpl implements ItemService {
 
     private List<Item> getItemByRelatedItemType(String type, Mods mods, SecurityInfo securityInfo) {
         List<Item> items = new ArrayList<>();
+        if (mods.getRelatedItems() == null) {
+            return items;
+        }
         List<RelatedItem> relatedItem = mods.getRelatedItems()
             .stream()
             .filter(r -> type.equalsIgnoreCase(r.getType()))
