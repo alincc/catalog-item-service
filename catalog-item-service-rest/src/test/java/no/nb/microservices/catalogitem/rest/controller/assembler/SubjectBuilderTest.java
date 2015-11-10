@@ -1,6 +1,5 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.Person;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
@@ -16,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SubjectBuilderTest {
 
@@ -24,7 +24,7 @@ public class SubjectBuilderTest {
         Mods mods = new Mods();
         mods.setSubjects(createSubjects());
 
-        no.nb.microservices.catalogitem.rest.model.Subject build = new SubjectBuilder(mods).build();
+        no.nb.microservices.catalogitem.rest.model.Subject build = new SubjectBuilder().withSubjects(mods.getSubjects()).build();
 
         assertEquals(3, build.getTopics().size());
         assertEquals("Ski", getTopicFromResultIgnoreCase(build, "ski"));
@@ -33,12 +33,8 @@ public class SubjectBuilderTest {
     }
 
     @Test
-    public void testEmptyTopics() {
-        Mods mods = new Mods();
-
-        no.nb.microservices.catalogitem.rest.model.Subject subject = new SubjectBuilder(mods).build();
-
-        assertEquals(0, subject.getTopics().size());
+    public void whenNoSubjectsItShouldReturnNull() {
+        assertNull("subjects should be null", new SubjectBuilder().withSubjects(null).build());
     }
     
     @Test
@@ -46,7 +42,7 @@ public class SubjectBuilderTest {
         Mods mods = new Mods();
         mods.setSubjects(createSubjects());
 
-        no.nb.microservices.catalogitem.rest.model.Subject subject = new SubjectBuilder(mods).build();
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new SubjectBuilder().withSubjects(mods.getSubjects()).build();
 
         assertEquals(1, subject.getPersons().size());
         

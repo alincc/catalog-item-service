@@ -38,7 +38,7 @@ public final class MetadataBuilder {
                 .withIdentifiers(mods.getIdentifiers())
                 .build());
         metadata.setRecordInfo(new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo()).build());
-        metadata.setSubject(new SubjectBuilder(mods).build());
+        metadata.setSubject(new SubjectBuilder().withSubjects(mods.getSubjects()).build());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
