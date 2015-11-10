@@ -13,6 +13,11 @@ public class Classification {
     private List<String> ddc = new ArrayList<>();
     private List<String> udc = new ArrayList<>();
 
+    public Classification(List<String> ddc, List<String> udc) {
+        this.ddc = ddc;
+        this.udc = udc;
+    }
+
     public void addDdc(String ddc) {
         this.ddc.add(ddc);
     }

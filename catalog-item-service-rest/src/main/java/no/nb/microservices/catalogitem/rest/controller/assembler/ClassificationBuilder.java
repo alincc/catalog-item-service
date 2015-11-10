@@ -11,38 +11,21 @@ public class ClassificationBuilder {
 
     private List<no.nb.microservices.catalogmetadata.model.mods.v3.Classification> classifications;
     
-    public ClassificationBuilder(List<no.nb.microservices.catalogmetadata.model.mods.v3.Classification> classifications) {
-        if (classifications == null) {
-            this.classifications = new ArrayList<>();
-        } else {
-            this.classifications = classifications;
-        }
+    public ClassificationBuilder withClassifications(List<no.nb.microservices.catalogmetadata.model.mods.v3.Classification> classifications) {
+        this.classifications = classifications;
+        return this;
     }
 
     public Classification build() {
-        Classification classification = new Classification();
-        
-        addDdc(classification);
-        addUdc(classification);
-        
-        return classification;
-         
+        if (classifications == null) {
+            return null;
+        }
+        if (!getDdc().isEmpty() || !getUdc().isEmpty()) {
+            return new Classification(getDdc(), getUdc());
+        }
+        return null;
      }
      
-     private void addDdc(Classification classification) {
-         Iterator<String> iter = getDdc().iterator();
-            while (iter.hasNext()) {
-                classification.addDdc(iter.next());
-            }
-     }
-
-     private void addUdc(Classification classification) {
-         Iterator<String> iter = getUdc().iterator();
-            while (iter.hasNext()) {
-                classification.addUdc(iter.next());
-            }
-     }
-    
     private List<String> getDdc() {
         return classifications.stream()
                 .filter(authority -> "ddc".equalsIgnoreCase(authority.getAuthority()))
