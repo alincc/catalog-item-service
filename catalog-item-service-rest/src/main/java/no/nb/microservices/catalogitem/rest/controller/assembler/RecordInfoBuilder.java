@@ -1,7 +1,6 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.rest.model.RecordInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class RecordInfoBuilder {
 
@@ -16,11 +15,10 @@ public class RecordInfoBuilder {
         if (recordInfo == null) {
             return null;
         }
-        if (getIdentifier() != null || getIdentifierSource() != null || getCreated() != null) {
-            RecordInfo recordInfo = new RecordInfo(getIdentifier(), getIdentifierSource(), getCreated());
-            return recordInfo;
-        }
-        return null;
+        
+        RecordInfo recordInfo = new RecordInfo(getIdentifier(), getIdentifierSource(), getCreated());
+        
+        return recordInfo.isEmpty() ? null : recordInfo;
     }
 
     private String getIdentifier() {

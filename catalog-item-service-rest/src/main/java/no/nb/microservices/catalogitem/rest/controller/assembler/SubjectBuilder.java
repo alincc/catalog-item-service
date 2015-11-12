@@ -18,10 +18,12 @@ public class SubjectBuilder {
     }
 
     public no.nb.microservices.catalogitem.rest.model.Subject build() {
-        if (!getTopics().isEmpty() || !getPersons().isEmpty()) {
-            return new no.nb.microservices.catalogitem.rest.model.Subject(getTopics(),getPersons());
+        if (subjects == null) {
+            return null;
         }
-        return null;
+        
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new no.nb.microservices.catalogitem.rest.model.Subject(getTopics(),getPersons());
+        return subject.isEmpty() ? null : subject;
     }
 
     private List<String> getTopics() {

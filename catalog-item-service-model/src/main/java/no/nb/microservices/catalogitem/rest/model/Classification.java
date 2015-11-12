@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -36,6 +37,11 @@ public class Classification {
 
     public List<String> getUdc() {
         return Collections.unmodifiableList(udc);
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return ddc.isEmpty() && udc.isEmpty();
     }
 
 }

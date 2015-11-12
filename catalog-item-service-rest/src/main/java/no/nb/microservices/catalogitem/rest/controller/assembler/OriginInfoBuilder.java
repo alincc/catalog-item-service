@@ -1,13 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import org.apache.commons.validator.routines.DateValidator;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import org.apache.commons.validator.routines.DateValidator;
+
+import no.nb.microservices.catalogitem.rest.model.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 
 public class OriginInfoBuilder {
 
@@ -22,14 +22,11 @@ public class OriginInfoBuilder {
         if (originInfo == null) {
             return null;
         }
-        if (getPublisher() != null || getDateIssued() != null || getFrequency() != null
-                || getDateCreated() != null || getDateCaptured() != null || getDateCaptured() != null
-                || getDateModified() != null || getEdition() != null) {
-            OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
+
+        OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
                     getDateCreated(), getDateCaptured(), getDateModified(), getEdition());
-            return originInfo;
-        }
-        return null;
+        
+        return originInfo.isEmpty() ? null : originInfo;
     }
     
     private String getPublisher() {

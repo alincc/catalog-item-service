@@ -1,10 +1,11 @@
 package no.nb.microservices.catalogitem.rest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -76,6 +77,16 @@ public class Identifiers {
 
     public void setUrn(String urn) {
         this.urn = urn;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return isbn10.isEmpty()
+                && isbn13.isEmpty()
+                && issn.isEmpty()
+                && sesamId == null
+                && oaiId == null
+                && urn == null;
     }
 
 }

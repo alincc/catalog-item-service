@@ -12,12 +12,9 @@ public class GeographicBuilder {
     }
 
     public Geographic build() {
-        if (getPlaceString() != null) {
-            Geographic geographic = new Geographic();
-            geographic.setPlaceString(getPlaceString());
-            return geographic;
-        }
-        return null;
+        Geographic geographic = new Geographic();
+        geographic.setPlaceString(getPlaceString());
+        return geographic.isEmpty() ? null : geographic;
     }
 
     public String getPlaceString() {

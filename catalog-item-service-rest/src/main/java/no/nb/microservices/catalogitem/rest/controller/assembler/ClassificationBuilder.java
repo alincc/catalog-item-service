@@ -1,11 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.Classification;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import no.nb.microservices.catalogitem.rest.model.Classification;
 
 public class ClassificationBuilder {
 
@@ -20,10 +18,9 @@ public class ClassificationBuilder {
         if (classifications == null) {
             return null;
         }
-        if (!getDdc().isEmpty() || !getUdc().isEmpty()) {
-            return new Classification(getDdc(), getUdc());
-        }
-        return null;
+
+        Classification classification = new Classification(getDdc(), getUdc());
+        return classification.isEmpty() ? null : classification;
      }
      
     private List<String> getDdc() {

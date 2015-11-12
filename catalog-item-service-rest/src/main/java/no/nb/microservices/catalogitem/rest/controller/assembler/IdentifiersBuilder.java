@@ -21,12 +21,11 @@ public class IdentifiersBuilder {
         if (identifiers == null) {
             return null;
         }
-        if (!getIsbn10().isEmpty() || !getIsbn13().isEmpty() || getIdentifierByType("sesamid") != null || getIdentifierByType("oaiid") != null
-                || getIdentifierByType("issn") != null || getIdentifierByType("urn") != null) {
-            return new Identifiers(getIsbn10(),getIsbn13(),getMultipleIdentifierByType("issn"),
-                    getIdentifierByType("sesamid"), getIdentifierByType("oaiid"), getIdentifierByType("urn"));
-        }
-        return null;
+        
+        Identifiers ids = new Identifiers(getIsbn10(), getIsbn13(), getMultipleIdentifierByType("issn"),
+                getIdentifierByType("sesamid"), getIdentifierByType("oaiid"), getIdentifierByType("urn"));
+        
+        return ids.isEmpty() ? null : ids;
     }
 
     private List<String> getIsbn10() {
