@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -69,5 +70,12 @@ public class StreamingInfo {
           append("offset", offset).
           append("extent", extent).
           toString();
-      }    
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return identifier == null
+                && offset == null
+                && extent == null;
+    }    
 }

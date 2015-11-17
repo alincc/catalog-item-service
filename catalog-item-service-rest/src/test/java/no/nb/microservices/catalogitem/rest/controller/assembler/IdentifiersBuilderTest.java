@@ -4,20 +4,31 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
+import java.util.Arrays;
+
 public class IdentifiersBuilderTest {
 
     @Test
+    public void whenNoIdentifiersItShouldReturnNull() {
+        Identifiers identifiers = new IdentifiersBuilder().withIdentifiers(null).build();
+        assertNull("Identifiers should be null", identifiers);
+    }
+
+    @Test
     public void urnIsEmptyTest() {
-        Mods mods = new Mods();
+        Identifier sesamid = new Identifier();
+        sesamid.setType("sesamid");
+        sesamid.setValue("sesamid1234");
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(Arrays.asList(sesamid))
                 .build();
 
         assertNull("urn should be empty not null", identifiers.getUrn());
@@ -28,7 +39,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("URN should not be empty", !identifiers.getUrn().isEmpty());
@@ -40,7 +51,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("sesamId should not be empty", !identifiers.getSesamId().isEmpty());
@@ -52,7 +63,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("oaiId should not be empty", !identifiers.getOaiId().isEmpty());
@@ -65,7 +76,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("isbn13 should not be empty", !identifiers.getIsbn13().isEmpty());
@@ -77,7 +88,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("isbn10 should not be empty", !identifiers.getIsbn10().isEmpty());
@@ -90,7 +101,7 @@ public class IdentifiersBuilderTest {
         Mods mods = TestMods.aDefaultBookMods().build();
 
         Identifiers identifiers = new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build();
 
         assertTrue("isbn10 should not be empty", !identifiers.getIssn().isEmpty());

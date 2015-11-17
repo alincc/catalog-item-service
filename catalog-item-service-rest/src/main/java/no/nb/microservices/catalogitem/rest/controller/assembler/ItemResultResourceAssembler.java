@@ -23,17 +23,26 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
+        FieldResource field = item.getField();
+        createTitle(field, resource);
+        
         createLinks(item, resource);
         
         if (hasRelatedItems(item)) {
             resource.setExpand("relatedItems");
         }
         
-        resource.setAccessInfo(new AccessInfoBuilder().fields(item.getField()).access(item.hasAccess()).build());
+        resource.setAccessInfo(new AccessInfoBuilder().fields(field).access(item.hasAccess()).build());
         resource.setMetadata(new MetadataBuilder(item).build());
         resource.setRelatedItems(new RelatedItemsBuilder().withRelatedItems(item.getRelatedItems()).build());
 
         return resource;
+    }
+
+    private void createTitle(FieldResource field, ItemResource resource) {
+        if(field != null) {
+            resource.setTitle(field.getTitle());
+        }
     }
 
     private void createLinks(Item item, ItemResource resource) {

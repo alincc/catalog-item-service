@@ -1,28 +1,24 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.rest.model.RecordInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 public class RecordInfoBuilder {
 
     private no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo recordInfo;
 
-    public RecordInfoBuilder mods(final Mods mods) {
-        if (mods == null) {
-            this.recordInfo = new no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo();
-        } else {
-            this.recordInfo = mods.getRecordInfo() != null ? mods.getRecordInfo() : new no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo();
-        }
+    public RecordInfoBuilder withRecordInfo(final no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo recordInfo) {
+        this.recordInfo = recordInfo;
         return this;
     }
 
     public RecordInfo build() {
-        RecordInfo recordInfo = new RecordInfo();
-        recordInfo.setIdentifier(getIdentifier());
-        recordInfo.setIdentifierSource(getIdentifierSource());
-        recordInfo.setCreated(getCreated());
-
-        return recordInfo;
+        if (recordInfo == null) {
+            return null;
+        }
+        
+        RecordInfo recordInfo = new RecordInfo(getIdentifier(), getIdentifierSource(), getCreated());
+        
+        return recordInfo.isEmpty() ? null : recordInfo;
     }
 
     private String getIdentifier() {

@@ -8,11 +8,15 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-/**
- * Created by raymondk on 9/14/15.
- */
 public class RecordInfoBuilderTest {
+
+    @Test
+    public void whenNoRecordInfoItShouldReturnNull() {
+        RecordInfo recordInfo = new RecordInfoBuilder().withRecordInfo(null).build();
+        assertNull("recordInfo should be null", recordInfo);
+    }
 
     @Test
     public void whenRecordInfoIsvalid() {
@@ -23,7 +27,7 @@ public class RecordInfoBuilderTest {
         Mods mods = new Mods();
         mods.setRecordInfo(recordInfo);
 
-        RecordInfoBuilder builder = new RecordInfoBuilder().mods(mods);
+        RecordInfoBuilder builder = new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo());
         RecordInfo build = builder.build();
 
         assertEquals("111321352", build.getIdentifier());

@@ -14,7 +14,7 @@ public class GeographicBuilder {
     public Geographic build() {
         Geographic geographic = new Geographic();
         geographic.setPlaceString(getPlaceString());
-        return geographic;
+        return geographic.isEmpty() ? null : geographic;
     }
 
     public String getPlaceString() {

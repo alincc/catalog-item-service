@@ -1,13 +1,15 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.StreamingInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import no.nb.microservices.catalogitem.rest.model.StreamingInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Extent;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Location;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Offset;
 
 public class StreamingInfoBuilder {
 
@@ -34,7 +36,10 @@ public class StreamingInfoBuilder {
                     identifier = getIdentifierFromIdentifier();
                 }
 
-                streamingInfoList.add(new StreamingInfo(identifier, offset, extent));
+                StreamingInfo streamingInfo = new StreamingInfo(identifier, offset, extent);
+                if (!streamingInfo.isEmpty()) {
+                    streamingInfoList.add(streamingInfo);
+                }
             }
         }
         else {
@@ -42,7 +47,10 @@ public class StreamingInfoBuilder {
             if (identifier == null) {
                 identifier = getIdentifierFromIdentifier();
             }
-            streamingInfoList.add(new StreamingInfo(identifier, null, null));
+            StreamingInfo streamingInfo = new StreamingInfo(identifier, null, null);
+            if (!streamingInfo.isEmpty()) {
+                streamingInfoList.add(streamingInfo);
+            }
         }
 
         return streamingInfoList;

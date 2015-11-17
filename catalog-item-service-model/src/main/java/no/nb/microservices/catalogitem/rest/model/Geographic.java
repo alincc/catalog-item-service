@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -35,5 +36,12 @@ public class Geographic {
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return placeString == null
+                && place == null
+                && coordinates == null;
     }
 }

@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -9,6 +10,17 @@ public class RecordInfo {
     private String identifier;
     private String identifierSource;
     private String created;
+
+    public RecordInfo() {
+        super();
+    }
+
+    public RecordInfo(String identifier, String identifierSource, String created) {
+        this();
+        this.identifier = identifier;
+        this.identifierSource = identifierSource;
+        this.created = created;
+    }
 
     public String getIdentifier() {
         return identifier;
@@ -32,5 +44,12 @@ public class RecordInfo {
 
     public void setCreated(String created) {
         this.created = created;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return identifier == null
+                && identifierSource == null
+                && created == null;
     }
 }

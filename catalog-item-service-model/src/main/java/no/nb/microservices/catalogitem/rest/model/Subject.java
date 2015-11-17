@@ -1,10 +1,11 @@
 package no.nb.microservices.catalogitem.rest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -13,6 +14,7 @@ public class Subject {
     private List<Person> persons;
 
     public Subject() {
+
     }
 
     public Subject(List<String> topics, List<Person> persons) {
@@ -42,5 +44,11 @@ public class Subject {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return topics.isEmpty()
+                && persons.isEmpty();
     }
 }

@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
@@ -15,6 +16,12 @@ import no.nb.microservices.catalogmetadata.test.mods.v3.ModsBuilder;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 
 public class OriginInfoBuilderTest {
+
+    @Test
+    public void whenNoOriginInfoItShouldReturnNull() {
+        OriginInfo originInfo = new OriginInfoBuilder().withOriginInfo(null).build();
+        assertNull("originInfo should be null", originInfo);
+    }
 
     @Test
     public void whenOriginInfoIsValidTest() {
@@ -40,7 +47,7 @@ public class OriginInfoBuilderTest {
         Mods mods = new Mods();
         mods.setOriginInfo(originInfo);
 
-        OriginInfo build = new OriginInfoBuilder().mods(mods).build();
+        OriginInfo build = new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build();
 
         assertEquals("1969-04-01", build.getCaptured());
         assertEquals("1969-04-01", build.getCreated());
@@ -71,7 +78,7 @@ public class OriginInfoBuilderTest {
                 .build();
         
         OriginInfo originInfo = new OriginInfoBuilder()
-                .mods(mods)
+                .withOriginInfo(mods.getOriginInfo())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -96,7 +103,7 @@ public class OriginInfoBuilderTest {
                 .build();
         
         OriginInfo originInfo = new OriginInfoBuilder()
-                .mods(mods)
+                .withOriginInfo(mods.getOriginInfo())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -119,7 +126,7 @@ public class OriginInfoBuilderTest {
                 .build();
         
         OriginInfo originInfo = new OriginInfoBuilder()
-                .mods(mods)
+                .withOriginInfo(mods.getOriginInfo())
                 .build();        
         
         assertEquals("2008", originInfo.getIssued());
@@ -137,10 +144,9 @@ public class OriginInfoBuilderTest {
                 .build();
         
         OriginInfo originInfo = new OriginInfoBuilder()
-                .mods(mods)
+                .withOriginInfo(mods.getOriginInfo())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
     }
-    
 }

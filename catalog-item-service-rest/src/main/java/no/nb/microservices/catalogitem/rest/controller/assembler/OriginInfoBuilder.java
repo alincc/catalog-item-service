@@ -1,38 +1,32 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import org.apache.commons.validator.routines.DateValidator;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import org.apache.commons.validator.routines.DateValidator;
+
+import no.nb.microservices.catalogitem.rest.model.OriginInfo;
+import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 
 public class OriginInfoBuilder {
 
     private no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo;
     
-    public OriginInfoBuilder mods(final Mods mods) {
-        if (mods == null) {
-            this.originInfo = new no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo();
-        } else {
-            this.originInfo = mods.getOriginInfo() != null ? mods.getOriginInfo() : new no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo();
-        }
+    public OriginInfoBuilder withOriginInfo(final no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo) {
+        this.originInfo = originInfo;
         return this;
     }
     
     public OriginInfo build() {
-        OriginInfo originInfo = new OriginInfo();
-        originInfo.setPublisher(getPublisher());
-        originInfo.setCaptured(getDateCaptured());
-        originInfo.setCreated(getDateCreated());
-        originInfo.setEdition(getEdition());
-        originInfo.setFrequency(getFrequency());
-        originInfo.setIssued(getDateIssued());
-        originInfo.setModified(getDateModified());
+        if (originInfo == null) {
+            return null;
+        }
+
+        OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
+                    getDateCreated(), getDateCaptured(), getDateModified(), getEdition());
         
-        return originInfo;
+        return originInfo.isEmpty() ? null : originInfo;
     }
     
     private String getPublisher() {

@@ -9,7 +9,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Metadata {
-    private String compositeTitle;
     private List<TitleInfo> titleInfos;
     private String typeOfResource;
     private List<String> mediaTypes;
@@ -28,14 +27,6 @@ public class Metadata {
     private List<String> languages;
     private List<StreamingInfo> streamingInfo;
 
-    public String getCompositeTitle() {
-        return compositeTitle;
-    }
-    
-    public void setCompositeTitle(String compositeTitle) {
-        this.compositeTitle = compositeTitle;
-    }
-    
     public List<TitleInfo> getTitleInfos() {
         if (titleInfos == null) {
             return Collections.emptyList();

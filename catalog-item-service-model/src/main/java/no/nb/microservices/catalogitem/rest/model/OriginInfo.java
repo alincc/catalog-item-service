@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -13,6 +14,20 @@ public class OriginInfo {
     private String captured;
     private String modified;
     private String edition;
+
+    public OriginInfo() {
+
+    }
+
+    public OriginInfo(String publisher, String issued, String frequency, String created, String captured, String modified, String edition) {
+        this.publisher = publisher;
+        this.issued = issued;
+        this.frequency = frequency;
+        this.created = created;
+        this.captured = captured;
+        this.modified = modified;
+        this.edition = edition;
+    }
 
     public String getPublisher() {
         return publisher;
@@ -68,5 +83,17 @@ public class OriginInfo {
 
     public void setEdition(String edition) {
         this.edition = edition;
+    }
+    
+    @JsonIgnore
+    public boolean isEmpty() {
+        return publisher == null 
+                && issued == null 
+                && frequency == null
+                && created == null 
+                && captured == null 
+                && modified == null
+                && edition == null;
+
     }
 }

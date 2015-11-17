@@ -1,12 +1,10 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.rest.model.Person;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,20 +12,18 @@ public class SubjectBuilder {
 
     private List<Subject> subjects;
 
-    public SubjectBuilder(final Mods mods) {
-        if (mods == null) {
-            this.subjects = Arrays.asList(new Subject());
-        } else {
-            this.subjects = mods.getSubjects() != null ? mods.getSubjects() : Arrays.asList(new Subject());
-        }
+    public SubjectBuilder withSubjects(final List<Subject> subjects) {
+        this.subjects = subjects;
+        return this;
     }
 
     public no.nb.microservices.catalogitem.rest.model.Subject build() {
-        no.nb.microservices.catalogitem.rest.model.Subject subject = new no.nb.microservices.catalogitem.rest.model.Subject();
-        subject.setTopics(getTopics());
-        subject.setPersons(getPersons());
-
-        return subject;
+        if (subjects == null) {
+            return null;
+        }
+        
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new no.nb.microservices.catalogitem.rest.model.Subject(getTopics(),getPersons());
+        return subject.isEmpty() ? null : subject;
     }
 
     private List<String> getTopics() {

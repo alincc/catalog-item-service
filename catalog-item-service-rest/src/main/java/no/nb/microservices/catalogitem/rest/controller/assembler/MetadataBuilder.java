@@ -25,22 +25,20 @@ public final class MetadataBuilder {
     
     public Metadata build() {
         Metadata metadata = new Metadata();
-        metadata.setCompositeTitle(getTitle());
-
         metadata.setTitleInfos(new TitleInfosBuilder()
             .withTitleInfos(mods.getTitleInfos())
             .build());
 
         metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
         metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
-        metadata.setOriginInfo(new OriginInfoBuilder().mods(mods).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build());
         metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
-        metadata.setClassification(new ClassificationBuilder(mods.getClassifications()).build());
+        metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
-                .withMods(mods)
+                .withIdentifiers(mods.getIdentifiers())
                 .build());
-        metadata.setRecordInfo(new RecordInfoBuilder().mods(mods).build());
-        metadata.setSubject(new SubjectBuilder(mods).build());
+        metadata.setRecordInfo(new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo()).build());
+        metadata.setSubject(new SubjectBuilder().withSubjects(mods.getSubjects()).build());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
@@ -64,13 +62,6 @@ public final class MetadataBuilder {
         }
     }
     
-    private String getTitle() {
-        if (field != null) {
-            return field.getTitle();
-        }
-        return null;
-    }
-
     private List<String> getMediaTypes() {
         if (field != null) {
             return field.getMediaTypes();
