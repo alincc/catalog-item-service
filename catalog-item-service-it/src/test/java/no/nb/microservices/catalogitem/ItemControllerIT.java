@@ -24,7 +24,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
@@ -59,7 +58,7 @@ import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
 @SpringApplicationConfiguration(classes = { TestConfig.class,
         RibbonClientConfiguration.class })
 @WebIntegrationTest("server.port: 0")
-public class ItemControllerIntegrationTest {
+public class ItemControllerIT {
 
     @Value("${local.server.port}")
     int port;
@@ -229,7 +228,7 @@ class TestNiConfig {
 
     @Bean
     public NiClient getNiClient() throws Exception {
-        return new NiClient(ItemControllerIntegrationTest.TEST_SERVER_ADDR);
+        return new NiClient(ItemControllerIT.TEST_SERVER_ADDR);
     }
 }
 
