@@ -91,7 +91,7 @@ public class ItemControllerIT {
 
     @Test
     public void testGetItem() throws Exception {
-        String itemResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/ItemResource.json"));
+        String searchResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
         MockWebServer server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
 
@@ -107,7 +107,7 @@ public class ItemControllerIT {
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().equals("/search?q=sesamid%3Aid1&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(itemResource)
+                    return new MockResponse().setBody(searchResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 }
@@ -148,7 +148,7 @@ public class ItemControllerIT {
 
     @Test
     public void testExpandrelatedItems() throws Exception {
-        String itemResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/ItemResource.json"));
+        String searchResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
         MockWebServer server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
 
@@ -165,7 +165,7 @@ public class ItemControllerIT {
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().contains("/search?q=sesamid")) {
-                    return new MockResponse().setBody(itemResource)
+                    return new MockResponse().setBody(searchResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().contains("/search?q=oaiid")) {
