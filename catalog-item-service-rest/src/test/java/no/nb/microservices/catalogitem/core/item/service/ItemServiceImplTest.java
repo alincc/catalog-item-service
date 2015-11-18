@@ -9,12 +9,14 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.concurrent.Future;
 
+import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -76,11 +78,13 @@ public class ItemServiceImplTest {
         Future<Mods> mods = new AsyncResult<Mods>(TestMods.aDefaultMusicAlbum().build());
         Future<FieldResource> fields = new AsyncResult<FieldResource>(TestFields.aDefaultMusic().build());
         Future<Boolean> hasAccess = new AsyncResult<Boolean>(true);
+        Future<SearchResource> searchResource = new AsyncResult<>(new SearchResource(new PagedResources.PageMetadata(1,1,1,1)));
         
         when(metadataService.getModsById(anyObject())).thenReturn(mods);
         when(metadataService.getFieldsById(anyObject())).thenReturn(fields);
         when(securityService.hasAccess(anyObject())).thenReturn(hasAccess);
-        when(indexService.search(anyString(), anyObject())).thenReturn(searchResult);
+        when(indexService.getSearchResource(anyObject())).thenReturn(searchResource);
+        when(indexService.search(anyObject(), anyObject(), anyObject())).thenReturn(searchResult);
 
         Item item = itemService.getItemById(id, "relatedItems");
         

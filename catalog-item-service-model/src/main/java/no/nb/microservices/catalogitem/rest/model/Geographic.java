@@ -12,6 +12,13 @@ public class Geographic {
     private Coordinates coordinates;
 
     public Geographic() {
+
+    }
+
+    public Geographic(String placeString, Coordinates coordinates) {
+        this.placeString = placeString;
+        this.place = place;
+        this.coordinates = coordinates;
     }
 
     public String getPlaceString() {
