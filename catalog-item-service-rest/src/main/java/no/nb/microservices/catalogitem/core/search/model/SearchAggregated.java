@@ -1,7 +1,7 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
-import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

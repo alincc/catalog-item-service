@@ -13,6 +13,8 @@ import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -42,7 +44,8 @@ public class SearchServiceImpl implements ISearchService {
     public SearchAggregated search(SearchRequest searchRequest, Pageable pageable) {
         SearchResult result = indexService.search(searchRequest, pageable, new SecurityInfo());
         List<ItemResource> items = consumeItems(result);
-        return null;
+        Page<ItemResource> page = new PageImpl<ItemResource>(items, pageable, result.getTotalElements());
+        return new SearchAggregated(page, result.getAggregations());
     }
 
     private List<ItemResource> consumeItems(SearchResult result) {
