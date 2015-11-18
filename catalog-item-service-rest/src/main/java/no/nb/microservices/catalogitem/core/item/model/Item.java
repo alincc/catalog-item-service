@@ -6,8 +6,6 @@ import org.springframework.hateoas.Identifiable;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
-import java.util.concurrent.Future;
-
 public class Item implements Identifiable<String> {
     
     private String id;
