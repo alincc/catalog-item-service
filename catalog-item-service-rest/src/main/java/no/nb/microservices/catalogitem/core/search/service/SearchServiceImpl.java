@@ -73,7 +73,7 @@ public class SearchServiceImpl implements ISearchService {
 
     private void waitForAllItemsToFinish(final CountDownLatch latch) {
         try {
-            latch.wait();
+            latch.await();
         } catch (InterruptedException ex) {
             throw new LatchException(ex);
         }
