@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -90,7 +91,7 @@ public class ItemControllerIT {
 
     @Test
     public void testGetItem() throws Exception {
-
+        String itemResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/ItemResource.json"));
         MockWebServer server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
 
@@ -103,6 +104,10 @@ public class ItemControllerIT {
                             .setHeader("Content-Type", "application/xml");
                 } else if (request.getPath().equals("/catalog/metadata/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
+                            .setResponseCode(200)
+                            .setHeader("Content-Type", "application/json");
+                } else if (request.getPath().equals("/search?q=sesamid%3Aid1&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                    return new MockResponse().setBody(itemResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 }
@@ -143,18 +148,24 @@ public class ItemControllerIT {
 
     @Test
     public void testExpandrelatedItems() throws Exception {
+        String itemResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/ItemResource.json"));
         MockWebServer server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
 
             @Override
             public MockResponse dispatch(RecordedRequest request)
                     throws InterruptedException {
+                System.out.println("REQUEST: " + request.getPath());
                 if (request.getPath().contains("/mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultMusicAlbumXml())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/xml");
                 } else if (request.getPath().contains("/fields")) {
                     return new MockResponse().setBody(TestFields.aDefaultMusicJson())
+                            .setResponseCode(200)
+                            .setHeader("Content-Type", "application/json");
+                } else if (request.getPath().contains("/search?q=sesamid")) {
+                    return new MockResponse().setBody(itemResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().contains("/search?q=oaiid")) {
