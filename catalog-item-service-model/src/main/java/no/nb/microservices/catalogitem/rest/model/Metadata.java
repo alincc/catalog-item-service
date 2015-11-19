@@ -26,6 +26,7 @@ public class Metadata {
     private List<String> statementOfResponsibility;
     private List<String> languages;
     private List<StreamingInfo> streamingInfo;
+    private int pageCount;
 
     public List<TitleInfo> getTitleInfos() {
         if (titleInfos == null) {
@@ -165,6 +166,14 @@ public class Metadata {
 
     public void setStreamingInfo(List<StreamingInfo> streamingInfo) {
         this.streamingInfo = streamingInfo;
+    }
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
     }
 
 }

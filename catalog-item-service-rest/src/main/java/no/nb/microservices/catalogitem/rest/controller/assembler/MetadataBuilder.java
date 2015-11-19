@@ -50,11 +50,21 @@ public final class MetadataBuilder {
         metadata.setNotes(getNotes(getNotesPredicate()));
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
         metadata.setLanguages(new LanguageBuilder(mods).build());
+        metadata.setPageCount(getPageCount());
         
         StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());
         metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
 
         return metadata;
+    }
+
+    private int getPageCount() {
+        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()){
+            return searchResource.getEmbedded().getItems().get(0).getPageCount();
+        }
+        else {
+            return 0;
+        }
     }
 
     private Location getLocation() {
