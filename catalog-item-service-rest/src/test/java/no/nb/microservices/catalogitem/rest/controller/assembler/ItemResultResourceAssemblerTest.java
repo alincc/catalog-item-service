@@ -1,16 +1,12 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,24 +14,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Classification;
-import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Name;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Namepart;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RecordIdentifier;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Role;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RoleTerm;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class ItemResultResourceAssemblerTest {
 
@@ -44,7 +28,7 @@ public class ItemResultResourceAssemblerTest {
     @Before
     public void init() {
         resource = new ItemResultResourceAssembler();
-        
+
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/id1");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
@@ -227,7 +211,8 @@ public class ItemResultResourceAssemblerTest {
         Item item = new Item.ItemBuilder("id1").mods(mods).build();
         ItemResource itemResource = resource.toResource(item);
 
-        assertNotNull("Should not be null", itemResource.getMetadata().getOriginInfo());
+        assertNotNull("Metadata should not be null", itemResource.getMetadata());
+        assertNotNull("OriginInfo should not be null", itemResource.getMetadata().getOriginInfo());
         assertEquals("Publisher should be Banana Airlines", "Banana Airlines" ,itemResource.getMetadata().getOriginInfo().getPublisher());
     }
 
@@ -392,5 +377,4 @@ public class ItemResultResourceAssemblerTest {
         
         return name;
     }
-
 }

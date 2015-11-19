@@ -6,6 +6,7 @@ import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.Location;
 import no.nb.microservices.catalogsearchindex.SearchResource;
 
@@ -35,7 +36,7 @@ public final class MetadataBuilder {
 
         metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
         metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
-        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
         metadata.setGeographic(new GeographicBuilder().withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
         metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
@@ -73,6 +74,13 @@ public final class MetadataBuilder {
         } else {
             return null;
         }
+    }
+
+    private ItemResource getItemResource() {
+        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
+            return searchResource.getEmbedded().getItems().get(0);
+        }
+        return null;
     }
 
     private String getFirstMediatype() {
