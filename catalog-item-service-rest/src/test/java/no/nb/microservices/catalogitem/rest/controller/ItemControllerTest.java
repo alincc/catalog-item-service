@@ -1,10 +1,10 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
+import no.nb.microservices.catalogitem.core.item.service.ItemService;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +14,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
-import no.nb.microservices.catalogitem.core.item.service.ItemService;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemControllerTest {

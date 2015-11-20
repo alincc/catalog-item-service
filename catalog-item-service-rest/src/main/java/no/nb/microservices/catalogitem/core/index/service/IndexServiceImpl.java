@@ -1,23 +1,22 @@
 package no.nb.microservices.catalogitem.core.index.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.repository.IndexRepository;
+import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import no.nb.microservices.catalogitem.core.index.model.SearchResult;
-import no.nb.microservices.catalogitem.core.index.repository.IndexRepository;
-import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import no.nb.microservices.catalogsearchindex.SearchResource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 public class IndexServiceImpl implements IndexService {
@@ -40,6 +39,7 @@ public class IndexServiceImpl implements IndexService {
                 pageable.getPageSize(),
                 searchRequest.getSort(),
                 searchRequest.getAggs(),
+                searchRequest.getSearchType(),
                 securityInfo.getxHost(),
                 securityInfo.getxPort(),
                 securityInfo.getxRealIp(),
@@ -57,7 +57,7 @@ public class IndexServiceImpl implements IndexService {
         Trace.continueSpan(id.getSpan());
         SecurityInfo securityInfo = id.getSecurityInfo();
         SearchResource searchResource = indexRepository.search("sesamid:" + id.getId(),null,0, 1, new ArrayList(),
-                null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
+                null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);
 

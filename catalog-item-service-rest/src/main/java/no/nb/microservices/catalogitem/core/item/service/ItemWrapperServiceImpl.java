@@ -2,8 +2,6 @@ package no.nb.microservices.catalogitem.core.item.service;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
-import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -23,20 +21,18 @@ public class ItemWrapperServiceImpl implements ItemWrapperService {
 
     @Override
     @Async
-    public Future<ItemResource> getById(ItemWrapper itemWrapper) {
-        ItemResource itemResource = null;
+    public Future<Item> getById(ItemWrapper itemWrapper) {
+        Item item = null;
         try {
             SecurityInfo securityInfo = itemWrapper.getSecurityInfo();
 
             Trace.continueSpan(itemWrapper.getSpan());
-            Item item = itemService.getItemById(itemWrapper.getId(), "");
-            itemResource = new ItemResultResourceAssembler().toResource(item);
-
+            item = itemService.getItemById(itemWrapper.getId(), "", securityInfo);
 
         } finally {
             itemWrapper.getLatch().countDown();
         }
-        return new AsyncResult<>(itemResource);
+        return new AsyncResult<>(item);
     }
 
 }

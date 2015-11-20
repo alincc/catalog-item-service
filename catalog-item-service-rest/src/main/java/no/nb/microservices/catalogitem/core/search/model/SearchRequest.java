@@ -1,15 +1,20 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
+import no.nb.microservices.catalogsearchindex.NBSearchType;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SearchRequest {
+public class SearchRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String q;
     private String fields;
     private List<String> sort = new ArrayList<>();
     private String aggs;
+    private NBSearchType searchType;
 
     public SearchRequest() {
 
@@ -36,8 +41,8 @@ public class SearchRequest {
         return sort;
     }
 
-    public void setSort(List<String> sort) {
-        this.sort = sort;
+    public void setSort(String[] sort) {
+        this.sort = Arrays.asList(sort);
     }
 
     public String getAggs() {
@@ -54,5 +59,13 @@ public class SearchRequest {
                 sort.set(i, sort.get(i).replace("%2C",","));
             }
         }
+    }
+
+    public NBSearchType getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(NBSearchType searchType) {
+        this.searchType = searchType;
     }
 }

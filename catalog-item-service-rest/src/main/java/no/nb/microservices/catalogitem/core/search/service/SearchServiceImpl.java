@@ -4,13 +4,13 @@ import no.nb.commons.web.util.UserUtils;
 import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
 import no.nb.microservices.catalogitem.core.index.model.SearchResult;
 import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.search.exception.LatchException;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,30 +38,28 @@ public class SearchServiceImpl implements ISearchService {
         this.indexService = indexService;
     }
 
-
-
     @Override
     public SearchAggregated search(SearchRequest searchRequest, Pageable pageable) {
         SearchResult result = indexService.search(searchRequest, pageable, new SecurityInfo());
-        List<ItemResource> items = consumeItems(result);
-        Page<ItemResource> page = new PageImpl<ItemResource>(items, pageable, result.getTotalElements());
+        List<Item> items = consumeItems(result);
+        Page<Item> page = new PageImpl<>(items, pageable, result.getTotalElements());
         return new SearchAggregated(page, result.getAggregations());
     }
 
-    private List<ItemResource> consumeItems(SearchResult result) {
+    private List<Item> consumeItems(SearchResult result) {
         final CountDownLatch latch = new CountDownLatch(result.getIds().size());
-        List<ItemResource> items = Collections.synchronizedList(new ArrayList<>());
-        List<Future<ItemResource>> workList = new ArrayList<>();
+        List<Item> items = Collections.synchronizedList(new ArrayList<>());
+        List<Future<Item>> workList = new ArrayList<>();
 
         for (String id : result.getIds()) {
             ItemWrapper itemWrapper = createItemWrapper(latch, items, id);
-            Future<ItemResource> item = itemWrapperService.getById(itemWrapper);
+            Future<Item> item = itemWrapperService.getById(itemWrapper);
             workList.add(item);
         }
 
         waitForAllItemsToFinish(latch);
 
-        for (Future<ItemResource> item : workList) {
+        for (Future<Item> item : workList) {
             try {
                 items.add(item.get());
             } catch (Exception ex) {
@@ -79,7 +77,7 @@ public class SearchServiceImpl implements ISearchService {
         }
     }
 
-    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<ItemResource> items, String id) {
+    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, String id) {
         ItemWrapper itemWrapper = new ItemWrapper(id, latch, items);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 

@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.core.index.repository;
 
+import no.nb.microservices.catalogsearchindex.NBSearchType;
 import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,8 @@ public interface IndexRepository {
             @RequestParam("page") int pageNumber,
             @RequestParam("size") int pageSize, 
             @RequestParam("sort") List<String> sort, 
-            @RequestParam("aggs") String aggs, 
+            @RequestParam("aggs") String aggs,
+            @RequestParam("searchType") NBSearchType searchType,
             @RequestParam("X-Forwarded-Host") String xHost, 
             @RequestParam("X-Forwarded-Port") String xPort, 
             @RequestParam("X-Original-IP-Fra-Frontend") String xRealIp, 

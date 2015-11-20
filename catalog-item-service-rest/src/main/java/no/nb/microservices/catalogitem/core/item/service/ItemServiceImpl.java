@@ -1,13 +1,19 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
+import no.nb.commons.web.util.UserUtils;
+import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.security.service.SecurityService;
+import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
 import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
@@ -19,19 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
-import no.nb.microservices.catalogitem.core.index.model.SearchResult;
-import no.nb.microservices.catalogitem.core.index.service.IndexService;
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
-import no.nb.microservices.catalogitem.core.security.service.SecurityService;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -56,7 +54,8 @@ public class ItemServiceImpl implements ItemService {
         SecurityInfo securityInfo = getSecurityInfo();
         return getItemById(id, expand, securityInfo);
     }
-    
+
+    @Override
     public Item getItemById(String id, String expand, SecurityInfo securityInfo) {
 
         try {

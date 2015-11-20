@@ -3,11 +3,11 @@ package no.nb.microservices.catalogitem.core.search.service;
 import no.nb.commons.web.util.UserUtils;
 import no.nb.microservices.catalogitem.core.index.model.SearchResult;
 import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,10 +70,10 @@ public class SearchServiceImplTest {
 
 class ItemWrapperServiceStub implements ItemWrapperService {
     @Override
-    public Future<ItemResource> getById(ItemWrapper itemWrapper) {
-        ItemResource itemResource = new ItemResource("123");
+    public Future<Item> getById(ItemWrapper itemWrapper) {
+        Item item = new Item.ItemBuilder("123").build();
         try {
-            return new AsyncResult<ItemResource>(itemResource);
+            return new AsyncResult<Item>(item);
         } finally {
             itemWrapper.getLatch().countDown();
         }

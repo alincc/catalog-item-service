@@ -27,7 +27,7 @@ import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 @Api(value = "/catalog/items", description = "Home api")
 public class ItemController {
     private ItemService itemService;
-    
+
     @Autowired
     public ItemController(ItemService itemService) {
         super();

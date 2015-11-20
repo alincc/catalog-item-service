@@ -5,7 +5,6 @@ import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
-
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -57,7 +56,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         if (hasRelatedItems(item)) {
             resource.add(createRelatedItemsLink(item));
         }
-        
+
         if (streamingInfoStrategy.hasStreamingLink()) {
             resource.add(createPlaylistLink(item));
         }

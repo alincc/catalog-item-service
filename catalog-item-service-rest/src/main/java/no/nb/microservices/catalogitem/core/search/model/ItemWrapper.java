@@ -1,8 +1,8 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
 import no.nb.htrace.core.Traceable;
+import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import org.apache.htrace.Span;
 import org.apache.htrace.Trace;
 
@@ -12,12 +12,12 @@ import java.util.concurrent.CountDownLatch;
 public class ItemWrapper implements Traceable {
     private String id;
     private CountDownLatch latch;
-    private List<ItemResource> items;
+    private List<Item> items;
     private Span span = Trace.currentSpan();
 
     private SecurityInfo securityInfo = new SecurityInfo();
 
-    public ItemWrapper(String id, CountDownLatch latch, List<ItemResource> items) {
+    public ItemWrapper(String id, CountDownLatch latch, List<Item> items) {
         this.id = id;
         this.latch = latch;
         this.items = items;
@@ -27,7 +27,7 @@ public class ItemWrapper implements Traceable {
         return latch;
     }
 
-    public List<ItemResource> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
@@ -47,4 +47,5 @@ public class ItemWrapper implements Traceable {
     public void setSpan(Span span) {
         this.span = span;
     }
+
 }

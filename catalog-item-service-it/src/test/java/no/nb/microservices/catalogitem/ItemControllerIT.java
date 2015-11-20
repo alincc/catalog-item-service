@@ -57,7 +57,7 @@ import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TestConfig.class,
-        RibbonClientConfiguration.class })
+        RibbonClientConfiguration.class, TestNiConfig.class })
 @WebIntegrationTest("server.port: 0")
 public class ItemControllerIT {
 
@@ -222,7 +222,6 @@ public class ItemControllerIT {
             throw new TestDataException(ex);
         }
     }
-    
 }
 
 @Configuration
