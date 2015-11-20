@@ -15,6 +15,9 @@ public class SearchRequest implements Serializable {
     private List<String> sort = new ArrayList<>();
     private String aggs;
     private NBSearchType searchType;
+    private String topRight;
+    private String bottomLeft;
+    private String precision;
 
     public SearchRequest() {
 
@@ -67,5 +70,29 @@ public class SearchRequest implements Serializable {
 
     public void setSearchType(NBSearchType searchType) {
         this.searchType = searchType;
+    }
+
+    public String getTopRight() {
+        return topRight;
+    }
+
+    public void setTopRight(String topRight) {
+        this.topRight = topRight;
+    }
+
+    public String getBottomLeft() {
+        return bottomLeft;
+    }
+
+    public void setBottomLeft(String bottomLeft) {
+        this.bottomLeft = bottomLeft;
+    }
+
+    public String getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(String precision) {
+        this.precision = precision;
     }
 }

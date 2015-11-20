@@ -40,6 +40,9 @@ public class IndexServiceImpl implements IndexService {
                 searchRequest.getSort(),
                 searchRequest.getAggs(),
                 searchRequest.getSearchType(),
+                searchRequest.getTopRight(),
+                searchRequest.getBottomLeft(),
+                searchRequest.getPrecision(),
                 securityInfo.getxHost(),
                 securityInfo.getxPort(),
                 securityInfo.getxRealIp(),
@@ -57,7 +60,7 @@ public class IndexServiceImpl implements IndexService {
         Trace.continueSpan(id.getSpan());
         SecurityInfo securityInfo = id.getSecurityInfo();
         SearchResource searchResource = indexRepository.search("sesamid:" + id.getId(),null,0, 1, new ArrayList(),
-                null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
+                null, null, null, null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);
 
