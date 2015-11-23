@@ -1,8 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.service.ItemService;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
@@ -26,18 +25,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchControllerTest {
 
     @Mock
+    private ItemService itemService;
+
+    @Mock
     private ISearchService searchService;
 
-    private SearchController searchController;
+    private ItemController searchController;
 
     @Mock
     private SearchResultResourceAssembler searchResultResourceAssembler;
@@ -59,7 +59,7 @@ public class SearchControllerTest {
 
     @Before
     public void setup() {
-        searchController = new SearchController(searchService);
+        searchController = new ItemController(itemService, searchService);
     }
 
     @Test

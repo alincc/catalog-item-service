@@ -76,9 +76,6 @@ public class SearchControllerIT {
     @Before
     public void setup() throws Exception {
         String searchResource1 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
-        String searchResource2 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource2.json"));
-        String searchResource3 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource3.json"));
-        String searchResource4 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource4.json"));
         String searchResultMock = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service.json"));
         String searchResultMockWithAggragations = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service-aggregations.json"));
 
@@ -90,57 +87,22 @@ public class SearchControllerIT {
                 System.out.println(request.getPath());
                 if (request.getPath().equals("/search?q=Ola&fields=-title&page=0&size=10&sort=title%2Cdesc")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().equals("/catalog/metadata/id1/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().contains("mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/catalog/metadata/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().contains("fields")) {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/search?q=sesamid%3Aid1&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().startsWith("/search?q=sesamid%3Aid")) {
                     return new MockResponse().setBody(searchResource1)
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/metadata/id2/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/catalog/metadata/id2/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestFields.aDefaultBookJson())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/search?q=sesamid%3Aid2&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(searchResource2)
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/metadata/id3/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/catalog/metadata/id3/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestFields.aDefaultBookJson())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/search?q=sesamid%3Aid3&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(searchResource3)
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/metadata/id4/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/catalog/metadata/id4/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(TestFields.aDefaultBookJson())
-                            .setResponseCode(200)
-                            .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/search?q=sesamid%3Aid4&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
-                    return new MockResponse().setBody(searchResource4)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().equals("/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
+
                 return new MockResponse().setResponseCode(404);
             }
         };
@@ -158,7 +120,7 @@ public class SearchControllerIT {
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
 
         ResponseEntity<SearchResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/catalog/items/search?q=Ola&fields=-title&size=10&sort=title,desc", HttpMethod.GET,
+                "http://localhost:" + port + "/catalog/items?q=Ola&fields=-title&size=10&sort=title,desc", HttpMethod.GET,
                 new HttpEntity<Void>(headers), SearchResource.class);
 
         assertTrue("Status code should be 200 ", entity.getStatusCode().is2xxSuccessful());
@@ -173,7 +135,7 @@ public class SearchControllerIT {
         HttpHeaders headers = new HttpHeaders();
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
-        String url = "http://localhost:" + port + "/catalog/items/search?q=*&aggs=ddc1,mediatype";
+        String url = "http://localhost:" + port + "/catalog/items?q=*&aggs=ddc1,mediatype";
         ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
 
         assertTrue("Status code should be 200 ", entity.getStatusCode().is2xxSuccessful());
