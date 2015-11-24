@@ -1,0 +1,32 @@
+{  
+   "_links":{  
+      "self":{  
+         "href":"http://localhost/search?q=*"
+      }
+   },
+   "page":{  
+      "size":"11",
+      "totalElements":4,
+      "totalPages":1,
+      "number":0
+   },
+   "_embedded":{
+      "testId": "HEIA",
+      "items":[  
+         {  
+            "itemId":"id1"
+         },
+         {
+            "itemId":"id2"
+         },
+         {
+            "itemId":"id3"
+         }
+         ,{
+            "itemId":"id4"
+         }
+      ]
+   }
+
+}
+

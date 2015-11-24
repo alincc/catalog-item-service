@@ -14,12 +14,13 @@ public class OriginInfo {
     private String captured;
     private String modified;
     private String edition;
+    private String firstIndexTime;
 
     public OriginInfo() {
 
     }
 
-    public OriginInfo(String publisher, String issued, String frequency, String created, String captured, String modified, String edition) {
+    public OriginInfo(String publisher, String issued, String frequency, String created, String captured, String modified, String edition, String firstIndexTime) {
         this.publisher = publisher;
         this.issued = issued;
         this.frequency = frequency;
@@ -27,6 +28,7 @@ public class OriginInfo {
         this.captured = captured;
         this.modified = modified;
         this.edition = edition;
+        this.firstIndexTime = firstIndexTime;
     }
 
     public String getPublisher() {
@@ -84,7 +86,15 @@ public class OriginInfo {
     public void setEdition(String edition) {
         this.edition = edition;
     }
-    
+
+    public String getFirstIndexTime() {
+        return firstIndexTime;
+    }
+
+    public void setFirstIndexTime(String firstIndexTime) {
+        this.firstIndexTime = firstIndexTime;
+    }
+
     @JsonIgnore
     public boolean isEmpty() {
         return publisher == null 
@@ -93,7 +103,8 @@ public class OriginInfo {
                 && created == null 
                 && captured == null 
                 && modified == null
-                && edition == null;
+                && edition == null
+                && firstIndexTime == null;
 
     }
 }

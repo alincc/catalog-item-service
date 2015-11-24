@@ -1,7 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import no.nb.microservices.catalogsearchindex.Location;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.rest.model.Geographic;
@@ -16,7 +18,7 @@ public class GeographicBuilderTest {
         place.setPlaceTerm("Norge;Telemark;Kviteseid;;;;;");
         OriginInfo originInfo = new OriginInfo();
         originInfo.setPlace(place);
-        GeographicBuilder builder = new GeographicBuilder(originInfo);
+        GeographicBuilder builder = new GeographicBuilder().withOriginInfo(originInfo);
 
         Geographic build = builder.build();
         assertEquals("Norge;Telemark;Kviteseid;;;;;", build.getPlaceString());
@@ -28,9 +30,19 @@ public class GeographicBuilderTest {
         place.setPlaceTerm(null);
         OriginInfo originInfo = new OriginInfo();
         originInfo.setPlace(place);
-        GeographicBuilder builder = new GeographicBuilder(originInfo);
+        GeographicBuilder builder = new GeographicBuilder().withOriginInfo(originInfo);
 
         Geographic build = builder.build();
         assertEquals(null, build);
+    }
+
+    @Test
+    public void whenLocationIsNotNullGeographicShouldContainCoordinates() {
+        Location location = new Location();
+        location.setLat(123);
+        location.setLon(321);
+
+        Geographic geographic = new GeographicBuilder().withLocation(location).build();
+        assertNotNull(geographic.getCoordinates());
     }
 }

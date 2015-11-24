@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.junit.Test;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
@@ -25,6 +27,7 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 public class MetadataBuilderTest {
 
@@ -46,7 +49,11 @@ public class MetadataBuilderTest {
         mods.setLanguages(createLanguages("nob", "eng"));
         FieldResource fields = new FieldResource();
         fields.setMediaTypes(createMediaTypes());
-        Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).hasAccess(true).build();
+
+        SearchResource searchResource = new SearchResource();
+        searchResource.setEmbedded(createWrapper());
+
+        Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).withSearchResource(searchResource).hasAccess(true).build();
         
         Metadata metadata = new MetadataBuilder(item).build();
 
@@ -61,9 +68,23 @@ public class MetadataBuilderTest {
         assertNotNull("Should have subject", metadata.getSubject());
         assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
         assertTrue("Should have language", metadata.getLanguages().equals(Arrays.asList("nob", "eng")));
-
+        assertEquals(70, metadata.getPageCount());
     }
-    
+
+    private EmbeddedWrapper createWrapper() {
+        EmbeddedWrapper embeddedWrapper = new EmbeddedWrapper();
+            embeddedWrapper.setItems(createItem());
+        return embeddedWrapper;
+    }
+
+    private List<ItemResource> createItem() {
+        List<ItemResource> itemResources = new ArrayList<>();
+        ItemResource pageCount = new ItemResource();
+        pageCount.setPageCount(70);
+        itemResources.add(pageCount);
+        return itemResources;
+    }
+
     @Test
     public void testStreamingInfo() {
         Mods mods = TestMods.aDefaultRadioProgramMods().build();

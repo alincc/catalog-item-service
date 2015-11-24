@@ -1,20 +1,5 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.htrace.Trace;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import no.nb.commons.web.util.UserUtils;
 import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
 import no.nb.microservices.catalogitem.core.index.model.SearchResult;
@@ -23,11 +8,28 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.security.service.SecurityService;
 import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogsearchindex.SearchResource;
+import org.apache.htrace.Trace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -52,7 +54,8 @@ public class ItemServiceImpl implements ItemService {
         SecurityInfo securityInfo = getSecurityInfo();
         return getItemById(id, expand, securityInfo);
     }
-    
+
+    @Override
     public Item getItemById(String id, String expand, SecurityInfo securityInfo) {
 
         try {
@@ -60,8 +63,9 @@ public class ItemServiceImpl implements ItemService {
             Future<Mods> mods = metadataService.getModsById(tracableId);
             Future<FieldResource> fields = metadataService.getFieldsById(tracableId);
             Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
-            
-            while (!(mods.isDone() && fields.isDone() && hasAccess.isDone())) {
+            Future<SearchResource> search = indexService.getSearchResource(tracableId);
+
+            while (!(mods.isDone() && fields.isDone() && hasAccess.isDone() && search.isDone())) {
                 Thread.sleep(1);
             }
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
@@ -70,6 +74,7 @@ public class ItemServiceImpl implements ItemService {
                     .fields(fields.get())
                     .hasAccess(hasAccess.get())
                     .withRelatedItems(relatedItems)
+                    .withSearchResource(search.get())
                     .build();
         } catch (Exception ex) {
             LOG.warn("Failed getting item for id " + id, ex);
@@ -121,13 +126,16 @@ public class ItemServiceImpl implements ItemService {
             .collect(Collectors.toList());
         
         relatedItem.forEach(r -> {
-            String query = getQueryFromRecordIdentifier(mods, r); 
+            String query = getQueryFromRecordIdentifier(mods, r);
             if (query == null) {
                 query = getQueryFromIdentifier(mods, r);
             }
              
             if (query != null) {
-                SearchResult searchResult = indexService.search(query, securityInfo);
+                SearchRequest searchRequest = new SearchRequest();
+                searchRequest.setQ(query);
+                Pageable pagable = new PageRequest(0,1);
+                SearchResult searchResult = indexService.search(searchRequest, pagable, securityInfo);
                 if (!searchResult.getIds().isEmpty()) {
                     String id = searchResult.getIds().get(0);
                     Item item = getItemById(id, null, securityInfo);

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 class ResourceLinkBuilder extends LinkBuilderSupport<ResourceLinkBuilder> {
-    
+
     ResourceLinkBuilder(UriComponentsBuilder builder) {
         super(builder);
     }

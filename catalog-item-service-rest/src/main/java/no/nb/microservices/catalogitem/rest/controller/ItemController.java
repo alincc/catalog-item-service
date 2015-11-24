@@ -1,13 +1,17 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
+import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.search.service.ISearchService;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -26,12 +30,20 @@ import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 @RequestMapping(value = "/catalog/items")
 @Api(value = "/catalog/items", description = "Home api")
 public class ItemController {
-    private ItemService itemService;
-    
+
+    private final ISearchService searchService;
+    private final ItemService itemService;
+
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, ISearchService searchService) {
         super();
         this.itemService = itemService;
+        this.searchService = searchService;
+    }
+
+    @InitBinder
+    public void sortBinderInit(WebDataBinder binder) {
+        binder.registerCustomEditor(String[].class, "sort", new StringArrayPropertyEditor(null));
     }
 
     @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
@@ -52,6 +64,18 @@ public class ItemController {
         Item item = itemService.getItemById(id, "relatedItems");
         
         RelatedItemResource resource = new RelatedItemsResourceAssembler().toResource(item);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
+    @Traceable(description="search")
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, @PageableDefault Pageable pageable) {
+
+        SearchAggregated result = searchService.search(searchRequest, pageable);
+
+        ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

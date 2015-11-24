@@ -1,19 +1,18 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import no.nb.microservices.catalogitem.rest.model.OriginInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.DateMods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
 import no.nb.microservices.catalogmetadata.test.mods.v3.DateModsBuilder;
 import no.nb.microservices.catalogmetadata.test.mods.v3.ModsBuilder;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class OriginInfoBuilderTest {
 
@@ -47,7 +46,10 @@ public class OriginInfoBuilderTest {
         Mods mods = new Mods();
         mods.setOriginInfo(originInfo);
 
-        OriginInfo build = new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build();
+        ItemResource itemResource = new ItemResource();
+        itemResource.setFirstIndexTime("2015-05-05");
+
+        OriginInfo build = new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(itemResource).build();
 
         assertEquals("1969-04-01", build.getCaptured());
         assertEquals("1969-04-01", build.getCreated());
@@ -56,6 +58,7 @@ public class OriginInfoBuilderTest {
         assertEquals("Edition", build.getEdition());
         assertEquals("1969-04-01", build.getIssued());
         assertEquals("Publisher", build.getPublisher());
+        assertEquals("2015-05-05", build.getFirstIndexTime());
     }
     
     @Test
@@ -76,9 +79,11 @@ public class OriginInfoBuilderTest {
                         .withDateIssued(noEncoding, w3cdtf, marc)
                         .build())
                 .build();
-        
+
+
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
+                .withItemResource(getItemResource())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -104,6 +109,7 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
+                .withItemResource(getItemResource())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -127,6 +133,7 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
+                .withItemResource(getItemResource())
                 .build();        
         
         assertEquals("2008", originInfo.getIssued());
@@ -145,8 +152,15 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
+                .withItemResource(getItemResource())
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
+    }
+
+    private ItemResource getItemResource() {
+        ItemResource itemResource = new ItemResource();
+        itemResource.setFirstIndexTime("2015-05-05");
+        return itemResource;
     }
 }

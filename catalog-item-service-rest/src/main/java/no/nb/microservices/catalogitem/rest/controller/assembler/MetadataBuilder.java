@@ -6,6 +6,9 @@ import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.Location;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,11 +19,13 @@ public final class MetadataBuilder {
 
     private final FieldResource field;
     private final Mods mods;
+    private final SearchResource searchResource;
     
     public MetadataBuilder(Item item) {
         super();
         this.field = item.getField();
         this.mods = item.getMods();
+        this.searchResource = item.getSearchResource();
     }
     
     public Metadata build() {
@@ -31,8 +36,8 @@ public final class MetadataBuilder {
 
         metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
         metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
-        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).build());
-        metadata.setGeographic(new GeographicBuilder(mods.getOriginInfo()).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
+        metadata.setGeographic(new GeographicBuilder().withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
         metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
@@ -46,11 +51,36 @@ public final class MetadataBuilder {
         metadata.setNotes(getNotes(getNotesPredicate()));
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
         metadata.setLanguages(new LanguageBuilder(mods).build());
+        metadata.setPageCount(getPageCount());
         
         StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());
         metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
 
         return metadata;
+    }
+
+    private int getPageCount() {
+        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()){
+            return searchResource.getEmbedded().getItems().get(0).getPageCount();
+        }
+        else {
+            return 0;
+        }
+    }
+
+    private Location getLocation() {
+        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
+            return searchResource.getEmbedded().getItems().get(0).getLocation();
+        } else {
+            return null;
+        }
+    }
+
+    private ItemResource getItemResource() {
+        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
+            return searchResource.getEmbedded().getItems().get(0);
+        }
+        return null;
     }
 
     private String getFirstMediatype() {
