@@ -1,10 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +11,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import java.util.Arrays;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class RelatedItemsResourceAssemblerTest {
 
@@ -49,7 +48,7 @@ public class RelatedItemsResourceAssemblerTest {
 
         RelatedItemResource relatedItemsResource = assembler.toResource(item );
         
-        assertThat(relatedItemsResource.getId().getHref(), is("http://localhost/catalog/items/id1/relatedItems"));
+        assertThat(relatedItemsResource.getId().getHref(), is("http://localhost/v1/catalog/items/id1/relatedItems"));
         
     }
 

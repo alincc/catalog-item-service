@@ -1,7 +1,5 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +8,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.microservices.catalogitem.rest.controller.assembler.ResourceLinkBuilder;
-import no.nb.microservices.catalogitem.rest.controller.assembler.ResourceTemplateLink;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ResourceLinkBuilderTest {
 
@@ -89,7 +87,7 @@ public class ResourceLinkBuilderTest {
         Link modsLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, "id1").withRel("mods");
 
         assertEquals("should have \"mods\" rel", "mods", modsLink.getRel());
-        assertEquals("Should have mods href", "http://localhost/catalog/metadata/id1/mods", modsLink.getHref());
+        assertEquals("Should have mods href", "http://localhost/v1/catalog/metadata/id1/mods", modsLink.getHref());
     }
 
     @Test
@@ -97,7 +95,7 @@ public class ResourceLinkBuilderTest {
         Link presentationLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, "id1").withRel("presentation");
 
         assertEquals("should have \"presentation\" rel", "presentation", presentationLink.getRel());
-        assertEquals("Should have mods href", "http://localhost/catalog/iiif/id1/manifest", presentationLink.getHref());
+        assertEquals("Should have mods href", "http://localhost/v1/catalog/iiif/id1/manifest", presentationLink.getHref());
     }
 
 }

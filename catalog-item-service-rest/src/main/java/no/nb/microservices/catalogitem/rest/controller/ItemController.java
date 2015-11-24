@@ -1,9 +1,20 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+import no.nb.htrace.annotation.Traceable;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.service.ItemService;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
+import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
+import no.nb.microservices.catalogitem.rest.controller.assembler.RelatedItemsResourceAssembler;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.data.domain.Pageable;
@@ -13,22 +24,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-
-import no.nb.htrace.annotation.Traceable;
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.service.ItemService;
-import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
-import no.nb.microservices.catalogitem.rest.controller.assembler.RelatedItemsResourceAssembler;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
-
 @RestController
-@RequestMapping(value = "/catalog/items")
-@Api(value = "/catalog/items", description = "Home api")
+@RequestMapping(value = "/v1/catalog/items")
+@Api(value = "/v1/catalog/items", description = "Home api")
 public class ItemController {
 
     private final ISearchService searchService;

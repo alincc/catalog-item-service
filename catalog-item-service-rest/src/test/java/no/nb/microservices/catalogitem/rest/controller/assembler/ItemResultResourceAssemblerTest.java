@@ -118,7 +118,7 @@ public class ItemResultResourceAssemblerTest {
         
         ItemResource itemResource = resource.toResource(item );
         
-        assertThat(itemResource.getLink("relatedItems").getHref(), is("http://localhost/catalog/items/id1/relatedItems"));
+        assertThat(itemResource.getLink("relatedItems").getHref(), is("http://localhost/v1/catalog/items/id1/relatedItems"));
     }
 
     @Test

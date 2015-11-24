@@ -1,7 +1,7 @@
 {
   "_links": {
     "self": {
-      "href": "http://localhost/search?q=sesamid:id1"
+      "href": "http://localhost/v1/search?q=sesamid:id1"
     }
   },
   "page": {
