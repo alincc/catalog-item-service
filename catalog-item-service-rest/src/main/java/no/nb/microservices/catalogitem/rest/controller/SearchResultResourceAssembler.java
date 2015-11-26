@@ -23,14 +23,15 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
 
     private final HateoasPageableHandlerMethodArgumentResolver pageableResolver = new HateoasPageableHandlerMethodArgumentResolver();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final ItemResultResourceAssembler itemResultResourceAssembler = new ItemResultResourceAssembler();
+    
     @Override
     public ItemSearchResource toResource(SearchAggregated result) {
 
         ItemSearchResource resources = new ItemSearchResource(asPageMetadata(result.getPage()));
 
         for (Item item : result.getPage().getContent()) {
-            ItemResource itemResource = new ItemResultResourceAssembler().toResource(item);
+            ItemResource itemResource = itemResultResourceAssembler.toResource(item);
             resources.getEmbedded().getItems().add(itemResource);
         }
 

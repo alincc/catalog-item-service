@@ -32,6 +32,7 @@ public class ItemController {
     private final ISearchService searchService;
     private final ItemService itemService;
     private final ItemResultResourceAssembler itemResultResourceAssembler;
+    private final SearchResultResourceAssembler searchResultResourceAssembler;
 
     @Autowired
     public ItemController(ItemService itemService, ISearchService searchService) {
@@ -39,6 +40,7 @@ public class ItemController {
         this.itemService = itemService;
         this.searchService = searchService;
         this.itemResultResourceAssembler = new ItemResultResourceAssembler();
+        this.searchResultResourceAssembler = new SearchResultResourceAssembler();
     }
 
     @InitBinder
@@ -74,7 +76,7 @@ public class ItemController {
 
         SearchAggregated result = searchService.search(searchRequest, pageable);
 
-        ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
+        ItemSearchResource resource = searchResultResourceAssembler.toResource(result);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

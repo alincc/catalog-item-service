@@ -14,9 +14,10 @@ import java.util.List;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
-    AccessInfoBuilder accessInfoBuilder = new AccessInfoBuilder();
-    RelatedItemsBuilder relatedItemsBuilder = new RelatedItemsBuilder();
-    
+    private final AccessInfoBuilder accessInfoBuilder = new AccessInfoBuilder();
+    private final RelatedItemsBuilder relatedItemsBuilder = new RelatedItemsBuilder();
+    private final MetadataBuilder metadataBuilder = new MetadataBuilder();
+
     public ItemResultResourceAssembler() {
         super(ItemController.class, ItemResource.class);
     }
@@ -33,10 +34,8 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
             resource.setExpand("relatedItems");
         }
         
-        
         resource.setAccessInfo(accessInfoBuilder.fields(field).access(item.hasAccess()).build());
-        resource.setMetadata(new MetadataBuilder()
-                .withItem(item).build());
+        resource.setMetadata(metadataBuilder.withItem(item).build());
         resource.setRelatedItems(relatedItemsBuilder.withRelatedItems(item.getRelatedItems()).build());
 
         return resource;
