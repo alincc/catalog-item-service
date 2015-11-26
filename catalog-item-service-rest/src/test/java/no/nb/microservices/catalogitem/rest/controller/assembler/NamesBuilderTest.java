@@ -25,7 +25,8 @@ public class NamesBuilderTest {
 
         List<Name> names = Arrays.asList(person, corporate);
         
-        List<Person> persons = new NamesBuilder(names)
+        List<Person> persons = new NamesBuilder()
+                .withNames(names)
                 .buildPersonList();
         
         Person expected = new Person();
@@ -44,7 +45,8 @@ public class NamesBuilderTest {
 
         List<Name> names = Arrays.asList(person, corporate);
         
-        List<Corporates> persons = new NamesBuilder(names)
+        List<Corporates> persons = new NamesBuilder()
+                .withNames(names)
                 .buildCorporatesList();
         
         Corporates expected = new Corporates();

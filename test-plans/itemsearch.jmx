@@ -23,17 +23,17 @@
             <stringProp name="1691">50</stringProp>
             <stringProp name="1567">10</stringProp>
           </collectionProp>
-          <collectionProp name="-258442819">
+          <collectionProp name="-202543595">
             <stringProp name="1691">50</stringProp>
-            <stringProp name="1758">75</stringProp>
+            <stringProp name="1722">60</stringProp>
             <stringProp name="1629">30</stringProp>
           </collectionProp>
-          <collectionProp name="1739413830">
+          <collectionProp name="-172385536">
             <stringProp name="1758">75</stringProp>
-            <stringProp reference="../../collectionProp[3]/stringProp[2]"/>
-            <stringProp name="1629">30</stringProp>
+            <stringProp name="1758">75</stringProp>
+            <stringProp name="1567">10</stringProp>
           </collectionProp>
-          <collectionProp name="1722284">
+          <collectionProp name="-1907442361">
             <stringProp name="1758">75</stringProp>
             <stringProp name="48">0</stringProp>
             <stringProp name="1567">10</stringProp>
@@ -240,6 +240,39 @@
         <boolProp name="include_checkbox_state">false</boolProp>
         <boolProp name="exclude_checkbox_state">false</boolProp>
       </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <threadCounts>true</threadCounts>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
       <hashTree/>
     </hashTree>
   </hashTree>

@@ -55,7 +55,9 @@ public class MetadataBuilderTest {
 
         Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).withSearchResource(searchResource).hasAccess(true).build();
         
-        Metadata metadata = new MetadataBuilder(item).build();
+        Metadata metadata = new MetadataBuilder()
+                .withItem(item)
+                .build();
 
         assertEquals("Bøker",  metadata.getMediaTypes().get(0));
         assertEquals("Aviser", metadata.getMediaTypes().get(1));
@@ -94,7 +96,9 @@ public class MetadataBuilderTest {
                 .fields(fields)
                 .build();
         
-        Metadata metadata = new MetadataBuilder(item).build();
+        Metadata metadata = new MetadataBuilder()
+                .withItem(item)
+                .build();
         
         assertNotNull("Should have a streamingInfo", metadata.getStreamingInfo());
     }
@@ -108,7 +112,9 @@ public class MetadataBuilderTest {
                 .fields(fields)
                 .build();
         
-        Metadata metadata = new MetadataBuilder(item).build();
+        Metadata metadata = new MetadataBuilder()
+                .withItem(item)
+                .build();
         
         assertNull("Should not have a streamingInfo", metadata.getStreamingInfo());
     }

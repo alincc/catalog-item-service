@@ -13,8 +13,9 @@ public class NamesBuilder {
     private static final String CORPORATE = "corporate";
     private List<Name> names;
 
-    public NamesBuilder(final List<Name> names) {
+    public NamesBuilder withNames(final List<Name> names) {
         this.names = names;
+        return this;
     }
 
     public List<Person> buildPersonList() {
@@ -46,4 +47,5 @@ public class NamesBuilder {
         }
         return corporates;
     }
+
 }

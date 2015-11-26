@@ -31,12 +31,14 @@ public class ItemController {
 
     private final ISearchService searchService;
     private final ItemService itemService;
+    private final ItemResultResourceAssembler itemResultResourceAssembler;
 
     @Autowired
     public ItemController(ItemService itemService, ISearchService searchService) {
         super();
         this.itemService = itemService;
         this.searchService = searchService;
+        this.itemResultResourceAssembler = new ItemResultResourceAssembler();
     }
 
     @InitBinder
@@ -51,8 +53,7 @@ public class ItemController {
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id,
             @RequestParam(required=false) String expand) {
         Item item = itemService.getItemById(id, expand);
-        
-        ItemResource resource = new ItemResultResourceAssembler().toResource(item);
+        ItemResource resource = itemResultResourceAssembler.toResource(item);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

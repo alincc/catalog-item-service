@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 
 public final class MetadataBuilder {
 
-    private final FieldResource field;
-    private final Mods mods;
-    private final SearchResource searchResource;
+    private FieldResource field;
+    private Mods mods;
+    private SearchResource searchResource;
     
-    public MetadataBuilder(Item item) {
-        super();
+    public MetadataBuilder withItem(Item item) {
         this.field = item.getField();
         this.mods = item.getMods();
         this.searchResource = item.getSearchResource();
+        return this;
     }
     
     public Metadata build() {
@@ -34,8 +34,12 @@ public final class MetadataBuilder {
             .withTitleInfos(mods.getTitleInfos())
             .build());
 
-        metadata.setPeople(new NamesBuilder(mods.getNames()).buildPersonList());
-        metadata.setCorporates(new NamesBuilder(mods.getNames()).buildCorporatesList());
+        metadata.setPeople(new NamesBuilder()
+                .withNames(mods.getNames())
+                .buildPersonList());
+        metadata.setCorporates(new NamesBuilder()
+                .withNames(mods.getNames())
+                .buildCorporatesList());
         metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
         metadata.setGeographic(new GeographicBuilder().withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
         metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
