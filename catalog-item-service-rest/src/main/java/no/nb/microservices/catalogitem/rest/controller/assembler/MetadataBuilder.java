@@ -20,13 +20,6 @@ public final class MetadataBuilder {
     private FieldResource field;
     private Mods mods;
     private SearchResource searchResource;
-    private final NamesBuilder namesBuilder = new NamesBuilder();
-    private final OriginInfoBuilder originInfoBuilder = new OriginInfoBuilder();
-    private final GeographicBuilder geographicBuilder = new GeographicBuilder();
-    private final ClassificationBuilder classificationBuilder = new ClassificationBuilder();
-    private final RecordInfoBuilder recordInfoBuilder = new RecordInfoBuilder();
-    private final SubjectBuilder subjectBuilder = new SubjectBuilder();
-    private final LanguageBuilder languageBuilder = new LanguageBuilder();
     
     public MetadataBuilder withItem(Item item) {
         this.field = item.getField();
@@ -41,28 +34,27 @@ public final class MetadataBuilder {
             .withTitleInfos(mods.getTitleInfos())
             .build());
 
-        
-        metadata.setPeople(namesBuilder
+        metadata.setPeople(new NamesBuilder()
                 .withNames(mods.getNames())
                 .buildPersonList());
-        metadata.setCorporates(namesBuilder
+        metadata.setCorporates(new NamesBuilder()
                 .withNames(mods.getNames())
                 .buildCorporatesList());
-        metadata.setOriginInfo(originInfoBuilder.withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
-        metadata.setGeographic(geographicBuilder.withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
-        metadata.setClassification(classificationBuilder.withClassifications(mods.getClassifications()).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
+        metadata.setGeographic(new GeographicBuilder().withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
+        metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
                 .build());
-        metadata.setRecordInfo(recordInfoBuilder.withRecordInfo(mods.getRecordInfo()).build());
-        metadata.setSubject(subjectBuilder.withSubjects(mods.getSubjects()).build());
+        metadata.setRecordInfo(new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo()).build());
+        metadata.setSubject(new SubjectBuilder().withSubjects(mods.getSubjects()).build());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
         metadata.setNotes(getNotes(getNotesPredicate()));
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
-        metadata.setLanguages(languageBuilder.withMods(mods).build());
+        metadata.setLanguages(new LanguageBuilder(mods).build());
         metadata.setPageCount(getPageCount());
         
         StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());

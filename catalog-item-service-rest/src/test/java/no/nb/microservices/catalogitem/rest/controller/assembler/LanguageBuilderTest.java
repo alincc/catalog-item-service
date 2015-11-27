@@ -18,7 +18,7 @@ public class LanguageBuilderTest {
         Mods mods = new Mods();
         mods.setLanguages(createLanguages("eng", "mul", "nob"));
 
-        List<String> languages = new LanguageBuilder().withMods(mods).build();
+        List<String> languages = new LanguageBuilder(mods).build();
 
         assertTrue(languages.equals(Arrays.asList("eng", "mul", "nob")));
     }
@@ -28,7 +28,7 @@ public class LanguageBuilderTest {
         Mods mods = new Mods();
         mods.setLanguages(null);
         
-        List<String> languages = new LanguageBuilder().withMods(mods).build();
+        List<String> languages = new LanguageBuilder(mods).build();
 
         assertNull(languages);
     }
