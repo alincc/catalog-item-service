@@ -32,7 +32,7 @@
         <dependency>
             <groupId>no.nb.microservices.catalogsearchindex</groupId>
             <artifactId>catalog-search-index-model</artifactId>
-            <version>-61</version>
+            <version>-65</version>
         </dependency>
         <dependency>
             <groupId>no.nb.microservices</groupId>

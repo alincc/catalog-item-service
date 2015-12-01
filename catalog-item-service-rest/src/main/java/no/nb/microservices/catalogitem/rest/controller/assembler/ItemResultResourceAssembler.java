@@ -1,17 +1,18 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.controller.ItemController;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.controller.ItemController;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
     
@@ -22,8 +23,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
-        FieldResource field = item.getField();
-        createTitle(field, resource);
+        resource.setTitle(item.getSearchResource().getEmbedded().getItems().get(0).getTitle());
         
         createLinks(item, resource);
         
@@ -32,7 +32,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         }
         
         resource.setAccessInfo(new AccessInfoBuilder()
-                .fields(field)
+                .setItemResource(item.getSearchResource().getEmbedded().getItems().get(0))
                 .access(item.hasAccess())
                 .build());
         resource.setMetadata(new MetadataBuilder()
@@ -43,12 +43,6 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
                 .build());
 
         return resource;
-    }
-
-    private void createTitle(FieldResource field, ItemResource resource) {
-        if(field != null) {
-            resource.setTitle(field.getTitle());
-        }
     }
 
     private void createLinks(Item item, ItemResource resource) {
@@ -126,7 +120,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     }
 
     private String getFirstMediatype(Item item) {
-        List<String> mediaTypes = getMediaTypes(item.getField());
+        List<String> mediaTypes = getMediaTypes(item.getSearchResource());
         if (mediaTypes != null && !mediaTypes.isEmpty()) {
             return mediaTypes.get(0);
         } else {
@@ -134,15 +128,18 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         }
     }
     
-    private List<String> getMediaTypes(FieldResource field) {
-        if (field != null) {
-            return field.getMediaTypes();
+    private List<String> getMediaTypes(SearchResource searchResource) {
+        if (searchResource != null) {
+            return searchResource.getEmbedded().getItems().get(0).getMediaTypes();
         } else {
             return Collections.emptyList();
         }
     }
     
     private List<Link> createThumbnailLinks(Item item) {
-        return new ThumbnailBuilder(item).build();
+        return new ThumbnailBuilder()
+                .withItemResource(item.getSearchResource().getEmbedded().getItems().get(0))
+                .withMods(item.getMods())
+                .build();
     }
 }

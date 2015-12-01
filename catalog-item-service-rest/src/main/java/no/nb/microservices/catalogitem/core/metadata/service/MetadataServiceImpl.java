@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.metadata.repository.MetadataRepository;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 
 @Service
@@ -32,15 +31,6 @@ public class MetadataServiceImpl  implements MetadataService{
       SecurityInfo securityInfo = id.getSecurityInfo();
       Mods mods = metadataRepository.getModsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
       return new AsyncResult<Mods>(mods);
-    }
-
-    @Override
-    @Async
-    public Future<FieldResource> getFieldsById(TracableId id) {
-        Trace.continueSpan(id.getSpan());
-        SecurityInfo securityInfo = id.getSecurityInfo();
-        FieldResource field =  metadataRepository.getFieldsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
-      return new AsyncResult<FieldResource>(field);
     }
 
 }

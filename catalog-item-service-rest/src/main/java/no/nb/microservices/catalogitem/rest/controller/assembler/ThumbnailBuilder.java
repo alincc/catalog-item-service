@@ -1,6 +1,9 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.hateoas.Link;
 
@@ -11,29 +14,40 @@ public class ThumbnailBuilder {
     public static final String THUMBNAIL_LARGE = "thumbnail_large";
     public static final String THUMBNAIL_MEDIUM = "thumbnail_medium";
     public static final String THUMBNAIL_SMALL = "thumbnail_small";
-    private final Item item;
+    private ItemResource itemResource;
+    private Mods mods;
 
-    public ThumbnailBuilder(Item item) {
-        this.item = item;
+    public ThumbnailBuilder() {
+        super();
+    }
+
+    public ThumbnailBuilder withItemResource(ItemResource itemResource) {
+        this.itemResource = itemResource;
+        return this;
+    }
+    
+    public ThumbnailBuilder withMods(Mods mods) {
+        this.mods = mods;
+        return this;
     }
 
     public List<Link> build() {
         List<Link> links = new ArrayList<>();
 
-        if (StringUtils.isNotEmpty(item.getField().getThumbnailUrl())) {
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getField().getThumbnailUrl(), 256).withRel(THUMBNAIL_LARGE));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getField().getThumbnailUrl(), 128).withRel(THUMBNAIL_MEDIUM));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, item.getField().getThumbnailUrl(), 64).withRel(THUMBNAIL_SMALL));
+        if (StringUtils.isNotEmpty(itemResource.getThumbnailUrn())) {
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 256).withRel(THUMBNAIL_LARGE));
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 128).withRel(THUMBNAIL_MEDIUM));
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 64).withRel(THUMBNAIL_SMALL));
         }
-        else if (item.getMods() != null
-                && item.getMods().getLocation() != null
-                && item.getMods().getLocation().getUrls() != null
-                && !item.getMods().getLocation().getUrls().isEmpty())
+        else if (mods != null
+                && mods.getLocation() != null
+                && mods.getLocation().getUrls() != null
+                && !mods.getLocation().getUrls().isEmpty())
         {
             String thumbnailUrl = "";
-            String location = (item.getMods().getLocation().getUrls().stream()
+            String location = (mods.getLocation().getUrls().stream()
                     .filter(q -> "preview".equalsIgnoreCase(q.getAccess())).findAny()
-                    .orElseGet(() -> item.getMods().getLocation().getUrls().get(0))).getValue();
+                    .orElseGet(() -> mods.getLocation().getUrls().get(0))).getValue();
             thumbnailUrl = location.startsWith("http://") ? location : "";
 
             if (StringUtils.isNotEmpty(thumbnailUrl)) {

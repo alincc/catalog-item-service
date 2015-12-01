@@ -17,12 +17,10 @@ import java.util.stream.Collectors;
 
 public final class MetadataBuilder {
 
-    private FieldResource field;
     private Mods mods;
     private SearchResource searchResource;
     
     public MetadataBuilder withItem(Item item) {
-        this.field = item.getField();
         this.mods = item.getMods();
         this.searchResource = item.getSearchResource();
         return this;
@@ -63,7 +61,7 @@ public final class MetadataBuilder {
         return metadata;
     }
 
-    private int getPageCount() {
+    private Integer getPageCount() {
         if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()){
             return searchResource.getEmbedded().getItems().get(0).getPageCount();
         }
@@ -97,8 +95,8 @@ public final class MetadataBuilder {
     }
     
     private List<String> getMediaTypes() {
-        if (field != null) {
-            return field.getMediaTypes();
+        if (searchResource != null) {
+            return searchResource.getEmbedded().getItems().get(0).getMediaTypes();
         } else {
             return Collections.emptyList();
         }

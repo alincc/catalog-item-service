@@ -61,17 +61,15 @@ public class ItemServiceImpl implements ItemService {
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
             Future<Mods> mods = metadataService.getModsById(tracableId);
-            Future<FieldResource> fields = metadataService.getFieldsById(tracableId);
             //Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
             Future<SearchResource> search = indexService.getSearchResource(tracableId);
 
-            while (!(mods.isDone() && fields.isDone() && /*hasAccess.isDone() &&*/ search.isDone())) {
+            while (!(mods.isDone() && /*hasAccess.isDone() &&*/ search.isDone())) {
                 Thread.sleep(1);
             }
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
             return new ItemBuilder(id)
                     .mods(mods.get())
-                    .fields(fields.get())
                     .hasAccess(true)
                     .withRelatedItems(relatedItems)
                     .withSearchResource(search.get())

@@ -42,7 +42,6 @@ public class ItemControllerTest {
     public void testItem() throws Exception {
         Item item = new ItemBuilder("id1")
                 .mods(TestMods.aDefaultBookMods().build())
-                .fields(TestFields.aDefaultBook().build())
                 .hasAccess(true)
                 .build();
 
@@ -56,7 +55,6 @@ public class ItemControllerTest {
     public void testItemExpandRelatedItems() throws Exception {
         Item item = new ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicAlbum().build())
-                .fields(TestFields.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
 
@@ -70,7 +68,6 @@ public class ItemControllerTest {
     public void testRelatedItems() throws Exception {
         Item item = new ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicAlbum().build())
-                .fields(TestFields.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
 

@@ -1,24 +1,21 @@
 package no.nb.microservices.catalogitem.core.item.model;
 
-import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.springframework.hateoas.Identifiable;
 
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 public class Item implements Identifiable<String> {
     
     private String id;
     private Mods mods; 
-    private FieldResource field;
     private boolean hasAccess;
     private RelatedItems relatedItems;
     private SearchResource searchResource;
 
-    private Item(String id, Mods mods, FieldResource field, boolean hasAccess, RelatedItems relatedItems, SearchResource searchResource) {
+    private Item(String id, Mods mods, boolean hasAccess, RelatedItems relatedItems, SearchResource searchResource) {
         this.id = id;
         this.mods = mods;
-        this.field = field;
         this.hasAccess = hasAccess;
         this.relatedItems = relatedItems;
         this.searchResource = searchResource;
@@ -36,13 +33,6 @@ public class Item implements Identifiable<String> {
         return mods;
     }
 
-    public FieldResource getField() {
-        if (field == null) {
-            field = new FieldResource();
-        }
-        return field;
-    }
-
     public boolean hasAccess() {
         return hasAccess;
     }
@@ -58,7 +48,6 @@ public class Item implements Identifiable<String> {
     public static class ItemBuilder  {
         private final String id;
         private Mods mods; 
-        private FieldResource fields;
         private boolean hasAccess;
         private RelatedItems relatedItems;
         private SearchResource searchResource;
@@ -77,11 +66,6 @@ public class Item implements Identifiable<String> {
             return this;
         }
         
-        public ItemBuilder fields(final FieldResource fields) {
-            this.fields = fields;
-            return this;
-        }
-        
         public ItemBuilder hasAccess(final boolean hasAccess) {
             this.hasAccess = hasAccess;
             return this;
@@ -93,7 +77,7 @@ public class Item implements Identifiable<String> {
         }
 
         public Item build() {
-            return new Item(id, mods, fields, hasAccess, relatedItems, searchResource);
+            return new Item(id, mods, hasAccess, relatedItems, searchResource);
         }
 
     }

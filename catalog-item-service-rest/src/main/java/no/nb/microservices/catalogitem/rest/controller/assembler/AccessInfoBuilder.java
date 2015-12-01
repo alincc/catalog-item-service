@@ -1,30 +1,31 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.rest.model.AccessInfo;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-
 import java.util.List;
+
+import no.nb.microservices.catalogitem.rest.model.AccessInfo;
 
 public final class AccessInfoBuilder {
     public static final String VIEWABILITY_ALL = "ALL";
     public static final String VIEWABILITY_NONE = "NONE";
     
-    private FieldResource fields = new FieldResource();
     private boolean hasAccess = false;
+    private no.nb.microservices.catalogsearchindex.ItemResource itemResource;
     
-    public AccessInfoBuilder fields(final FieldResource fields) {
-        this.fields = fields != null ? fields : new FieldResource();
-        return this;
-    }
-
     public AccessInfoBuilder access(final boolean hasAccess) {
         this.hasAccess = hasAccess;
         return this;
     }
 
+    public AccessInfoBuilder setItemResource(
+            no.nb.microservices.catalogsearchindex.ItemResource itemResource) {
+        this.itemResource = itemResource;
+        return this;
+    }
+
+
     public AccessInfo build() {
         AccessInfo accessInfo = new AccessInfo();
-        accessInfo.setDigital(fields.isDigital());
+        accessInfo.setDigital(itemResource.isDigital());
         accessInfo.setPublicDomain(isPublicDomain());
         accessInfo.setAccessAllowedFrom(accessAllowedFrom());
         accessInfo.setViewability(getViewability());
@@ -32,12 +33,12 @@ public final class AccessInfoBuilder {
     }
     
     private boolean isPublicDomain() {
-        return fields.getContentClasses().contains("public");
+        return itemResource.getContentClasses().contains("public");
     }
     
     private String accessAllowedFrom() {
         String result = "";
-        List<String> contentClasses = fields.getContentClasses();
+        List<String> contentClasses = itemResource.getContentClasses();
         if (contentClasses.contains("public") || contentClasses.contains("mavispublic") || contentClasses.contains("statfjordpublic") || 
                 contentClasses.contains("friggpublic") || contentClasses.contains("showonly")) {
             result = "EVERYWHERE";
