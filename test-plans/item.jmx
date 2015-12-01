@@ -13,22 +13,22 @@
     <hashTree>
       <kg.apc.jmeter.timers.VariableThroughputTimer guiclass="kg.apc.jmeter.timers.VariableThroughputTimerGui" testclass="kg.apc.jmeter.timers.VariableThroughputTimer" testname="jp@gc - Throughput Shaping Timer" enabled="true">
         <collectionProp name="load_profile">
-          <collectionProp name="139339554">
+          <collectionProp name="1396151763">
             <stringProp name="49">1</stringProp>
             <stringProp name="49586">200</stringProp>
             <stringProp name="1629">30</stringProp>
           </collectionProp>
-          <collectionProp name="105204487">
+          <collectionProp name="1668489511">
             <stringProp name="49586">200</stringProp>
             <stringProp name="49586">200</stringProp>
             <stringProp name="1572">15</stringProp>
           </collectionProp>
-          <collectionProp name="94561065">
+          <collectionProp name="2084527545">
             <stringProp name="49586">200</stringProp>
             <stringProp name="1512228">1500</stringProp>
             <stringProp name="60">60</stringProp>
           </collectionProp>
-          <collectionProp name="1453282447">
+          <collectionProp name="2101953699">
             <stringProp name="1512228">1500</stringProp>
             <stringProp name="48">0</stringProp>
             <stringProp name="60">60</stringProp>
@@ -38,11 +38,11 @@
       <hashTree/>
       <kg.apc.jmeter.threads.UltimateThreadGroup guiclass="kg.apc.jmeter.threads.UltimateThreadGroupGui" testclass="kg.apc.jmeter.threads.UltimateThreadGroup" testname="Jmeter Users" enabled="true">
         <collectionProp name="ultimatethreadgroupdata">
-          <collectionProp name="1603664974">
-            <stringProp name="48625">100</stringProp>
+          <collectionProp name="-110945885">
+            <stringProp name="48780">150</stringProp>
             <stringProp name="0">0</stringProp>
             <stringProp name="30">30</stringProp>
-            <stringProp name="60">60</stringProp>
+            <stringProp name="48718">130</stringProp>
             <stringProp name="10">10</stringProp>
           </collectionProp>
         </collectionProp>

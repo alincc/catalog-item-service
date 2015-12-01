@@ -1,21 +1,12 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
-import no.nb.microservices.catalogitem.core.index.model.SearchResult;
-import no.nb.microservices.catalogitem.core.index.service.IndexService;
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
-import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
-import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.core.security.service.SecurityService;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
-import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import no.nb.microservices.catalogsearchindex.SearchResource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +17,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+import no.nb.commons.web.util.UserUtils;
+import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
+import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
+import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.security.service.SecurityService;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -62,10 +62,10 @@ public class ItemServiceImpl implements ItemService {
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
             Future<Mods> mods = metadataService.getModsById(tracableId);
-            //Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
+            Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
             Future<SearchResource> search = indexService.getSearchResource(tracableId);
 
-            while (!(mods.isDone() && /*hasAccess.isDone() &&*/ search.isDone())) {
+            while (!(mods.isDone() && hasAccess.isDone() && search.isDone())) {
                 Thread.sleep(1);
             }
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
