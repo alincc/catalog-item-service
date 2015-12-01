@@ -99,6 +99,7 @@ public class SearchControllerTest {
         SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), aggregations);
 
         when(searchService.search(searchRequest, pageable)).thenReturn(searchResult);
+        
         ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
 
         assertEquals(2, result.getBody().getEmbedded().getAggregations().size());

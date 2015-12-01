@@ -3,6 +3,7 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 import java.util.List;
 
 import no.nb.microservices.catalogitem.rest.model.AccessInfo;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 
 public final class AccessInfoBuilder {
     public static final String VIEWABILITY_ALL = "ALL";
@@ -25,20 +26,24 @@ public final class AccessInfoBuilder {
 
     public AccessInfo build() {
         AccessInfo accessInfo = new AccessInfo();
-        accessInfo.setDigital(itemResource.isDigital());
+        accessInfo.setDigital(isDigital());
         accessInfo.setPublicDomain(isPublicDomain());
         accessInfo.setAccessAllowedFrom(accessAllowedFrom());
         accessInfo.setViewability(getViewability());
         return accessInfo;
     }
-    
-    private boolean isPublicDomain() {
-        return itemResource.getContentClasses().contains("public");
+
+    private boolean isDigital() {
+        return getItemResource().isDigital();
     }
     
+    private boolean isPublicDomain() {
+        return getItemResource().getContentClasses().contains("public");
+    }
+
     private String accessAllowedFrom() {
         String result = "";
-        List<String> contentClasses = itemResource.getContentClasses();
+        List<String> contentClasses = getItemResource().getContentClasses();
         if (contentClasses.contains("public") || contentClasses.contains("mavispublic") || contentClasses.contains("statfjordpublic") || 
                 contentClasses.contains("friggpublic") || contentClasses.contains("showonly")) {
             result = "EVERYWHERE";
@@ -53,6 +58,14 @@ public final class AccessInfoBuilder {
         }
         return result;
     }    
+    
+    private ItemResource getItemResource() {
+        if (itemResource == null) {
+            return new ItemResource();
+        } else {
+            return itemResource;
+        }
+    }
     
     private String getViewability() {
         return hasAccess ? AccessInfoBuilder.VIEWABILITY_ALL : AccessInfoBuilder.VIEWABILITY_NONE;

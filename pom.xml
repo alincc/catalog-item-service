@@ -21,6 +21,7 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <catalog-metadata-service.version>0.0.1-133</catalog-metadata-service.version>
+        <catalog-search-index-service.version>-66</catalog-search-index-service.version>
     </properties>
 
     <dependencyManagement>
@@ -31,6 +32,17 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nb.microservices.catalogsearchindex</groupId>
+                <artifactId>catalog-search-index-model</artifactId>
+                <version>${catalog-search-index-service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nb.microservices.catalogsearchindex</groupId>
+                <artifactId>catalog-search-index-test</artifactId>
+                <version>${catalog-search-index-service.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>no.nb.microservices</groupId>

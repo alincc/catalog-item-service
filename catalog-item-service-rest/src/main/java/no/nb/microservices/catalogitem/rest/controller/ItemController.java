@@ -49,8 +49,9 @@ public class ItemController {
     @Traceable(description="item")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id,
+            @RequestParam(required=false) String fields,
             @RequestParam(required=false) String expand) {
-        Item item = itemService.getItemById(id, expand);
+        Item item = itemService.getItemById(id, fields, expand);
         ItemResource resource = new ItemResultResourceAssembler().toResource(item);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -58,7 +59,7 @@ public class ItemController {
     @Traceable(description="relatedItems")
     @RequestMapping(value = "/{id}/relatedItems", method = RequestMethod.GET)
     public ResponseEntity<RelatedItemResource> getRelatedItems(@PathVariable(value = "id") String id) {
-        Item item = itemService.getItemById(id, "relatedItems");
+        Item item = itemService.getItemById(id, null, "relatedItems");
         
         RelatedItemResource resource = new RelatedItemsResourceAssembler().toResource(item);
         return new ResponseEntity<>(resource, HttpStatus.OK);

@@ -16,8 +16,8 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.Item.ItemBuilder;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
 
 public class RelatedItemsBuilderTest {
 
@@ -37,7 +37,7 @@ public class RelatedItemsBuilderTest {
     public void testConsititutens() {
         Item constituten = new ItemBuilder("id")
                 .mods(TestMods.aDefaultMusicAlbum().build())
-                .fields(TestFields.aDefaultMusic().build())
+                .withItemResource(TestItemResource.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
         List<Item> constitutens = Arrays.asList(constituten);
@@ -54,7 +54,7 @@ public class RelatedItemsBuilderTest {
     public void testHosts() {
         Item host = new ItemBuilder("id")
                 .mods(TestMods.aDefaultMusicTrack().build())
-                .fields(TestFields.aDefaultMusic().build())
+                .withItemResource(TestItemResource.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
         List<Item> hosts = Arrays.asList(host);
@@ -71,7 +71,7 @@ public class RelatedItemsBuilderTest {
     public void testPreceding() {
         Item item = new ItemBuilder("id")
                 .mods(TestMods.aDefaultMusicAlbum().build())
-                .fields(TestFields.aDefaultMusic().build())
+                .withItemResource(TestItemResource.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, null, item, null, null);
@@ -87,7 +87,7 @@ public class RelatedItemsBuilderTest {
     public void testSucceeding() {
         Item item = new ItemBuilder("id")
                 .mods(TestMods.aDefaultMusicAlbum().build())
-                .fields(TestFields.aDefaultMusic().build())
+                .withItemResource(TestItemResource.aDefaultMusic().build())
                 .hasAccess(true)
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, null, null, item, null);

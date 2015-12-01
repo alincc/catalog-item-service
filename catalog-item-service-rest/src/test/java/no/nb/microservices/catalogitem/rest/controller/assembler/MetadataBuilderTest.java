@@ -28,6 +28,7 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import no.nb.microservices.catalogsearchindex.SearchResource;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
 
 public class MetadataBuilderTest {
 
@@ -47,13 +48,15 @@ public class MetadataBuilderTest {
         mods.setGenre("drama");
         mods.setSubjects(createSubjects());
         mods.setLanguages(createLanguages("nob", "eng"));
-        FieldResource fields = new FieldResource();
-        fields.setMediaTypes(createMediaTypes());
 
-        SearchResource searchResource = new SearchResource();
-        searchResource.setEmbedded(createWrapper());
+        ItemResource itemResource = new ItemResource();
+        itemResource.setPageCount(70);
+        itemResource.setMediaTypes(createMediaTypes());
 
-        Item item = new Item.ItemBuilder(id).mods(mods).fields(fields).withSearchResource(searchResource).hasAccess(true).build();
+        Item item = new Item.ItemBuilder(id)
+                .mods(mods)
+                .withItemResource(itemResource)
+                .hasAccess(true).build();
         
         Metadata metadata = new MetadataBuilder()
                 .withItem(item)
@@ -70,30 +73,16 @@ public class MetadataBuilderTest {
         assertNotNull("Should have subject", metadata.getSubject());
         assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
         assertTrue("Should have language", metadata.getLanguages().equals(Arrays.asList("nob", "eng")));
-        assertEquals(70, metadata.getPageCount());
-    }
-
-    private EmbeddedWrapper createWrapper() {
-        EmbeddedWrapper embeddedWrapper = new EmbeddedWrapper();
-            embeddedWrapper.setItems(createItem());
-        return embeddedWrapper;
-    }
-
-    private List<ItemResource> createItem() {
-        List<ItemResource> itemResources = new ArrayList<>();
-        ItemResource pageCount = new ItemResource();
-        pageCount.setPageCount(70);
-        itemResources.add(pageCount);
-        return itemResources;
+        assertEquals(70, metadata.getPageCount().intValue());
     }
 
     @Test
     public void testStreamingInfo() {
         Mods mods = TestMods.aDefaultRadioProgramMods().build();
-        FieldResource fields = TestFields.aDefaultRadio().build();
+        ItemResource itemResource = TestItemResource.aDefaultRadio().build();
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
-                .fields(fields)
+                .withItemResource(itemResource)
                 .build();
         
         Metadata metadata = new MetadataBuilder()
@@ -106,10 +95,10 @@ public class MetadataBuilderTest {
     @Test
     public void testMediatypeWithoutStreamingInfo() {
         Mods mods = TestMods.aDefaultBookMods().build();
-        FieldResource fields = TestFields.aDefaultBook().build();
+        ItemResource itemResource = TestItemResource.aDefaultBook().build();
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
-                .fields(fields)
+                .withItemResource(itemResource)
                 .build();
         
         Metadata metadata = new MetadataBuilder()

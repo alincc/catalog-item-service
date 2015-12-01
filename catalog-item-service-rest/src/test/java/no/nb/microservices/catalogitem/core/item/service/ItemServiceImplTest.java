@@ -58,7 +58,7 @@ public class ItemServiceImplTest {
         when(metadataService.getModsById(anyObject())).thenReturn(mods);
         when(securityService.hasAccess(anyObject())).thenReturn(hasAccess);
         
-        Item item = itemService.getItemById(id, null);
+        Item item = itemService.getItemById(id, null, null);
         
         assertNotNull("Item should not be null", item);
         assertNotNull("Item should have mods", item.getMods());
@@ -78,7 +78,7 @@ public class ItemServiceImplTest {
         when(indexService.getSearchResource(anyObject())).thenReturn(searchResource);
         when(indexService.search(anyObject(), anyObject(), anyObject())).thenReturn(searchResult);
 
-        Item item = itemService.getItemById(id, "relatedItems");
+        Item item = itemService.getItemById(id, null, "relatedItems");
         
         assertNotNull("Item should have consitutents in relatedItems", item.getRelatedItems().getConstituents());
         assertNotNull("Item should have preceding in relatedItems", item.getRelatedItems().getPreceding());

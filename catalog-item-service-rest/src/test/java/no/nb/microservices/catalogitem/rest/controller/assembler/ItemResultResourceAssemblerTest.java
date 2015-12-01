@@ -7,6 +7,9 @@ import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.*;
 import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.SearchResource;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,18 +90,23 @@ public class ItemResultResourceAssemblerTest {
     public void testPlaylistLink() {
         Item item = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicTrack().build())
-                .fields(TestFields.aDefaultMusic().build())
+                .withItemResource(TestItemResource.aDefaultMusic().build())
                 .build();
         ItemResource itemResource = resource.toResource(item);
+
         assertEquals("Should have a playlist link element", "playlist", itemResource.getLink("playlist").getRel());
     }
 
     @Test
     public void testThumbnailLinks() {
-        FieldResource fields = new FieldResource();
-        fields.setThumbnailUrl("URN:NBN:no-nb_digibok_2014062307158_C1");
-        Item item = new Item.ItemBuilder("id1").fields(fields).build();
+        no.nb.microservices.catalogsearchindex.ItemResource itemIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
+        itemIndexResource.setThumbnailUrn("URN:NBN:no-nb_digibok_2014062307158_C1");
+        Item item = new Item.ItemBuilder("id1")
+                .withItemResource(itemIndexResource)
+                .build();
+        
         ItemResource itemResource = resource.toResource(item );
+
         assertEquals("Should have a thumbnail_small link element", "thumbnail_small", itemResource.getLink("thumbnail_small").getRel());
         assertEquals("Should have a thumbnail_medium link element", "thumbnail_medium", itemResource.getLink("thumbnail_medium").getRel());
         assertEquals("Should have a thumbnail_large link element", "thumbnail_large", itemResource.getLink("thumbnail_large").getRel());    
@@ -142,9 +150,12 @@ public class ItemResultResourceAssemblerTest {
         alternativeTitleInfo.setTitle("Supersonic alt");
         alternativeTitleInfo.setType("alternative");
         mods.setTitleInfos(Arrays.asList(titleInfo, alternativeTitleInfo));
-        FieldResource fields = new FieldResource();
-        fields.setTitle(titleInfo.getTitle() + " ct");
-        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields ).build();
+        no.nb.microservices.catalogsearchindex.ItemResource searchIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
+        searchIndexResource.setTitle(titleInfo.getTitle() + " ct");
+        Item item = new Item.ItemBuilder("id1")
+                .mods(mods)
+                .withItemResource(searchIndexResource)
+                .build();
         
         ItemResource itemResource = resource.toResource(item );
         
@@ -155,10 +166,12 @@ public class ItemResultResourceAssemblerTest {
     
     @Test
     public void testTitle() {
-        FieldResource fields = new FieldResource();
-        fields.setTitle("Supersonic");
+        no.nb.microservices.catalogsearchindex.ItemResource searchIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
+        searchIndexResource.setTitle("Supersonic");
+
         Item item = new Item.ItemBuilder("id1")
-                .fields(fields).build();
+                .withItemResource(searchIndexResource)
+                .build();
         
         ItemResource itemResource = resource.toResource(item);
         
@@ -252,11 +265,13 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testAccessInfo() {
-        FieldResource fields = new FieldResource();
-        fields.setContentClasses(Arrays.asList("restricted", "public"));
-        fields.setDigital(true);
-        
-        Item item = new Item.ItemBuilder("id1").fields(fields).hasAccess(true).build();
+        no.nb.microservices.catalogsearchindex.ItemResource searchIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
+        searchIndexResource.setDigital(true);
+        searchIndexResource.setContentClasses(Arrays.asList("restricted", "public"));
+        Item item = new Item.ItemBuilder("id1")
+                .withItemResource(searchIndexResource)
+                .hasAccess(true)
+                .build();
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);

@@ -1,28 +1,26 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import no.nb.microservices.catalogsearchindex.Location;
-import no.nb.microservices.catalogsearchindex.SearchResource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.Location;
+
 public final class MetadataBuilder {
 
     private Mods mods;
-    private SearchResource searchResource;
+    private ItemResource itemResource;
     
     public MetadataBuilder withItem(Item item) {
         this.mods = item.getMods();
-        this.searchResource = item.getSearchResource();
+        this.itemResource = item.getItemResource();
         return this;
     }
     
@@ -62,27 +60,24 @@ public final class MetadataBuilder {
     }
 
     private Integer getPageCount() {
-        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()){
-            return searchResource.getEmbedded().getItems().get(0).getPageCount();
+        if (getItemResource() != null){
+            return getItemResource().getPageCount();
         }
         else {
             return 0;
         }
     }
 
-    private Location getLocation() {
-        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
-            return searchResource.getEmbedded().getItems().get(0).getLocation();
+    private ItemResource getItemResource() {
+        if (itemResource == null) {
+            return new ItemResource();
         } else {
-            return null;
+            return itemResource;
         }
     }
 
-    private ItemResource getItemResource() {
-        if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
-            return searchResource.getEmbedded().getItems().get(0);
-        }
-        return null;
+    private Location getLocation() {
+        return getItemResource().getLocation();
     }
 
     private String getFirstMediatype() {
@@ -95,11 +90,7 @@ public final class MetadataBuilder {
     }
     
     private List<String> getMediaTypes() {
-        if (searchResource != null) {
-            return searchResource.getEmbedded().getItems().get(0).getMediaTypes();
-        } else {
-            return Collections.emptyList();
-        }
+        return getItemResource().getMediaTypes();
     }
     
     private String getSummary() {

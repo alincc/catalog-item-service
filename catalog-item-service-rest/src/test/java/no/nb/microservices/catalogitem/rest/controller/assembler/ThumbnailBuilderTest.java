@@ -5,6 +5,8 @@ import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Location;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Url;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -42,9 +44,10 @@ public class ThumbnailBuilderTest {
         location.setUrls(Arrays.asList(url));
         Mods mods = new Mods();
         mods.setLocation(location);
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
 
-        List<Link> links = new ThumbnailBuilder(item).build();
+        List<Link> links = new ThumbnailBuilder()
+                .withMods(mods)
+                .build();
         assertEquals(1, links.size());
         assertEquals("thumbnail_large", links.get(0).getRel());
         assertEquals("http://www.nb.no/baser/amundsen/bilder/JFIFSURA_P/301-350/SURA327.jpg", links.get(0).getHref());
@@ -65,9 +68,10 @@ public class ThumbnailBuilderTest {
         location.setUrls(Arrays.asList(url1, url2, url3));
         Mods mods = new Mods();
         mods.setLocation(location);
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
 
-        List<Link> links = new ThumbnailBuilder(item).build();
+        List<Link> links = new ThumbnailBuilder()
+                .withMods(mods)
+                .build();
         assertEquals(1, links.size());
         assertEquals("thumbnail_large", links.get(0).getRel());
         assertEquals("http://media31.dimu.no/media/image/NOM/NOMF-02772.109/0?byIndex=true&height=400&width=400", links.get(0).getHref());
@@ -87,7 +91,10 @@ public class ThumbnailBuilderTest {
         mods.setLocation(location);
         Item item = new Item.ItemBuilder("id1").mods(mods).build();
 
-        List<Link> links = new ThumbnailBuilder(item).build();
+        List<Link> links = new ThumbnailBuilder()
+                .withMods(mods)
+                .build();
+        
         assertEquals(2, links.size());
 
         Link large = links.stream().filter(q -> q.getRel().equalsIgnoreCase("thumbnail_large")).findAny().get();
@@ -101,12 +108,13 @@ public class ThumbnailBuilderTest {
 
     @Test
     public void buildStandardThumbnailsTest() {
-        FieldResource fields = new FieldResource();
-        fields.setThumbnailUrl("URN:NBN:no-nb_digibok_2014062307158_C1");
-        Mods mods = new Mods();
-        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields).build();
+        ItemResource itemResource = new ItemResource();
+        itemResource.setThumbnailUrn("URN:NBN:no-nb_digibok_2014062307158_C1");
+        
+        List<Link> links = new ThumbnailBuilder()
+                .withItemResource(itemResource )
+                .build();
 
-        List<Link> links = new ThumbnailBuilder(item).build();
         assertEquals(3, links.size());
 
         Link large = links.stream().filter(q -> q.getRel().equalsIgnoreCase("thumbnail_large")).findAny().get();
@@ -121,12 +129,9 @@ public class ThumbnailBuilderTest {
 
     @Test
     public void buildEmptyThumbnailsTest() {
-        FieldResource fields = new FieldResource();
-        fields.setThumbnailUrl("");
-        Mods mods = new Mods();
-        Item item = new Item.ItemBuilder("id1").mods(mods).fields(fields).build();
 
-        List<Link> links = new ThumbnailBuilder(item).build();
+        List<Link> links = new ThumbnailBuilder()
+                .build();
         assertEquals(0, links.size());
     }
 }

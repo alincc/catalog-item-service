@@ -3,7 +3,7 @@ package no.nb.microservices.catalogitem.core.item.model;
 import org.springframework.hateoas.Identifiable;
 
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogsearchindex.SearchResource;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 
 public class Item implements Identifiable<String> {
     
@@ -11,14 +11,14 @@ public class Item implements Identifiable<String> {
     private Mods mods; 
     private boolean hasAccess;
     private RelatedItems relatedItems;
-    private SearchResource searchResource;
+    private ItemResource itemResource;
 
-    private Item(String id, Mods mods, boolean hasAccess, RelatedItems relatedItems, SearchResource searchResource) {
+    private Item(String id, Mods mods, boolean hasAccess, RelatedItems relatedItems, ItemResource itemResource) {
         this.id = id;
         this.mods = mods;
         this.hasAccess = hasAccess;
         this.relatedItems = relatedItems;
-        this.searchResource = searchResource;
+        this.itemResource = itemResource;
     }
 
     @Override
@@ -41,8 +41,8 @@ public class Item implements Identifiable<String> {
         return relatedItems;
     }
 
-    public SearchResource getSearchResource() {
-        return searchResource;
+    public ItemResource getItemResource() {
+        return itemResource;
     }
 
     public static class ItemBuilder  {
@@ -50,7 +50,7 @@ public class Item implements Identifiable<String> {
         private Mods mods; 
         private boolean hasAccess;
         private RelatedItems relatedItems;
-        private SearchResource searchResource;
+        private ItemResource itemResource;
         
         public ItemBuilder(final String id) {
             this.id = id;
@@ -61,8 +61,8 @@ public class Item implements Identifiable<String> {
             return this;
         }
 
-        public ItemBuilder withSearchResource(final SearchResource searchResource) {
-            this.searchResource = searchResource;
+        public ItemBuilder withItemResource(final ItemResource itemResource) {
+            this.itemResource = itemResource;
             return this;
         }
         
@@ -77,7 +77,7 @@ public class Item implements Identifiable<String> {
         }
 
         public Item build() {
-            return new Item(id, mods, hasAccess, relatedItems, searchResource);
+            return new Item(id, mods, hasAccess, relatedItems, itemResource);
         }
 
     }

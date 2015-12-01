@@ -34,10 +34,10 @@ public class ThumbnailBuilder {
     public List<Link> build() {
         List<Link> links = new ArrayList<>();
 
-        if (StringUtils.isNotEmpty(itemResource.getThumbnailUrn())) {
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 256).withRel(THUMBNAIL_LARGE));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 128).withRel(THUMBNAIL_MEDIUM));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, itemResource.getThumbnailUrn(), 64).withRel(THUMBNAIL_SMALL));
+        if (StringUtils.isNotEmpty(getItemResource().getThumbnailUrn())) {
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 256).withRel(THUMBNAIL_LARGE));
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 128).withRel(THUMBNAIL_MEDIUM));
+            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 64).withRel(THUMBNAIL_SMALL));
         }
         else if (mods != null
                 && mods.getLocation() != null
@@ -62,5 +62,13 @@ public class ThumbnailBuilder {
         }
 
         return links;
+    }
+
+    private ItemResource getItemResource() {
+        if (itemResource == null) {
+            return new ItemResource();
+        } else {
+            return itemResource;
+        }
     }
 }

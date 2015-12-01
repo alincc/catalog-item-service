@@ -27,7 +27,7 @@ public class ItemWrapperServiceImpl implements ItemWrapperService {
             SecurityInfo securityInfo = itemWrapper.getSecurityInfo();
 
             Trace.continueSpan(itemWrapper.getSpan());
-            item = itemService.getItemById(itemWrapper.getId(), "", securityInfo);
+            item = itemService.getItemById(itemWrapper.getId(), null, "", securityInfo);
 
         } finally {
             itemWrapper.getLatch().countDown();
