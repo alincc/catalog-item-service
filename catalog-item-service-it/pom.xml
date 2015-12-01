@@ -19,11 +19,18 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>catalog-item-service-model</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>catalog-item-service-rest</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nb.microservices.catalogsearchindex</groupId>
+            <artifactId>catalog-search-index-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Testing -->
