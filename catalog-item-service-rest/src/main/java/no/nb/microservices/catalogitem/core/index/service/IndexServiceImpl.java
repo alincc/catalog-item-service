@@ -34,7 +34,7 @@ public class IndexServiceImpl implements IndexService {
 
         SearchResource result = indexRepository.search(
                 searchRequest.getQ(),
-                searchRequest.getFields(),
+                null,
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 searchRequest.getSort(),

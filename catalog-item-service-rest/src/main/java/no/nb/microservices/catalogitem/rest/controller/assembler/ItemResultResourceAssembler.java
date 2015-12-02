@@ -8,6 +8,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.utils.ItemFields;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
@@ -21,21 +22,31 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
-        resource.setTitle(createTitle(item));
-        
-        createLinks(item, resource);
+        if (ItemFields.show(item.getFields(), "_links")) {
+            createLinks(item, resource);
+        }
+
+        if (ItemFields.show(item.getFields(), "title")) {
+            resource.setTitle(createTitle(item));
+        }
         
         if (hasRelatedItems(item)) {
             resource.setExpand("relatedItems");
         }
         
-        resource.setAccessInfo(new AccessInfoBuilder()
-                .setItemResource(item.getItemResource())
-                .access(item.hasAccess())
-                .build());
-        resource.setMetadata(new MetadataBuilder()
-                .withItem(item)
-                .build());
+        if (ItemFields.show(item.getFields(), "accessInfo")) {
+            resource.setAccessInfo(new AccessInfoBuilder()
+                    .setItemResource(item.getItemResource())
+                    .access(item.hasAccess())
+                    .build());
+        }
+        
+        if (ItemFields.show(item.getFields(), "metadata")) {
+            resource.setMetadata(new MetadataBuilder()
+                    .withItem(item)
+                    .build());
+        }
+
         resource.setRelatedItems(new RelatedItemsBuilder()
                 .withRelatedItems(item.getRelatedItems())
                 .build());

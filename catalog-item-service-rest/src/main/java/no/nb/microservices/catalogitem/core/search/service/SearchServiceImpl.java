@@ -41,18 +41,18 @@ public class SearchServiceImpl implements ISearchService {
     @Override
     public SearchAggregated search(SearchRequest searchRequest, Pageable pageable) {
         SearchResult result = indexService.search(searchRequest, pageable, new SecurityInfo());
-        List<Item> items = consumeItems(result);
+        List<Item> items = consumeItems(searchRequest, result);
         Page<Item> page = new PageImpl<>(items, pageable, result.getTotalElements());
         return new SearchAggregated(page, result.getAggregations());
     }
 
-    private List<Item> consumeItems(SearchResult result) {
+    private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {
         final CountDownLatch latch = new CountDownLatch(result.getIds().size());
         List<Item> items = Collections.synchronizedList(new ArrayList<>());
         List<Future<Item>> workList = new ArrayList<>();
 
         for (String id : result.getIds()) {
-            ItemWrapper itemWrapper = createItemWrapper(latch, items, id);
+            ItemWrapper itemWrapper = createItemWrapper(latch, items, id, searchRequest);
             Future<Item> item = itemWrapperService.getById(itemWrapper);
             workList.add(item);
         }
@@ -77,8 +77,8 @@ public class SearchServiceImpl implements ISearchService {
         }
     }
 
-    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, String id) {
-        ItemWrapper itemWrapper = new ItemWrapper(id, latch, items);
+    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, String id, SearchRequest searchRequest) {
+        ItemWrapper itemWrapper = new ItemWrapper(id, latch, items, searchRequest);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
         itemWrapper.getSecurityInfo().setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));

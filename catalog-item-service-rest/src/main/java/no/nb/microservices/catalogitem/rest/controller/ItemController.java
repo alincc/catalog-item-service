@@ -15,6 +15,9 @@ import no.nb.microservices.catalogitem.rest.controller.assembler.RelatedItemsRes
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +52,7 @@ public class ItemController {
     @Traceable(description="item")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id,
-            @RequestParam(required=false) String fields,
+            @RequestParam(required=false) List<String> fields,
             @RequestParam(required=false) String expand) {
         Item item = itemService.getItemById(id, fields, expand);
         ItemResource resource = new ItemResultResourceAssembler().toResource(item);
@@ -69,7 +72,8 @@ public class ItemController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
     @Traceable(description="search")
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, @PageableDefault Pageable pageable) {
+    public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, 
+            @PageableDefault Pageable pageable) {
 
         SearchAggregated result = searchService.search(searchRequest, pageable);
 
