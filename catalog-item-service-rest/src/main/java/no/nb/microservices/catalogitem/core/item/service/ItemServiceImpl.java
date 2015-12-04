@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -27,6 +28,7 @@ import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.security.service.SecurityService;
+import no.nb.microservices.catalogitem.core.utils.ItemFields;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
@@ -51,18 +53,32 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(String id, String fields, String expand) {
+    public Item getItemById(String id, List<String> fields, String expand) {
         SecurityInfo securityInfo = getSecurityInfo();
         return getItemById(id, fields, expand, securityInfo);
     }
 
     @Override
-    public Item getItemById(String id, String fields, String expand, SecurityInfo securityInfo) {
+    public Item getItemById(String id, List<String> fields, String expand, SecurityInfo securityInfo) {
 
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
-            Future<Mods> mods = metadataService.getModsById(tracableId);
-            Future<Boolean> hasAccess = securityService.hasAccess(tracableId);
+            
+            Future<Mods> mods = null;
+            if (ItemFields.show(fields, "metadata")) {
+                mods = metadataService.getModsById(tracableId);
+            } else {
+                mods = new AsyncResult<Mods>(new Mods());
+            }
+            
+            Future<Boolean> hasAccess = null;
+            
+            if (ItemFields.show(fields, "accessInfo")) {
+                hasAccess = securityService.hasAccess(tracableId);
+            } else {
+                hasAccess = new AsyncResult<Boolean>(new Boolean(false));
+            }
+            
             Future<SearchResource> search = indexService.getSearchResource(tracableId);
 
             while (!(mods.isDone() && hasAccess.isDone() && search.isDone())) {
@@ -71,6 +87,7 @@ public class ItemServiceImpl implements ItemService {
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
             ItemBuilder itemBuilder = new ItemBuilder(id)
                     .mods(mods.get())
+                    .withFields(fields)
                     .hasAccess(true)
                     .withRelatedItems(relatedItems);
             

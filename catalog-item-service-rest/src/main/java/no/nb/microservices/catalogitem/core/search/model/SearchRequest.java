@@ -11,7 +11,7 @@ public class SearchRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String q;
-    private String fields;
+    private List<String> fields;
     private List<String> sort = new ArrayList<>();
     private String aggs;
     private NBSearchType searchType;
@@ -31,11 +31,11 @@ public class SearchRequest implements Serializable {
         this.q = q;
     }
 
-    public String getFields() {
+    public List<String> getFields() {
         return fields;
     }
 
-    public void setFields(String fields) {
+    public void setFields(List<String> fields) {
         this.fields = fields;
     }
 

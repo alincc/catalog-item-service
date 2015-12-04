@@ -14,13 +14,15 @@ public class ItemWrapper implements Traceable {
     private CountDownLatch latch;
     private List<Item> items;
     private Span span = Trace.currentSpan();
+    private SearchRequest searchRequest;
 
     private SecurityInfo securityInfo = new SecurityInfo();
 
-    public ItemWrapper(String id, CountDownLatch latch, List<Item> items) {
+    public ItemWrapper(String id, CountDownLatch latch, List<Item> items, SearchRequest searchRequest) {
         this.id = id;
         this.latch = latch;
         this.items = items;
+        this.searchRequest = searchRequest;
     }
 
     public CountDownLatch getLatch() {
@@ -46,6 +48,10 @@ public class ItemWrapper implements Traceable {
 
     public void setSpan(Span span) {
         this.span = span;
+    }
+
+    public SearchRequest getSearchRequest() {
+        return searchRequest;
     }
 
 }

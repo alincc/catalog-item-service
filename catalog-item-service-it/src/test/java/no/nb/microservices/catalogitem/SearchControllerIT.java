@@ -17,6 +17,8 @@ import no.nb.sesam.ni.niserver.NiServer;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -37,12 +39,14 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TestConfig.class, RibbonClientConfiguration.class, TestNiConfig2.class })
 @WebIntegrationTest("server.port: 0")
 public class SearchControllerIT {
-
+    Logger logger = LoggerFactory.getLogger(SearchControllerIT.class);
+    
     @Value("${local.server.port}")
     int port;
 
@@ -84,14 +88,13 @@ public class SearchControllerIT {
 
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                System.out.println(request.getPath());
-                if (request.getPath().equals("/v1/search?q=Ola&fields=-title&page=0&size=10&sort=title%2Cdesc")) {
+                if (request.getPath().equals("/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().contains("mods")) {
+                } else if (request.getPath().contains("/mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().contains("fields")) {
+                } else if (request.getPath().contains("/fields")) {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
@@ -102,7 +105,7 @@ public class SearchControllerIT {
                 } else if (request.getPath().equals("/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
-
+                logger.error("Request \"" + request.getPath() +"\"not found");
                 return new MockResponse().setResponseCode(404);
             }
         };
@@ -120,10 +123,10 @@ public class SearchControllerIT {
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
 
         ResponseEntity<SearchResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/v1/catalog/items?q=Ola&fields=-title&size=10&sort=title,desc", HttpMethod.GET,
+                "http://localhost:" + port + "/v1/catalog/items?q=Ola&size=10&sort=title,desc", HttpMethod.GET,
                 new HttpEntity<Void>(headers), SearchResource.class);
 
-        assertTrue("Status code should be 200 ", entity.getStatusCode().is2xxSuccessful());
+        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
         assertNotNull("Response should have page element", entity.getBody().getMetadata());
         assertNotNull("Response should have _embedded element", entity.getBody().getEmbedded());
         assertNotNull("Response should have links", entity.getBody().getLinks());
@@ -138,7 +141,7 @@ public class SearchControllerIT {
         String url = "http://localhost:" + port + "/v1/catalog/items?q=*&aggs=ddc1,mediatype";
         ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
 
-        assertTrue("Status code should be 200 ", entity.getStatusCode().is2xxSuccessful());
+        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
         assertNotNull("Response should contain aggregations", entity.getBody().getEmbedded().getAggregations());
         assertEquals("Should contain 2 aggragations", 2, entity.getBody().getEmbedded().getAggregations().size());
     }
