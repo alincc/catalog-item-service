@@ -1,14 +1,13 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogsearchindex.ItemResource;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.hateoas.Link;
 
-import java.util.ArrayList;
-import java.util.List;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 
 public class ThumbnailBuilder {
     public static final String THUMBNAIL_LARGE = "thumbnail_large";
@@ -35,9 +34,9 @@ public class ThumbnailBuilder {
         List<Link> links = new ArrayList<>();
 
         if (StringUtils.isNotEmpty(getItemResource().getThumbnailUrn())) {
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 256).withRel(THUMBNAIL_LARGE));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 128).withRel(THUMBNAIL_MEDIUM));
-            links.add(ResourceLinkBuilder.linkTo(ResourceTemplateLink.THUMBNAIL, getItemResource().getThumbnailUrn(), 64).withRel(THUMBNAIL_SMALL));
+            links.add(new Link(ResourceTemplateLink.THUMBNAIL.getTemplate().replace("{id}", getItemResource().getThumbnailUrn()).replace("{height}", "256")).withRel(THUMBNAIL_LARGE));
+            links.add(new Link(ResourceTemplateLink.THUMBNAIL.getTemplate().replace("{id}", getItemResource().getThumbnailUrn()).replace("{height}", "128")).withRel(THUMBNAIL_MEDIUM));
+            links.add(new Link(ResourceTemplateLink.THUMBNAIL.getTemplate().replace("{id}", getItemResource().getThumbnailUrn()).replace("{height}", "64")).withRel(THUMBNAIL_SMALL));
         }
         else if (mods != null
                 && mods.getLocation() != null
