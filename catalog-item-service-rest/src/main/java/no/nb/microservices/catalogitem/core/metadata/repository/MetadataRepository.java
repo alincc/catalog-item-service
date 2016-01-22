@@ -12,7 +12,7 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 @FeignClient("catalog-metadata-service")
 public interface MetadataRepository {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/catalog/metadata/{id}/mods", produces = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/v1/metadata/{id}/mods", produces = MediaType.APPLICATION_XML_VALUE)
     Mods getModsById(@PathVariable("id") String id, 
             @RequestParam("X-Forwarded-Host") String xHost, 
             @RequestParam("X-Forwarded-Port") String xPort, 

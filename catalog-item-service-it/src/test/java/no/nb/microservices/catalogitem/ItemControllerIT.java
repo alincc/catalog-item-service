@@ -94,15 +94,15 @@ public class ItemControllerIT {
             @Override
             public MockResponse dispatch(RecordedRequest request)
                     throws InterruptedException {
-                if (request.getPath().equals("/v1/catalog/metadata/id1/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                if (request.getPath().equals("/catalog/v1/metadata/id1/mods?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/xml");
-                } else if (request.getPath().equals("/v1/catalog/metadata/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().equals("/catalog/v1/metadata/id1/fields?X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/v1/search?q=sesamid%3Aid1&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=sesamid%3Aid1&page=0&size=1&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(searchResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
@@ -121,7 +121,7 @@ public class ItemControllerIT {
         HttpHeaders headers = defaultHeaders();
         
         ResponseEntity<ItemResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/v1/catalog/items/id1", HttpMethod.GET,
+                "http://localhost:" + port + "/catalog/v1/items/id1", HttpMethod.GET,
                 new HttpEntity<Void>(headers), ItemResource.class);
         
         assertTrue("Status code should be 200 ", entity.getStatusCode()
@@ -160,11 +160,11 @@ public class ItemControllerIT {
                     return new MockResponse().setBody(TestFields.aDefaultMusicJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().contains("/v1/search?q=sesamid")) {
+                } else if (request.getPath().contains("/catalog/v1/search?q=sesamid")) {
                     return new MockResponse().setBody(searchResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().contains("/v1/search?q=oaiid")) {
+                } else if (request.getPath().contains("/catalog/v1/search?q=oaiid")) {
                     PageMetadata pageMetadata = new PageMetadata(1, 0, 1);
                     SearchResource searchResource = new SearchResource(pageMetadata);
                     EmbeddedWrapper wrapper = new EmbeddedWrapper();
@@ -194,7 +194,7 @@ public class ItemControllerIT {
         HttpHeaders headers = defaultHeaders();
         
         ResponseEntity<ItemResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/v1/catalog/items/id1?expand=relatedItems", HttpMethod.GET,
+                "http://localhost:" + port + "/catalog/v1/items/id1?expand=relatedItems", HttpMethod.GET,
                 new HttpEntity<Void>(headers), ItemResource.class);
         
         Metadata metadata = entity.getBody().getMetadata();

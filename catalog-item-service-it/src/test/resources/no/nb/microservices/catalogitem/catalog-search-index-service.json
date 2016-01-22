@@ -1,7 +1,7 @@
 {  
    "_links":{  
       "self":{  
-         "href":"http://localhost/v1/search?q=*"
+         "href":"http://localhost/catalog/v1/search?q=*"
       }
    },
    "page":{  

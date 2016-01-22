@@ -24,7 +24,7 @@ public class RelatedItemsResourceAssemblerTest {
     public void init() {
         assembler = new RelatedItemsResourceAssembler();
 
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/id1/relatedItems");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/id1/relatedItems");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
     }
@@ -48,7 +48,7 @@ public class RelatedItemsResourceAssemblerTest {
 
         RelatedItemResource relatedItemsResource = assembler.toResource(item );
         
-        assertThat(relatedItemsResource.getId().getHref(), is("http://localhost/v1/catalog/items/id1/relatedItems"));
+        assertThat(relatedItemsResource.getId().getHref(), is("http://localhost/catalog/v1/items/id1/relatedItems"));
         
     }
 

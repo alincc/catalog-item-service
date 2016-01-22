@@ -23,7 +23,7 @@ public class RelatedItemsBuilderTest {
 
     @Before
     public void init() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/id1");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/id1");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
     }

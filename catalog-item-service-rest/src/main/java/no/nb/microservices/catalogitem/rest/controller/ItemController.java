@@ -28,8 +28,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/v1/catalog/items")
-@Api(value = "/v1/catalog/items", description = "Home api")
+@RequestMapping(value = "/catalog/v1/items")
+@Api(value = "/catalog/v1/items", description = "Home api")
 public class ItemController {
 
     private final ISearchService searchService;

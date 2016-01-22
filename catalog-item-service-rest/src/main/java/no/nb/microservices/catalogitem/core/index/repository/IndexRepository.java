@@ -12,7 +12,7 @@ import java.util.List;
 @FeignClient("catalog-search-index-service")
 public interface IndexRepository {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/search")
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/v1/search")
     SearchResource search(@RequestParam("q") String q, 
             @RequestParam("fields") String fields, 
             @RequestParam("page") int pageNumber,

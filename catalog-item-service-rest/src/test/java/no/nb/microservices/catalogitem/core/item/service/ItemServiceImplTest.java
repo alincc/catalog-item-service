@@ -86,7 +86,7 @@ public class ItemServiceImplTest {
     }
     
     private void mockRequest() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/search?q=Junit");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/search?q=Junit");
         String ip = "123.45.123.123";
         request.addHeader(UserUtils.REAL_IP_HEADER, ip);
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);

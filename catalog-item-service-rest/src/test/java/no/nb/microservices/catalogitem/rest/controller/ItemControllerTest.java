@@ -47,7 +47,7 @@ public class ItemControllerTest {
 
         when(itemService.getItemById("id1", null, null)).thenReturn(item);
 
-        mockMvc.perform(get("/v1/catalog/items/id1"))
+        mockMvc.perform(get("/catalog/v1/items/id1"))
             .andExpect(status().is2xxSuccessful());
     }
 
@@ -60,7 +60,7 @@ public class ItemControllerTest {
 
         when(itemService.getItemById("id1", null, null)).thenReturn(item);
 
-        mockMvc.perform(get("/v1/catalog/items/id1"))
+        mockMvc.perform(get("/catalog/v1/items/id1"))
             .andExpect(status().is2xxSuccessful());
     }
 
@@ -73,7 +73,7 @@ public class ItemControllerTest {
 
         when(itemService.getItemById("id1", null, "relatedItems")).thenReturn(item);
 
-        mockMvc.perform(get("/v1/catalog/items/id1/relatedItems"))
+        mockMvc.perform(get("/catalog/v1/items/id1/relatedItems"))
             .andExpect(status().is2xxSuccessful());
     }
 }

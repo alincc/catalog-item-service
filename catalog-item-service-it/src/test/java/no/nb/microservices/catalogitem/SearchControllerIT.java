@@ -88,7 +88,7 @@ public class SearchControllerIT {
 
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                if (request.getPath().equals("/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc")) {
+                if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().contains("/mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
@@ -98,11 +98,11 @@ public class SearchControllerIT {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().startsWith("/v1/search?q=sesamid%3Aid")) {
+                } else if (request.getPath().startsWith("/catalog/v1/search?q=sesamid%3Aid")) {
                     return new MockResponse().setBody(searchResource1)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");
@@ -123,7 +123,7 @@ public class SearchControllerIT {
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
 
         ResponseEntity<SearchResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/v1/catalog/items?q=Ola&size=10&sort=title,desc", HttpMethod.GET,
+                "http://localhost:" + port + "/catalog/v1/items?q=Ola&size=10&sort=title,desc", HttpMethod.GET,
                 new HttpEntity<Void>(headers), SearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
@@ -138,7 +138,7 @@ public class SearchControllerIT {
         HttpHeaders headers = new HttpHeaders();
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
-        String url = "http://localhost:" + port + "/v1/catalog/items?q=*&aggs=ddc1,mediatype";
+        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&aggs=ddc1,mediatype";
         ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));

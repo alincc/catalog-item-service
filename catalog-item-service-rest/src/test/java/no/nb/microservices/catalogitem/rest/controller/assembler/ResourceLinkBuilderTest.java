@@ -17,7 +17,7 @@ public class ResourceLinkBuilderTest {
 
     @Before
     public void init() {
-        request = new MockHttpServletRequest("GET", "/v1/id1");
+        request = new MockHttpServletRequest("GET", "/catalog/v1/id1");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
     }
@@ -87,7 +87,7 @@ public class ResourceLinkBuilderTest {
         Link modsLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.MODS, "id1").withRel("mods");
 
         assertEquals("should have \"mods\" rel", "mods", modsLink.getRel());
-        assertEquals("Should have mods href", "http://localhost/v1/catalog/metadata/id1/mods", modsLink.getHref());
+        assertEquals("Should have mods href", "http://localhost/catalog/v1/metadata/id1/mods", modsLink.getHref());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ResourceLinkBuilderTest {
         Link presentationLink = ResourceLinkBuilder.linkTo(ResourceTemplateLink.PRESENTATION, "id1").withRel("presentation");
 
         assertEquals("should have \"presentation\" rel", "presentation", presentationLink.getRel());
-        assertEquals("Should have mods href", "http://localhost/v1/catalog/iiif/id1/manifest", presentationLink.getHref());
+        assertEquals("Should have mods href", "http://localhost/catalog/v1/iiif/id1/manifest", presentationLink.getHref());
     }
 
 }
