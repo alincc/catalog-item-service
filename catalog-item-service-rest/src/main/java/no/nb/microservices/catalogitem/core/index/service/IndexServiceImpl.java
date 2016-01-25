@@ -59,7 +59,15 @@ public class IndexServiceImpl implements IndexService {
     public Future<SearchResource> getSearchResource(TracableId id) {
         Trace.continueSpan(id.getSpan());
         SecurityInfo securityInfo = id.getSecurityInfo();
-        SearchResource searchResource = indexRepository.search("sesamid:" + id.getId(),null,0, 1, new ArrayList(),
+
+        String query;
+        if(id.getId().contains("URN:NBN")) {
+            query = "urn:\"" + id.getId() + "\"";
+        } else {
+            query = "sesamid:" + id.getId();
+        }
+
+        SearchResource searchResource = indexRepository.search(query,null,0, 1, new ArrayList(),
                 null, null, null, null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);

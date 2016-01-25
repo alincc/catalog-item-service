@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 public enum ResourceTemplateLink {
+    ITEM_SELF("/catalog/v1/items/{id}"),
     MODS ("/catalog/v1/metadata/{id}/mods"),
     PRESENTATION ("/catalog/v1/iiif/{id}/manifest"),
     ENW ("/catalog/v1/reference/{id}/enw"),

@@ -105,7 +105,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     }
 
     private Link createSelfLink(Item item) {
-        return linkTo(ItemController.class).slash(item).withSelfRel();
+        return ResourceLinkBuilder.linkTo(ResourceTemplateLink.ITEM_SELF, item.getId()).withSelfRel();
     }
     
     private Link createModsLink(Item item) {
