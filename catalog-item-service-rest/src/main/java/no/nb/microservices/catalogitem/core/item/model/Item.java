@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.core.item.model;
 
 import java.util.List;
 
+import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import org.springframework.hateoas.Identifiable;
 
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
@@ -58,7 +59,7 @@ public class Item implements Identifiable<String> {
     }
 
     public static class ItemBuilder  {
-        private final String id;
+        private String id;
         private List<String> fields;
         private Mods mods; 
         private boolean hasAccess;
@@ -95,6 +96,16 @@ public class Item implements Identifiable<String> {
         }
 
         public Item build() {
+            if(mods != null) {
+                final List<Identifier> identifiers = mods.getIdentifiers();
+                if(identifiers != null) {
+                    for(Identifier identifier : identifiers) {
+                        if("URN".equalsIgnoreCase(identifier.getType())) {
+                            id = identifier.getValue();
+                        }
+                    }
+                }
+            }
             return new Item(id, fields, mods, hasAccess, relatedItems, itemResource);
         }
 
