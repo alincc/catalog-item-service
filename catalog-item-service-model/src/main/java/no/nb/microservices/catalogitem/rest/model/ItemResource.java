@@ -1,16 +1,11 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.hateoas.ResourceSupport;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({"expand", "id", "_links", "accessInfo", "metadata" })
+@JsonPropertyOrder({"expand", "id", "title", "_links", "accessInfo", "metadata" })
 public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
