@@ -104,6 +104,8 @@ public class SearchControllerIT {
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&boost=title%2C10&boost=name%2C4")) {
+                    return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");
                 return new MockResponse().setResponseCode(404);
@@ -144,6 +146,17 @@ public class SearchControllerIT {
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
         assertNotNull("Response should contain aggregations", entity.getBody().getEmbedded().getAggregations());
         assertEquals("Should contain 2 aggragations", 2, entity.getBody().getEmbedded().getAggregations().size());
+    }
+
+    @Test
+    public void testSearchWithBoost() throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(UserUtils.SSO_HEADER, "token");
+        headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
+        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&boost=title,10&boost=name,4";
+        ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
+
+        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
     }
 
     @After

@@ -41,7 +41,7 @@ public class SearchRequest implements Serializable {
     }
 
     public List<String> getSort() {
-        removeEncoding();
+        removeEncoding(sort);
         return sort;
     }
 
@@ -50,6 +50,7 @@ public class SearchRequest implements Serializable {
     }
 
     public List<String> getBoost() {
+        removeEncoding(boost);
         return boost;
     }
 
@@ -96,10 +97,10 @@ public class SearchRequest implements Serializable {
         this.precision = precision;
     }
 
-    private void removeEncoding() {
-        if (sort != null) {
-            for (int i = 0; i < sort.size(); i++) {
-                sort.set(i, sort.get(i).replace("%2C",","));
+    private void removeEncoding(List<String> params) {
+        if (params != null) {
+            for (int i = 0; i < params.size(); i++) {
+                params.set(i, params.get(i).replace("%2C",","));
             }
         }
     }
