@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
+<jmeterTestPlan version="1.2" properties="2.7" jmeter="2.12 r1636949">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Catalog Items API" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -38,7 +38,7 @@
       <hashTree/>
       <kg.apc.jmeter.threads.UltimateThreadGroup guiclass="kg.apc.jmeter.threads.UltimateThreadGroupGui" testclass="kg.apc.jmeter.threads.UltimateThreadGroup" testname="Jmeter Users" enabled="true">
         <collectionProp name="ultimatethreadgroupdata">
-          <collectionProp name="-110945885">
+          <collectionProp name="-957045757">
             <stringProp name="48780">150</stringProp>
             <stringProp name="0">0</stringProp>
             <stringProp name="30">30</stringProp>
@@ -57,8 +57,8 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">ronnym.nb.no</stringProp>
-          <stringProp name="HTTPSampler.port">9082</stringProp>
+          <stringProp name="HTTPSampler.domain">cp1.nb.no</stringProp>
+          <stringProp name="HTTPSampler.port">8765</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout">2000</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
@@ -120,8 +120,8 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">true</boolProp>
           <objProp>
             <name>saveConfig</name>
             <value class="SampleSaveConfiguration">
@@ -195,7 +195,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/catalog/v1/items/c3c9844de9cb027e003021b1aadeae6c</stringProp>
+          <stringProp name="HTTPSampler.path">/v1/catalog/items/c3c9844de9cb027e003021b1aadeae6c</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
