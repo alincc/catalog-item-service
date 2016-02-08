@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,45 @@ public class ItemServiceImpl implements ItemService {
     public Item getItemById(String id, List<String> fields, String expand) {
         SecurityInfo securityInfo = getSecurityInfo();
         return getItemById(id, fields, expand, securityInfo);
+    }
+
+    @Override
+    public Item getItemWithResource(ItemResource resource, List<String> fields, String expand, SecurityInfo securityInfo) {
+
+        try {
+            TracableId tracableId = new TracableId(Trace.currentSpan(), resource.getItemId(), securityInfo);
+
+            Future<Mods> mods = null;
+            if (ItemFields.show(fields, "metadata")) {
+                mods = metadataService.getModsById(tracableId);
+            } else {
+                mods = new AsyncResult<Mods>(new Mods());
+            }
+
+            Future<Boolean> hasAccess = null;
+
+            if (ItemFields.show(fields, "accessInfo")) {
+                hasAccess = securityService.hasAccess(tracableId);
+            } else {
+                hasAccess = new AsyncResult<Boolean>(new Boolean(false));
+            }
+
+            while (!(mods.isDone() && hasAccess.isDone())) {
+                Thread.sleep(1);
+            }
+            RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
+            ItemBuilder itemBuilder = new ItemBuilder(resource.getItemId())
+                    .mods(mods.get())
+                    .withFields(fields)
+                    .hasAccess(true)
+                    .withItemResource(resource)
+                    .withRelatedItems(relatedItems);
+
+            return itemBuilder.build();
+        } catch (Exception ex) {
+            LOG.warn("Failed getting item for id " + resource.getItemId(), ex);
+        }
+        return new ItemBuilder(resource.getItemId()).build();
     }
 
     @Override
@@ -156,8 +196,8 @@ public class ItemServiceImpl implements ItemService {
                 searchRequest.setQ(query);
                 Pageable pagable = new PageRequest(0,1);
                 SearchResult searchResult = indexService.search(searchRequest, pagable, securityInfo);
-                if (!searchResult.getIds().isEmpty()) {
-                    String id = searchResult.getIds().get(0);
+                if (!searchResult.getItems().isEmpty()) {
+                    String id = searchResult.getItems().get(0).getItemId();
                     Item item = getItemById(id, null, null, securityInfo);
                     addPartNumber(r, item);
                     items.add(item);

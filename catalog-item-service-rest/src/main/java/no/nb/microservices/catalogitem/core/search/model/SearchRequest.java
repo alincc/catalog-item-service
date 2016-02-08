@@ -18,6 +18,7 @@ public class SearchRequest implements Serializable {
     private String topRight;
     private String bottomLeft;
     private String precision;
+    private boolean explain;
 
     public SearchRequest() {
 
@@ -94,5 +95,13 @@ public class SearchRequest implements Serializable {
 
     public void setPrecision(String precision) {
         this.precision = precision;
+    }
+
+    public boolean isExplain() {
+        return explain;
+    }
+
+    public void setExplain(boolean explain) {
+        this.explain = explain;
     }
 }

@@ -40,7 +40,7 @@ public class IndexServiceImplTest {
 
         when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -53,7 +53,7 @@ public class IndexServiceImplTest {
 
         verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class IndexServiceImplTest {
         when(mockIndexRepository.search(eq("searchString"),
                 anyString(), anyInt(), anyInt(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -78,7 +78,7 @@ public class IndexServiceImplTest {
         verify(mockIndexRepository).search(eq("searchString"),
                 anyString(), anyInt(), anyInt(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }
 
     private SearchResource createSearchResource() {

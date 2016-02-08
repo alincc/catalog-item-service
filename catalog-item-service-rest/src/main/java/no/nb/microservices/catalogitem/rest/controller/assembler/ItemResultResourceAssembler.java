@@ -47,6 +47,10 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
                     .build());
         }
 
+        if ( item.getItemResource() != null && item.getItemResource().getExplain() != null) {
+            resource.setExplain(item.getItemResource().getExplain());
+        }
+
         resource.setRelatedItems(new RelatedItemsBuilder()
                 .withRelatedItems(item.getRelatedItems())
                 .build());
