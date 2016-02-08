@@ -13,6 +13,7 @@ public class SearchRequest implements Serializable {
     private String q;
     private List<String> fields;
     private List<String> sort = new ArrayList<>();
+    private List<String> boost = new ArrayList<>();
     private String aggs;
     private NBSearchType searchType;
     private String topRight;
@@ -21,7 +22,7 @@ public class SearchRequest implements Serializable {
     private boolean explain;
 
     public SearchRequest() {
-
+        super();
     }
 
     public String getQ() {
@@ -41,7 +42,7 @@ public class SearchRequest implements Serializable {
     }
 
     public List<String> getSort() {
-        removeEncoding();
+        removeEncoding(sort);
         return sort;
     }
 
@@ -49,20 +50,20 @@ public class SearchRequest implements Serializable {
         this.sort = Arrays.asList(sort);
     }
 
+    public List<String> getBoost() {
+        removeEncoding(boost);
+        return boost;
+    }
+
+    public void setBoost(String[] boost) {
+        this.boost = Arrays.asList(boost);
+    }
     public String getAggs() {
         return aggs;
     }
 
     public void setAggs(String aggs) {
         this.aggs = aggs;
-    }
-
-    private void removeEncoding() {
-        if (sort != null) {
-            for (int i = 0; i < sort.size(); i++) {
-                sort.set(i, sort.get(i).replace("%2C",","));
-            }
-        }
     }
 
     public NBSearchType getSearchType() {
@@ -96,6 +97,16 @@ public class SearchRequest implements Serializable {
     public void setPrecision(String precision) {
         this.precision = precision;
     }
+
+    private void removeEncoding(List<String> params) {
+        if (params != null) {
+            for (int i = 0; i < params.size(); i++) {
+                params.set(i, params.get(i).replace("%2C",","));
+            }
+        }
+    }
+
+
 
     public boolean isExplain() {
         return explain;

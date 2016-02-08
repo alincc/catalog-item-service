@@ -18,6 +18,7 @@ public interface IndexRepository {
             @RequestParam("page") int pageNumber,
             @RequestParam("size") int pageSize, 
             @RequestParam("sort") List<String> sort, 
+            @RequestParam("boost") List<String> boost,
             @RequestParam("aggs") String aggs,
             @RequestParam("searchType") NBSearchType searchType,
             @RequestParam("topRight") String topRight,

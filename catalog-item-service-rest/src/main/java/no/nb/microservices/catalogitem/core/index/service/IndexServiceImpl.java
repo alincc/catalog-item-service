@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class IndexServiceImpl implements IndexService {
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 searchRequest.getSort(),
+                searchRequest.getBoost(),
                 searchRequest.getAggs(),
                 searchRequest.getSearchType(),
                 searchRequest.getTopRight(),
@@ -67,6 +69,8 @@ public class IndexServiceImpl implements IndexService {
             query = "sesamid:" + id.getId();
         }
 
+        SearchResource searchResource = indexRepository.search(query,null,0, 1, Collections.emptyList(), Collections.emptyList(),
+                null, null, null, null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
         SearchResource searchResource = indexRepository.search(query,null,0, 1, new ArrayList(),
                 null, null, null, null, null, false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
