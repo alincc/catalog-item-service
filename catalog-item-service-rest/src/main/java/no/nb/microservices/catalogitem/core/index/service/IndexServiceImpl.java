@@ -41,6 +41,7 @@ public class IndexServiceImpl implements IndexService {
                 searchRequest.getSort(),
                 searchRequest.isGrouping(),
                 searchRequest.getBoost(),
+                searchRequest.getShould(),
                 searchRequest.getAggs(),
                 searchRequest.getSearchType(),
                 searchRequest.getTopRight(),
@@ -68,7 +69,7 @@ public class IndexServiceImpl implements IndexService {
         }
 
         SearchResource searchResource = indexRepository.search(query,null,0, 1, Collections.emptyList(), false, Collections.emptyList(),
-                null, null, null, null, null, false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
+                Collections.emptyList(), null, null, null, null, null, false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);
 

@@ -45,7 +45,7 @@ public class IndexServiceImplTest {
     public void searchInMetadata() {
         SearchResource searchResource = createSearchResource();
 
-        when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
+        when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
                 anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
@@ -58,7 +58,7 @@ public class IndexServiceImplTest {
         SecurityInfo securityInfo = createSecurityInfo();
         indexService.search(searchRequest, pageable, securityInfo);
 
-        verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
+        verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
                 anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }
@@ -68,7 +68,7 @@ public class IndexServiceImplTest {
         SearchResource searchResource = createSearchResource();
 
         when(mockIndexRepository.search(eq("searchString"),
-                anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyString(), anyObject(),
+                anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
                 anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
@@ -83,7 +83,7 @@ public class IndexServiceImplTest {
         indexService.search(searchRequest, pageable, securityInfo);
 
         verify(mockIndexRepository).search(eq("searchString"),
-                anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyString(), anyObject(),
+                anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
                 anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }

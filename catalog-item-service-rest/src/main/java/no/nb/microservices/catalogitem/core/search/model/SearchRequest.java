@@ -14,6 +14,7 @@ public class SearchRequest implements Serializable {
     private List<String> fields;
     private List<String> sort = new ArrayList<>();
     private List<String> boost = new ArrayList<>();
+    private List<String> should = new ArrayList<>();
     private String aggs;
     private NBSearchType searchType;
     private String topRight;
@@ -102,16 +103,26 @@ public class SearchRequest implements Serializable {
     public boolean isGrouping() {
         return grouping;
     }
-    
+
     public void setGrouping(boolean grouping) {
         this.grouping = grouping;
     }
-    
-    
+
+
+
+    public List<String> getShould() {
+        removeEncoding(should);
+        return should;
+    }
+
+    public void setShould(List<String> should) {
+        this.should = should;
+    }
+
     public boolean isExplain() {
         return explain;
     }
-    
+
     public void setExplain(boolean explain) {
         this.explain = explain;
     }

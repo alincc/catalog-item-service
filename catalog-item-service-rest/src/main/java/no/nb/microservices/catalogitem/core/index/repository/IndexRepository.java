@@ -20,6 +20,7 @@ public interface IndexRepository {
             @RequestParam("sort") List<String> sort,
             @RequestParam("grouping") boolean grouping,
             @RequestParam("boost") List<String> boost,
+            @RequestParam("should") List<String> should,
             @RequestParam("aggs") String aggs,
             @RequestParam("searchType") NBSearchType searchType,
             @RequestParam("topRight") String topRight,
