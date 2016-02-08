@@ -88,7 +88,8 @@ public class SearchControllerIT {
 
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc")) {
+                System.out.println("REQUEST: " + request.getPath());
+                if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc&grouping=false&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().contains("/mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
@@ -98,13 +99,13 @@ public class SearchControllerIT {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().startsWith("/catalog/v1/search?q=sesamid%3Aid")) {
+                } else if (request.getPath().startsWith("/catalog/v1/search?q=sesamid%3Aid&explain=false")) {
                     return new MockResponse().setBody(searchResource1)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&aggs=ddc1%2Cmediatype&explain=false")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&boost=title%2C10&boost=name%2C4")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&boost=title%2C10&boost=name%2C4&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");
@@ -181,4 +182,3 @@ class TestNiConfig2 {
         return new NiClient(SearchControllerIT.TEST_SERVER_ADDR);
     }
 }
-

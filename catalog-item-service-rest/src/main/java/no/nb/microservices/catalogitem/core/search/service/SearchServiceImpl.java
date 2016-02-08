@@ -11,6 +11,7 @@ import no.nb.microservices.catalogitem.core.search.exception.LatchException;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,12 +48,13 @@ public class SearchServiceImpl implements ISearchService {
     }
 
     private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {
-        final CountDownLatch latch = new CountDownLatch(result.getIds().size());
+        final CountDownLatch latch = new CountDownLatch(result.getItems().size());
         List<Item> items = Collections.synchronizedList(new ArrayList<>());
         List<Future<Item>> workList = new ArrayList<>();
 
-        for (String id : result.getIds()) {
-            ItemWrapper itemWrapper = createItemWrapper(latch, items, id, searchRequest);
+        for (ItemResource itemResource : result.getItems()) {
+
+            ItemWrapper itemWrapper = createItemWrapper(latch, items, itemResource, searchRequest);
             Future<Item> item = itemWrapperService.getById(itemWrapper);
             workList.add(item);
         }
@@ -77,8 +79,8 @@ public class SearchServiceImpl implements ISearchService {
         }
     }
 
-    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, String id, SearchRequest searchRequest) {
-        ItemWrapper itemWrapper = new ItemWrapper(id, latch, items, searchRequest);
+    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, ItemResource itemResource, SearchRequest searchRequest) {
+        ItemWrapper itemWrapper = new ItemWrapper(itemResource, latch, items, searchRequest);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
         itemWrapper.getSecurityInfo().setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));

@@ -52,11 +52,7 @@ public class IndexServiceImpl implements IndexService {
                 securityInfo.getxRealIp(),
                 securityInfo.getSsoToken());
 
-        List<String> ids = result.getEmbedded().getItems().stream()
-                .map(ItemResource::getItemId)
-                .collect(Collectors.toList());
-
-        return new SearchResult(ids, result.getMetadata().getTotalElements(), result.getEmbedded().getAggregations());
+        return new SearchResult(result.getEmbedded().getItems(), result.getMetadata().getTotalElements(), result.getEmbedded().getAggregations());
     }
 
     @Override

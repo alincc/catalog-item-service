@@ -8,6 +8,7 @@ import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class SearchServiceImplTest {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("I love Træna");
         Pageable pageable = new PageRequest(0,10);
-        SearchResult searchResult = new SearchResult(Arrays.asList("1","2"), 100, null);
+        SearchResult searchResult = new SearchResult(Arrays.asList(new ItemResource(), new ItemResource()), 100, null);
         when(indexService.search(anyObject(), anyObject(), anyObject())).thenReturn(searchResult);
 
         SearchAggregated result = searchService.search(searchRequest, pageable);

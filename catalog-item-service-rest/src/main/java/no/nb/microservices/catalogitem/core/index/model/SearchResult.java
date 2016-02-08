@@ -1,18 +1,19 @@
 package no.nb.microservices.catalogitem.core.index.model;
 
 import no.nb.microservices.catalogsearchindex.AggregationResource;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 
 import java.util.List;
 
 public class SearchResult {
 
     private long totalElements;
-    private List<String> ids;
+    private List<ItemResource> items;
     private List<AggregationResource> aggregations;
 
-    public SearchResult(List<String> ids, long totalElements, List<AggregationResource> aggregations) {
+    public SearchResult(List<ItemResource> items, long totalElements, List<AggregationResource> aggregations) {
         super();
-        this.ids = ids;
+        this.items = items;
         this.totalElements = totalElements;
         this.aggregations = aggregations;
     }
@@ -21,8 +22,8 @@ public class SearchResult {
         return totalElements;
     }
 
-    public List<String> getIds() {
-        return ids;
+    public List<ItemResource> getItems() {
+        return items;
     }
 
     public List<AggregationResource> getAggregations() {

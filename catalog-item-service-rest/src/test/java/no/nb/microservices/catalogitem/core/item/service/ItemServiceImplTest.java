@@ -29,6 +29,7 @@ import no.nb.microservices.catalogitem.core.security.service.SecurityService;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
 import no.nb.microservices.catalogsearchindex.SearchResource;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceImplTest {
@@ -68,7 +69,8 @@ public class ItemServiceImplTest {
     @Test
     public void testExpandRelatedItems() {
         String id = "id1";
-        SearchResult searchResult = new SearchResult(Arrays.asList("id1"), 1, null);
+        ItemResource resource = new ItemResource();
+        SearchResult searchResult = new SearchResult(Arrays.asList(resource), 1, null);
         Future<Mods> mods = new AsyncResult<Mods>(TestMods.aDefaultMusicAlbum().build());
         Future<Boolean> hasAccess = new AsyncResult<Boolean>(true);
         Future<SearchResource> searchResource = new AsyncResult<>(new SearchResource(new PagedResources.PageMetadata(1,1,1,1)));

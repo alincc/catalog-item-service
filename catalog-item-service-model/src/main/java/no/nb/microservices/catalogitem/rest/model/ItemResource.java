@@ -1,5 +1,6 @@
 package no.nb.microservices.catalogitem.rest.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.annotation.*;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -15,6 +16,7 @@ public class ItemResource extends ResourceSupport {
     private Metadata metadata;
     private AccessInfo accessInfo;
     private RelatedItemResource relatedItems;
+    private JsonNode explain;
 
     @JsonCreator
     public ItemResource() {
@@ -70,4 +72,11 @@ public class ItemResource extends ResourceSupport {
         this.relatedItems = relatedItems;
     }
 
+    public JsonNode getExplain() {
+        return explain;
+    }
+
+    public void setExplain(JsonNode explain) {
+        this.explain = explain;
+    }
 }
