@@ -105,7 +105,7 @@ public class SearchControllerIT {
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype&explain=false")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&boost=title%2C10&boost=name%2C4")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&boost=title%2C10&boost=name%2C4&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");

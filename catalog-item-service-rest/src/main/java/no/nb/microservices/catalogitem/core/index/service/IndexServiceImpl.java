@@ -51,9 +51,6 @@ public class IndexServiceImpl implements IndexService {
                 securityInfo.getxRealIp(),
                 securityInfo.getSsoToken());
 
-//        List<String> ids = result.getEmbedded().getItems().stream()
-//                .map(ItemResource::getItemId)
-//                .collect(Collectors.toList());
         return new SearchResult(result.getEmbedded().getItems(), result.getMetadata().getTotalElements(), result.getEmbedded().getAggregations());
     }
 
@@ -69,10 +66,8 @@ public class IndexServiceImpl implements IndexService {
             query = "sesamid:" + id.getId();
         }
 
-        SearchResource searchResource = indexRepository.search(query,null,0, 1, Collections.emptyList(), Collections.emptyList(),
-                null, null, null, null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
         SearchResource searchResource = indexRepository.search(query,null,0, 1, new ArrayList(),
-                null, null, null, null, null, false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
+                null, null, null, null, null, null,false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);
 
