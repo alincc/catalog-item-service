@@ -52,7 +52,7 @@ public class IndexServiceImpl implements IndexService {
                 securityInfo.getxRealIp(),
                 securityInfo.getSsoToken());
 
-        return new SearchResult(result.getEmbedded().getItems(), result.getMetadata().getTotalElements(), result.getEmbedded().getAggregations());
+        return new SearchResult(result.getEmbedded().getItems(), result.getMetadata().getTotalElements(), result.getEmbedded().getAggregations(), result.getScrollId());
     }
 
     @Override

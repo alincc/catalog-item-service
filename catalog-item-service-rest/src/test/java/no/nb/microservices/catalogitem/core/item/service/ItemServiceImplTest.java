@@ -70,7 +70,7 @@ public class ItemServiceImplTest {
     public void testExpandRelatedItems() {
         String id = "id1";
         ItemResource resource = new ItemResource();
-        SearchResult searchResult = new SearchResult(Arrays.asList(resource), 1, null);
+        SearchResult searchResult = new SearchResult(Arrays.asList(resource), 1, null, null);
         Future<Mods> mods = new AsyncResult<Mods>(TestMods.aDefaultMusicAlbum().build());
         Future<Boolean> hasAccess = new AsyncResult<Boolean>(true);
         Future<SearchResource> searchResource = new AsyncResult<>(new SearchResource(new PagedResources.PageMetadata(1,1,1,1)));

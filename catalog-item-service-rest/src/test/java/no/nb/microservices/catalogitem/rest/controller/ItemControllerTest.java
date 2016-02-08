@@ -100,7 +100,7 @@ public class ItemControllerTest {
         searchRequest.setBoost(new String[]{"title,10", "name,4"});
         PageRequest pageable = new PageRequest(0, 10);
         List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 10), null);
+        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 10), null, null);
         when(searchService.search(searchRequest, pageable)).thenReturn(searchResult);
 
         controller.search(searchRequest, pageable);

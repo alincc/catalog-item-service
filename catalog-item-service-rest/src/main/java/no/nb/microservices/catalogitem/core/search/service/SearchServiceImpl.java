@@ -44,7 +44,7 @@ public class SearchServiceImpl implements ISearchService {
         SearchResult result = indexService.search(searchRequest, pageable, new SecurityInfo());
         List<Item> items = consumeItems(searchRequest, result);
         Page<Item> page = new PageImpl<>(items, pageable, result.getTotalElements());
-        return new SearchAggregated(page, result.getAggregations());
+        return new SearchAggregated(page, result.getAggregations(), result.getScrollId());
     }
 
     private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {
