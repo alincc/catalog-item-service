@@ -1,13 +1,17 @@
 package no.nb.microservices.catalogitem.core.index;
 
-import no.nb.microservices.catalogitem.core.index.repository.IndexRepository;
-import no.nb.microservices.catalogitem.core.index.service.IndexService;
-import no.nb.microservices.catalogitem.core.index.service.IndexServiceImpl;
-import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
-import no.nb.microservices.catalogsearchindex.NBSearchType;
-import no.nb.microservices.catalogsearchindex.SearchResource;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,11 +20,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedResources;
 
-import java.util.ArrayList;
-
-import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import no.nb.microservices.catalogitem.core.index.repository.IndexRepository;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.index.service.IndexServiceImpl;
+import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
+import no.nb.microservices.catalogsearchindex.NBSearchType;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IndexServiceImplTest {
@@ -38,9 +45,9 @@ public class IndexServiceImplTest {
     public void searchInMetadata() {
         SearchResource searchResource = createSearchResource();
 
-        when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
+        when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), false, anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -51,9 +58,9 @@ public class IndexServiceImplTest {
         SecurityInfo securityInfo = createSecurityInfo();
         indexService.search(searchRequest, pageable, securityInfo);
 
-        verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
+        verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), false, anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }
 
     @Test
@@ -61,9 +68,9 @@ public class IndexServiceImplTest {
         SearchResource searchResource = createSearchResource();
 
         when(mockIndexRepository.search(eq("searchString"),
-                anyString(), anyInt(), anyInt(), anyList(), anyList(), anyString(), anyObject(),
+                anyString(), anyInt(), anyInt(), anyList(), false, anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -76,9 +83,9 @@ public class IndexServiceImplTest {
         indexService.search(searchRequest, pageable, securityInfo);
 
         verify(mockIndexRepository).search(eq("searchString"),
-                anyString(), anyInt(), anyInt(), anyList(), anyList(), anyString(), anyObject(),
+                anyString(), anyInt(), anyInt(), anyList(), false, anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyString(), anyString(), anyString(), anyString());
     }
 
     private SearchResource createSearchResource() {

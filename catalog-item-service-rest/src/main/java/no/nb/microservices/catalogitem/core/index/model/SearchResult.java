@@ -4,11 +4,6 @@ import no.nb.microservices.catalogsearchindex.AggregationResource;
 
 import java.util.List;
 
-/**
- * 
- * @author ronnymikalsen
- *
- */
 public class SearchResult {
 
     private long totalElements;

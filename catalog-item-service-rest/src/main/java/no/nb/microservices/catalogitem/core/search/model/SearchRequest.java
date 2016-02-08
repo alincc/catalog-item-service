@@ -19,6 +19,8 @@ public class SearchRequest implements Serializable {
     private String topRight;
     private String bottomLeft;
     private String precision;
+    private boolean grouping;
+    private boolean explain;
 
     public SearchRequest() {
         super();
@@ -95,6 +97,23 @@ public class SearchRequest implements Serializable {
 
     public void setPrecision(String precision) {
         this.precision = precision;
+    }
+
+    public boolean isGrouping() {
+        return grouping;
+    }
+    
+    public void setGrouping(boolean grouping) {
+        this.grouping = grouping;
+    }
+    
+    
+    public boolean isExplain() {
+        return explain;
+    }
+    
+    public void setExplain(boolean explain) {
+        this.explain = explain;
     }
 
     private void removeEncoding(List<String> params) {

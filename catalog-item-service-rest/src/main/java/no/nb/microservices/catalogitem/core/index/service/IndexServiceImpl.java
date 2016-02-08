@@ -39,12 +39,14 @@ public class IndexServiceImpl implements IndexService {
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 searchRequest.getSort(),
+                searchRequest.isGrouping(),
                 searchRequest.getBoost(),
                 searchRequest.getAggs(),
                 searchRequest.getSearchType(),
                 searchRequest.getTopRight(),
                 searchRequest.getBottomLeft(),
                 searchRequest.getPrecision(),
+                searchRequest.isExplain(),
                 securityInfo.getxHost(),
                 securityInfo.getxPort(),
                 securityInfo.getxRealIp(),
@@ -69,8 +71,8 @@ public class IndexServiceImpl implements IndexService {
             query = "sesamid:" + id.getId();
         }
 
-        SearchResource searchResource = indexRepository.search(query,null,0, 1, Collections.emptyList(), Collections.emptyList(),
-                null, null, null, null, null, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
+        SearchResource searchResource = indexRepository.search(query,null,0, 1, Collections.emptyList(), false, Collections.emptyList(),
+                null, null, null, null, null, false, securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
 
         return new AsyncResult<>(searchResource);
 
