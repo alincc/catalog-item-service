@@ -89,7 +89,7 @@ public class SearchControllerIT {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 System.out.println("REQUEST: " + request.getPath());
-                if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc&explain=false")) {
+                if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title%2Cdesc&grouping=false&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().contains("/mods")) {
                     return new MockResponse().setBody(TestMods.aDefaultBookModsXml())
@@ -103,9 +103,9 @@ public class SearchControllerIT {
                     return new MockResponse().setBody(searchResource1)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&aggs=ddc1%2Cmediatype&explain=false")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&aggs=ddc1%2Cmediatype&explain=false")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&boost=title%2C10&boost=name%2C4&explain=false")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&boost=title%2C10&boost=name%2C4&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");
@@ -125,9 +125,8 @@ public class SearchControllerIT {
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
 
-        ResponseEntity<SearchResource> entity = new TestRestTemplate().exchange(
-                "http://localhost:" + port + "/catalog/v1/items?q=Ola&size=10&sort=title,desc", HttpMethod.GET,
-                new HttpEntity<Void>(headers), SearchResource.class);
+        String url = "http://localhost:" + port + "/catalog/v1/items?q=Ola&size=10&sort=title,desc";
+        ResponseEntity<SearchResource> entity = getEntity(url, SearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
         assertNotNull("Response should have page element", entity.getBody().getMetadata());
@@ -138,11 +137,8 @@ public class SearchControllerIT {
 
     @Test
     public void testSearchWithAggregations() throws Exception{
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(UserUtils.SSO_HEADER, "token");
-        headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
         String url = "http://localhost:" + port + "/catalog/v1/items?q=*&aggs=ddc1,mediatype";
-        ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
+        ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
         assertNotNull("Response should contain aggregations", entity.getBody().getEmbedded().getAggregations());
@@ -151,13 +147,24 @@ public class SearchControllerIT {
 
     @Test
     public void testSearchWithBoost() throws Exception{
+        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&boost=title,10&boost=name,4";
+        ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
+
+        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
+    }
+
+    public void testSearchWithShould() throws Exception {
+        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&should=title,peter";
+        ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
+
+        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
+    }
+
+    private <T> ResponseEntity<T> getEntity(String url, Class<T> type) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
-        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&boost=title,10&boost=name,4";
-        ResponseEntity<ItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), ItemSearchResource.class);
-
-        assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
+        return new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), type);
     }
 
     @After
@@ -182,4 +189,3 @@ class TestNiConfig2 {
         return new NiClient(SearchControllerIT.TEST_SERVER_ADDR);
     }
 }
-

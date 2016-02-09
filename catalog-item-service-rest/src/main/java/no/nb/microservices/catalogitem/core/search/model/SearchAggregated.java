@@ -9,10 +9,12 @@ import java.util.List;
 public class SearchAggregated {
     private Page<Item> page;
     private List<AggregationResource> aggregations;
+    private String scrollId;
 
-    public SearchAggregated(Page<Item> page, List<AggregationResource> aggregations) {
+    public SearchAggregated(Page<Item> page, List<AggregationResource> aggregations, String scrollId) {
         this.page = page;
         this.aggregations = aggregations;
+        this.scrollId = scrollId;
     }
 
     public Page<Item> getPage() {
@@ -29,5 +31,13 @@ public class SearchAggregated {
 
     public void setAggregations(List<AggregationResource> aggregations) {
         this.aggregations = aggregations;
+    }
+
+    public String getScrollId() {
+        return scrollId;
+    }
+
+    public void setScrollId(String scrollId) {
+        this.scrollId = scrollId;
     }
 }

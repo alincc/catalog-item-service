@@ -59,7 +59,7 @@ public class SearchServiceImplTest {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("I love Træna");
         Pageable pageable = new PageRequest(0,10);
-        SearchResult searchResult = new SearchResult(Arrays.asList(new ItemResource(), new ItemResource()), 100, null);
+        SearchResult searchResult = new SearchResult(Arrays.asList(new ItemResource(), new ItemResource()), 100, null, null);
         when(indexService.search(anyObject(), anyObject(), anyObject())).thenReturn(searchResult);
 
         SearchAggregated result = searchService.search(searchRequest, pageable);

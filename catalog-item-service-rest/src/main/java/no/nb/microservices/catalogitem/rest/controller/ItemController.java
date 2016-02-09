@@ -18,6 +18,7 @@ import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 
 import java.util.List;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.data.domain.Pageable;
@@ -80,5 +81,12 @@ public class ItemController {
         ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
+    
+    @Traceable(description="scroll")
+    @RequestMapping(value = "/search/scroll", method = RequestMethod.GET)
+    public ResponseEntity<ItemSearchResource> search(
+            @RequestParam(value = "scrollId") String scrollId) {
+        throw new NotImplementedException("Scroll not implemented");
+    }    
 
 }

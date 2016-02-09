@@ -14,11 +14,13 @@ public class SearchRequest implements Serializable {
     private List<String> fields;
     private List<String> sort = new ArrayList<>();
     private List<String> boost = new ArrayList<>();
+    private List<String> should = new ArrayList<>();
     private String aggs;
     private NBSearchType searchType;
     private String topRight;
     private String bottomLeft;
     private String precision;
+    private boolean grouping;
     private boolean explain;
 
     public SearchRequest() {
@@ -98,15 +100,24 @@ public class SearchRequest implements Serializable {
         this.precision = precision;
     }
 
-    private void removeEncoding(List<String> params) {
-        if (params != null) {
-            for (int i = 0; i < params.size(); i++) {
-                params.set(i, params.get(i).replace("%2C",","));
-            }
-        }
+    public boolean isGrouping() {
+        return grouping;
+    }
+
+    public void setGrouping(boolean grouping) {
+        this.grouping = grouping;
     }
 
 
+
+    public List<String> getShould() {
+        removeEncoding(should);
+        return should;
+    }
+
+    public void setShould(List<String> should) {
+        this.should = should;
+    }
 
     public boolean isExplain() {
         return explain;
@@ -115,4 +126,13 @@ public class SearchRequest implements Serializable {
     public void setExplain(boolean explain) {
         this.explain = explain;
     }
+
+    private void removeEncoding(List<String> params) {
+        if (params != null) {
+            for (int i = 0; i < params.size(); i++) {
+                params.set(i, params.get(i).replace("%2C",","));
+            }
+        }
+    }
+
 }

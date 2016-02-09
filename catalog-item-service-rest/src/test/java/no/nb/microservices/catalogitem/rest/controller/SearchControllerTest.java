@@ -72,7 +72,7 @@ public class SearchControllerTest {
 
         List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build(), new Item.ItemBuilder("456").build());
 
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null);
+        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null);
         when(searchService.search(searchRequest, pageable)).thenReturn(searchResult);
 
         ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
@@ -96,7 +96,7 @@ public class SearchControllerTest {
         aggregations.add(new AggregationResource("ddc1"));
         aggregations.add(new AggregationResource("mediatype"));
 
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), aggregations);
+        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), aggregations, null);
 
         when(searchService.search(searchRequest, pageable)).thenReturn(searchResult);
         
@@ -115,7 +115,7 @@ public class SearchControllerTest {
 
         List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
 
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null);
+        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null);
         when(searchService.search(searchRequest, pageable)).thenReturn(searchResult);
         ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
 

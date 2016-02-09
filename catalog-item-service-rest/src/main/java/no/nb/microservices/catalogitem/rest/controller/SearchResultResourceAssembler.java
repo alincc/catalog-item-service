@@ -8,6 +8,10 @@ import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,34 +41,38 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
         JsonNode jsonNode = objectMapper.convertValue(result.getAggregations(), JsonNode.class);
         resources.getEmbedded().setAggregations(jsonNode);
 
-        return addPaginationLinks(resources, result.getPage());
+        return addPaginationLinks(resources, result);
     }
 
-    private ItemSearchResource addPaginationLinks(ItemSearchResource resources, Page<?> page) {
-        
-        UriTemplate base = new UriTemplate(ServletUriComponentsBuilder.fromCurrentRequest().build().toString());
-
-        if (page.hasPrevious()) {
-            resources.add(createLink(base, new PageRequest(0, page.getSize(), page.getSort()), Link.REL_FIRST));
+    private ItemSearchResource addPaginationLinks(ItemSearchResource resources, SearchAggregated result) {
+        if (result.getScrollId() != null) {
+            resources.add(linkTo(methodOn(ItemController.class).search(result.getScrollId())).withRel(Link.REL_NEXT));
+        } else {
+            Page<?> page = result.getPage();
+            UriTemplate base = new UriTemplate(ServletUriComponentsBuilder.fromCurrentRequest().build().toString());
+    
+            if (page.hasPrevious()) {
+                resources.add(createLink(base, new PageRequest(0, page.getSize(), page.getSort()), Link.REL_FIRST));
+            }
+    
+            if (page.hasPrevious()) {
+                resources.add(createLink(base, page.previousPageable(), Link.REL_PREVIOUS));
+            }
+            
+            resources.add(createLink(base, null, Link.REL_SELF));
+    
+            if (page.hasNext()) {
+                resources.add(createLink(base, page.nextPageable(), Link.REL_NEXT));
+            }
+            
+            if (page.hasNext()) {
+    
+                int lastIndex = page.getTotalPages() == 0 ? 0 : page.getTotalPages() - 1;
+    
+                resources.add(createLink(base, new PageRequest(lastIndex, page.getSize(), page.getSort()), Link.REL_LAST));
+            }
         }
 
-        if (page.hasPrevious()) {
-            resources.add(createLink(base, page.previousPageable(), Link.REL_PREVIOUS));
-        }
-        
-        resources.add(createLink(base, null, Link.REL_SELF));
-
-        if (page.hasNext()) {
-            resources.add(createLink(base, page.nextPageable(), Link.REL_NEXT));
-        }
-        
-        if (page.hasNext()) {
-
-            int lastIndex = page.getTotalPages() == 0 ? 0 : page.getTotalPages() - 1;
-
-            resources.add(createLink(base, new PageRequest(lastIndex, page.getSize(), page.getSort()), Link.REL_LAST));
-        }
-        
         return resources;
     }
     

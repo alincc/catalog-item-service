@@ -103,12 +103,12 @@ public class ItemControllerIT {
                     return new MockResponse().setBody(TestFields.aDefaultBookJson())
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=sesamid%3Aid1&page=0&size=1&explain=false&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=sesamid%3Aid1&page=0&size=1&grouping=false&explain=false&X-Original-IP-Fra-Frontend=123.45.100.1&amsso=token")) {
                     return new MockResponse().setBody(searchResource)
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 }
-
+                System.out.println("ERRRORRRR: " + request.getPath());
                 return new MockResponse().setResponseCode(404);
             }
         };

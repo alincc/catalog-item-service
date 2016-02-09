@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-parent</artifactId>
-        <version>Angel.SR4</version>
+        <version>Angel.SR6</version>
     </parent>
 
     <groupId>no.nb.microservices.catalogitem</groupId>
@@ -15,13 +15,13 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Angel.SR4</spring-cloud.version>
+        <spring-cloud.version>Angel.SR6</spring-cloud.version>
         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
         <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
-        <catalog-metadata-service.version>0.0.1-138</catalog-metadata-service.version>
-        <catalog-search-index-service.version>0.0.1-75</catalog-search-index-service.version>
+        <catalog-metadata-service.version>0.0.1-148</catalog-metadata-service.version>
+        <catalog-search-index-service.version>0.0.1-86</catalog-search-index-service.version>
     </properties>
 
     <dependencyManagement>
