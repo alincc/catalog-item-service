@@ -10,11 +10,13 @@ public class SearchAggregated {
     private Page<Item> page;
     private List<AggregationResource> aggregations;
     private String scrollId;
+    private SearchRequest searchRequest;
 
-    public SearchAggregated(Page<Item> page, List<AggregationResource> aggregations, String scrollId) {
+    public SearchAggregated(Page<Item> page, List<AggregationResource> aggregations, String scrollId, SearchRequest searchRequest) {
         this.page = page;
         this.aggregations = aggregations;
         this.scrollId = scrollId;
+        this.searchRequest = searchRequest;
     }
 
     public Page<Item> getPage() {
@@ -39,5 +41,13 @@ public class SearchAggregated {
 
     public void setScrollId(String scrollId) {
         this.scrollId = scrollId;
+    }
+
+    public SearchRequest getSearchRequest() {
+        return searchRequest;
+    }
+
+    public void setSearchRequest(SearchRequest searchRequest) {
+        this.searchRequest = searchRequest;
     }
 }
