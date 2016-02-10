@@ -30,21 +30,16 @@ import java.util.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchControllerTest {
 
     @Mock
-    private ItemService itemService;
-
-    @Mock
     private ISearchService searchService;
-
-    private ItemController searchController;
-
-    @Mock
-    private SearchResultResourceAssembler searchResultResourceAssembler;
+    private SearchController searchController;
 
     @Before
     public void init() {
@@ -62,12 +57,11 @@ public class SearchControllerTest {
 
     @Before
     public void setup() {
-        searchController = new ItemController(itemService, searchService);
+        searchController = new SearchController(searchService);
     }
 
     @Test
     public void whenSearchThenReturnItems() {
-
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("Supersonic");
 
@@ -153,5 +147,21 @@ public class SearchControllerTest {
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         searchAggregateds.put("bøker", searchAggregated);
         return new SuperSearchAggregated(searchAggregateds);
+    }
+
+    @Test
+    public void testBoosting() {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setQ("boost me");
+        searchRequest.setBoost(new String[]{"title,10", "name,4"});
+        PageRequest pageable = new PageRequest(0, 10);
+        List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
+        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 10), null, null, searchRequest);
+        when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
+
+        searchController.search(searchRequest.getQ(), null, null, null, new String[]{"title,10", "name,4"}, null, null,
+                null, null, false, false, null, null, pageable);
+
+        verify(searchService, times(1)).search(any(SearchRequest.class), any(Pageable.class));
     }
 }

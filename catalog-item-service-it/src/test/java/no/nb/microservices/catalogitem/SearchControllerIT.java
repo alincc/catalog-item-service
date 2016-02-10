@@ -129,7 +129,7 @@ public class SearchControllerIT {
 
     @Test
     public void testSearch() throws Exception {
-        String url = "http://localhost:" + port + "/catalog/v1/items?q=Ola&size=10&sort=title,desc";
+        String url = "http://localhost:" + port + "/catalog/v1/search?q=Ola&size=10&sort=title,desc";
         ResponseEntity<SearchResource> entity = getEntity(url, SearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
@@ -141,7 +141,7 @@ public class SearchControllerIT {
 
     @Test
     public void testSearchWithAggregations() throws Exception{
-        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&aggs=ddc1,mediatype";
+        String url = "http://localhost:" + port + "/catalog/v1/search?q=*&aggs=ddc1,mediatype";
         ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
@@ -151,7 +151,7 @@ public class SearchControllerIT {
 
     @Test
     public void testSearchWithBoost() throws Exception{
-        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&boost=title,10&boost=name,4";
+        String url = "http://localhost:" + port + "/catalog/v1/search?q=*&boost=title,10&boost=name,4";
         ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
@@ -160,7 +160,7 @@ public class SearchControllerIT {
     @Test
     public void testSuperSearch() throws Exception {
         HttpHeaders headers = defaultHeaders();
-        String url = "http://localhost:" + port + "/catalog/v1/items/superSearch?q=*";
+        String url = "http://localhost:" + port + "/catalog/v1/search/superSearch?q=*";
         ResponseEntity<SuperItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), SuperItemSearchResource.class);
 
         assertThat(entity.getStatusCode().value(), is(200));
@@ -171,7 +171,7 @@ public class SearchControllerIT {
     @Test
     public void whenSuperSearchWithMediaTypesThenReturnOtherMediaType() throws Exception {
         HttpHeaders headers = defaultHeaders();
-        String url = "http://localhost:" + port + "/catalog/v1/items/superSearch?q=*&mediatypes=radio";
+        String url = "http://localhost:" + port + "/catalog/v1/search/superSearch?q=*&mediatypes=radio";
         ResponseEntity<SuperItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), SuperItemSearchResource.class);
 
         assertThat(entity.getStatusCode().value(), is(200));
@@ -180,7 +180,7 @@ public class SearchControllerIT {
     }
 
     public void testSearchWithShould() throws Exception {
-        String url = "http://localhost:" + port + "/catalog/v1/items?q=*&should=title,peter";
+        String url = "http://localhost:" + port + "/catalog/v1/search?q=*&should=title,peter";
         ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
