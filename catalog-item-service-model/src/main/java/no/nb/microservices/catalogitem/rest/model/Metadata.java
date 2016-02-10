@@ -11,7 +11,6 @@ import java.util.List;
 public class Metadata {
     private List<TitleInfo> titleInfos;
     private String typeOfResource;
-    private List<String> mediaTypes;
     private String genre;
     private String summary;
     private List<Person> people;
@@ -126,14 +125,6 @@ public class Metadata {
 
     public void setNotes(List<String> notes) {
         this.notes = notes;
-    }
-
-    public List<String> getMediaTypes() {
-        return mediaTypes;
-    }
-
-    public void setMediaTypes(List<String> mediaTypes) {
-        this.mediaTypes = mediaTypes;
     }
 
     public Subject getSubject() {

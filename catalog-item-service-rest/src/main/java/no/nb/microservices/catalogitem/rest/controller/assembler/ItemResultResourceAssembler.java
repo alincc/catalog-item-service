@@ -26,10 +26,21 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
             createLinks(item, resource);
         }
 
+        if (ItemFields.show(item.getFields(), "mediatypes")) {
+            if (item.getItemResource() != null && !item.getItemResource().getMediaTypes().isEmpty()) {
+                resource.setMediatypes(item.getItemResource().getMediaTypes());
+            }
+        }
+
+        if (ItemFields.show(item.getFields(), "creators")) {
+            if (item.getItemResource() != null && !item.getItemResource().getCreators().isEmpty())
+            resource.setCreators(item.getItemResource().getCreators());
+        }
+
         if (ItemFields.show(item.getFields(), "title")) {
             resource.setTitle(createTitle(item));
         }
-        
+
         if (hasRelatedItems(item)) {
             resource.setExpand("relatedItems");
         }

@@ -62,8 +62,6 @@ public class MetadataBuilderTest {
                 .withItem(item)
                 .build();
 
-        assertEquals("Bøker",  metadata.getMediaTypes().get(0));
-        assertEquals("Aviser", metadata.getMediaTypes().get(1));
         assertTrue("Should have titles", !metadata.getTitleInfos().isEmpty());
         assertNotNull("Should have placeString", metadata.getGeographic().getPlaceString());
         assertEquals("It's a summary", metadata.getSummary());
