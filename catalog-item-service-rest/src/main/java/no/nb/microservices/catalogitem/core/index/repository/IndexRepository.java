@@ -27,6 +27,7 @@ public interface IndexRepository {
             @RequestParam("bottomLeft") String bottomLeft,
             @RequestParam("precision") String precision,
             @RequestParam("explain") boolean explain,
+            @RequestParam("filter") List<String> filter,
             @RequestParam("X-Forwarded-Host") String xHost, 
             @RequestParam("X-Forwarded-Port") String xPort, 
             @RequestParam("X-Original-IP-Fra-Frontend") String xRealIp, 

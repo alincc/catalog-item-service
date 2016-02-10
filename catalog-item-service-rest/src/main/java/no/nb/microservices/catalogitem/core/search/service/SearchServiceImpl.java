@@ -8,25 +8,25 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.search.exception.LatchException;
-import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
-import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.search.model.*;
 import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.AggregationResource;
+import no.nb.microservices.catalogsearchindex.FacetValueResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 public class SearchServiceImpl implements ISearchService {
@@ -44,7 +44,47 @@ public class SearchServiceImpl implements ISearchService {
         SearchResult result = indexService.search(searchRequest, pageable, new SecurityInfo());
         List<Item> items = consumeItems(searchRequest, result);
         Page<Item> page = new PageImpl<>(items, pageable, result.getTotalElements());
-        return new SearchAggregated(page, result.getAggregations(), result.getScrollId());
+        return new SearchAggregated(page, result.getAggregations(), result.getScrollId(), searchRequest);
+    }
+
+    @Override
+    public SuperSearchAggregated superSearch(SearchRequest searchRequest, Pageable pageable) {
+        searchRequest.setAggs("mediatype");
+        SearchAggregated search = search(searchRequest, new PageRequest(0, 1));
+
+        searchRequest.setAggs(null);
+        List<AggregationResource> aggregations = search.getAggregations();
+        Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
+        List<String> otherMediaTypes = new ArrayList<>();
+
+        List<String> wantedMediaTypes = searchRequest.getMediatypes().stream().map(String::toLowerCase).collect(Collectors.toList());
+
+        for(AggregationResource aggregationResource : aggregations) {
+            if("mediatype".equalsIgnoreCase(aggregationResource.getName())) {
+                for (FacetValueResource facetValueResource : aggregationResource.getFacetValues()) {
+                    String mediaType = facetValueResource.getKey().toLowerCase();
+                    if(searchRequest.getMediatypes().size() == 0 || wantedMediaTypes.contains(mediaType)) {
+
+                        SearchRequest mediaTypeSearchRequest = new SearchRequestBuilder(searchRequest)
+                                .withFilter(new String[]{"mediatype:" + mediaType})
+                                .build();
+
+                        searchAggregateds.put(mediaType, search(mediaTypeSearchRequest, new PageRequest(0, pageable.getPageSize())));
+                    } else {
+                        otherMediaTypes.add("mediatype:" + mediaType);
+                    }
+                }
+            }
+        }
+
+        if(!otherMediaTypes.isEmpty()) {
+            String join = String.join(" OR ", otherMediaTypes);
+            SearchRequest otherSearchRequest = new SearchRequest();
+            otherSearchRequest.setQ(searchRequest.getQ() + " AND (" + join + ")");
+            searchAggregateds.put("other", search(otherSearchRequest, new PageRequest(0, pageable.getPageSize())));
+        }
+
+        return new SuperSearchAggregated(searchAggregateds);
     }
 
     private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {

@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
-
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.rest.controller.assembler.ItemResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +16,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources.PageMetadata;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.UriTemplate;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 public class SearchResultResourceAssembler implements ResourceAssembler<SearchAggregated, ItemSearchResource> {
 
@@ -49,33 +49,44 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
             resources.add(linkTo(methodOn(ItemController.class).search(result.getScrollId())).withRel(Link.REL_NEXT));
         } else {
             Page<?> page = result.getPage();
-            UriTemplate base = new UriTemplate(ServletUriComponentsBuilder.fromCurrentRequest().build().toString());
-    
+
+            SearchRequest searchRequest = result.getSearchRequest();
+
+            UriTemplate base = new UriTemplate(linkTo(methodOn(ItemController.class)
+                    .search(searchRequest.getQ(), searchRequest.getAggs(), searchRequest.getSearchType(),
+                            getAsArray(searchRequest.getFilter()), getAsArray(searchRequest.getBoost()), searchRequest.getBottomLeft(),
+                            searchRequest.getTopRight(), searchRequest.getPrecision(), getAsArray(searchRequest.getFields()),
+                            searchRequest.isExplain(), searchRequest.isGrouping(),
+                            getAsArray(searchRequest.getShould()), getAsArray(searchRequest.getSort()),
+                            new PageRequest(page.getNumber(), page.getSize())))
+                    .toUriComponentsBuilder()
+                    .toUriString());
+
             if (page.hasPrevious()) {
                 resources.add(createLink(base, new PageRequest(0, page.getSize(), page.getSort()), Link.REL_FIRST));
             }
-    
+
             if (page.hasPrevious()) {
                 resources.add(createLink(base, page.previousPageable(), Link.REL_PREVIOUS));
             }
-            
+
             resources.add(createLink(base, null, Link.REL_SELF));
-    
+
             if (page.hasNext()) {
                 resources.add(createLink(base, page.nextPageable(), Link.REL_NEXT));
             }
-            
+
             if (page.hasNext()) {
-    
+
                 int lastIndex = page.getTotalPages() == 0 ? 0 : page.getTotalPages() - 1;
-    
+
                 resources.add(createLink(base, new PageRequest(lastIndex, page.getSize(), page.getSort()), Link.REL_LAST));
             }
         }
 
         return resources;
     }
-    
+
     private Link createLink(UriTemplate base, Pageable pageable, String rel) {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUri(base.expand());
@@ -83,10 +94,19 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
 
         return new Link(new UriTemplate(builder.build().toString()), rel);
     }
-    
+
     private static <T> PageMetadata asPageMetadata(Page<T> page) {
 
         return new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
+    }
+
+    private String[] getAsArray(List<String> list) {
+        String[] tmp = null;
+        if(list != null && !list.isEmpty()) {
+            tmp = new String[list.size()];
+            tmp = list.toArray(tmp);
+        }
+        return tmp;
     }
 }
 

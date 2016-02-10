@@ -47,7 +47,7 @@ public class IndexServiceImplTest {
 
         when(mockIndexRepository.search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyObject(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -60,7 +60,7 @@ public class IndexServiceImplTest {
 
         verify(mockIndexRepository).search(eq("searchString"), anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), eq(NBSearchType.FIELD_RESTRICTED_SEARCH),
                 anyObject(), anyObject(), anyObject(),
-                anyBoolean(), anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyObject(), anyString(), anyString(), anyString(), anyString());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class IndexServiceImplTest {
         when(mockIndexRepository.search(eq("searchString"),
                 anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
+                anyBoolean(), anyObject(), anyString(), anyString(), anyString(), anyString())).thenReturn(searchResource);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("searchString");
@@ -85,7 +85,7 @@ public class IndexServiceImplTest {
         verify(mockIndexRepository).search(eq("searchString"),
                 anyString(), anyInt(), anyInt(), anyList(), anyBoolean(), anyList(), anyList(), anyString(), anyObject(),
                 eq("82.16,74.35"), eq("34.54,-31.46"), eq("5"),
-                anyBoolean(), anyString(), anyString(), anyString(), anyString());
+                anyBoolean(), anyObject(), anyString(), anyString(), anyString(), anyString());
     }
 
     private SearchResource createSearchResource() {

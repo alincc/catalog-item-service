@@ -22,6 +22,8 @@ public class SearchRequest implements Serializable {
     private String precision;
     private boolean grouping;
     private boolean explain;
+    private List<String> filter = new ArrayList<>();
+    private List<String> mediatypes = new ArrayList<>();
 
     public SearchRequest() {
         super();
@@ -125,6 +127,24 @@ public class SearchRequest implements Serializable {
 
     public void setExplain(boolean explain) {
         this.explain = explain;
+    }
+
+    public List<String> getFilter() {
+        removeEncoding(filter);
+        return filter;
+    }
+    
+    public void setFilter(String[] filter) {
+        this.filter = Arrays.asList(filter);
+    }
+
+    public List<String> getMediatypes() {
+        removeEncoding(mediatypes);
+        return mediatypes;
+    }
+
+    public void setMediatypes(String[] mediatypes) {
+        this.mediatypes = Arrays.asList(mediatypes);
     }
 
     private void removeEncoding(List<String> params) {
