@@ -58,6 +58,7 @@ public class SearchRequestBuilder {
         this.grouping = searchRequest.isGrouping();
         this.sort = searchRequest.getSort();
         this.should = searchRequest.getShould();
+        this.expand = searchRequest.getExpand();
     }
 
     public SearchRequestBuilder withQ(String q) {
