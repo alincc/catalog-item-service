@@ -5,3 +5,10 @@ info:
 
 server:
   port: 0
+
+ni:
+  servers:
+    - localhost:7654
+
+zipkin:
+    collector-hostname: localhost
