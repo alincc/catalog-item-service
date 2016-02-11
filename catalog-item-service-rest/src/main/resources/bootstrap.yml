@@ -6,10 +6,3 @@ spring:
       uri: ${SPRING_CONFIG_URI:http://localhost:8888}
       failFast: false
 
----
-
-spring:
-  profiles: docker
-  cloud:
-    config:
-      failFast: true
