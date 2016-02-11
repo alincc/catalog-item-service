@@ -155,6 +155,7 @@ public class ItemResultResourceAssemblerTest {
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
                 .withItemResource(searchIndexResource)
+                .withExpand("metadata")
                 .build();
         
         ItemResource itemResource = resource.toResource(item );
@@ -221,7 +222,10 @@ public class ItemResultResourceAssemblerTest {
         originInfo.setPublisher("Banana Airlines");
         mods.setOriginInfo(originInfo);
 
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Item item = new Item.ItemBuilder("id1")
+                .mods(mods)
+                .withExpand("metadata")
+                .build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Metadata should not be null", itemResource.getMetadata());
@@ -239,7 +243,7 @@ public class ItemResultResourceAssemblerTest {
         recordInfo.setRecordIdentifier(recordIdentifier);
         mods.setRecordInfo(recordInfo);
 
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getRecordInfo());
@@ -256,7 +260,7 @@ public class ItemResultResourceAssemblerTest {
         originInfo.setPlace(place);
         mods.setOriginInfo(originInfo);
 
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getGeographic());
@@ -291,7 +295,10 @@ public class ItemResultResourceAssemblerTest {
                 createName("Bob Roger", "1990-", Arrays.asList(creator), "personal"),
                 createName("Kurt Josef", null, null, "personal")));
         
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();        
+        Item item = new Item.ItemBuilder("id1")
+                .mods(mods)
+                .withExpand("metadata")
+                .build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
@@ -317,7 +324,7 @@ public class ItemResultResourceAssemblerTest {
         mods.setNames(Arrays.asList(
                 name,
                 createName("Nordland Teater", null, Arrays.asList(roleTerm), "corporate")));
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();
+        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
@@ -336,7 +343,7 @@ public class ItemResultResourceAssemblerTest {
         classifications.add(createUdcClassification("456[S]"));
         mods.setClassifications(classifications);
         
-        Item item = new Item.ItemBuilder("id1").mods(mods).build();        
+        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getClassification());

@@ -28,9 +28,9 @@ public class ItemWrapperServiceImpl implements ItemWrapperService {
 
             Trace.continueSpan(itemWrapper.getSpan());
             if (itemWrapper.getItemResource() == null) {
-                item = itemService.getItemById(itemWrapper.getItemResource().getItemId(), itemWrapper.getSearchRequest().getFields(), "", securityInfo);
+                item = itemService.getItemById(itemWrapper.getItemResource().getItemId(), itemWrapper.getSearchRequest().getFields(), itemWrapper.getSearchRequest().getExpand(), securityInfo);
             } else {
-                item = itemService.getItemWithResource(itemWrapper.getItemResource(), itemWrapper.getSearchRequest().getFields(), "", securityInfo);
+                item = itemService.getItemWithResource(itemWrapper.getItemResource(), itemWrapper.getSearchRequest().getFields(), itemWrapper.getSearchRequest().getExpand(), securityInfo);
             }
 
 

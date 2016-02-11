@@ -37,7 +37,7 @@ public class ItemController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ItemResource> getItem(@PathVariable(value = "id") String id,
             @RequestParam(required=false) List<String> fields,
-            @RequestParam(required=false) String expand) {
+            @RequestParam(required=false, defaultValue = "metadata") String expand) {
         Item item = itemService.getItemById(id, fields, expand);
         ItemResource resource = new ItemResultResourceAssembler().toResource(item);
         return new ResponseEntity<>(resource, HttpStatus.OK);

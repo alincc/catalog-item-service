@@ -29,7 +29,7 @@ import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.security.service.SecurityService;
-import no.nb.microservices.catalogitem.core.utils.ItemFields;
+import no.nb.microservices.catalogitem.core.utils.ItemUtils;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
             TracableId tracableId = new TracableId(Trace.currentSpan(), resource.getItemId(), securityInfo);
 
             Future<Mods> mods = null;
-            if (ItemFields.show(fields, "metadata")) {
+            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems")) {
                 mods = metadataService.getModsById(tracableId);
             } else {
                 mods = new AsyncResult<Mods>(new Mods());
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
 
             Future<Boolean> hasAccess = null;
 
-            if (ItemFields.show(fields, "accessInfo")) {
+            if (ItemUtils.showField(fields, "accessInfo")) {
                 hasAccess = securityService.hasAccess(tracableId);
             } else {
                 hasAccess = new AsyncResult<Boolean>(new Boolean(false));
@@ -88,6 +88,7 @@ public class ItemServiceImpl implements ItemService {
                     .mods(mods.get())
                     .withFields(fields)
                     .hasAccess(true)
+                    .withExpand(expand)
                     .withItemResource(resource)
                     .withRelatedItems(relatedItems);
 
@@ -105,7 +106,7 @@ public class ItemServiceImpl implements ItemService {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
             
             Future<Mods> mods = null;
-            if (ItemFields.show(fields, "metadata")) {
+            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems")) {
                 mods = metadataService.getModsById(tracableId);
             } else {
                 mods = new AsyncResult<Mods>(new Mods());
@@ -113,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
             
             Future<Boolean> hasAccess = null;
             
-            if (ItemFields.show(fields, "accessInfo")) {
+            if (ItemUtils.showField(fields, "accessInfo")) {
                 hasAccess = securityService.hasAccess(tracableId);
             } else {
                 hasAccess = new AsyncResult<Boolean>(new Boolean(false));
@@ -129,6 +130,7 @@ public class ItemServiceImpl implements ItemService {
                     .mods(mods.get())
                     .withFields(fields)
                     .hasAccess(true)
+                    .withExpand(expand)
                     .withRelatedItems(relatedItems);
             
             SearchResource searchResource = search.get();
@@ -145,7 +147,7 @@ public class ItemServiceImpl implements ItemService {
     private RelatedItems getRelatedItems(String expand,
             SecurityInfo securityInfo, Mods mods) {
         RelatedItems relatedItems = null;
-        if ("relatedItems".equalsIgnoreCase(expand)) {
+        if (ItemUtils.isExpand(expand, "relatedItems")) {
             List<Item> constituents = getItemByRelatedItemType("constituent", mods, securityInfo);
             List<Item> hosts = getItemByRelatedItemType("host", mods, securityInfo);
             List<Item> preceding = getItemByRelatedItemType("preceding", mods, securityInfo);
@@ -235,12 +237,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void addPartNumber(RelatedItem r, Item item) {
-        if (item != null) {
+        if (item != null && item.getMods().getTitleInfos() != null) {
             for(TitleInfo titleInfo : item.getMods().getTitleInfos()) {
                 titleInfo.setPartNumber(r.getTitleInfo().get(0).getPartNumber());
             }
         }
     }
-
 }
 

@@ -59,7 +59,7 @@ public class ItemServiceImplTest {
         when(metadataService.getModsById(anyObject())).thenReturn(mods);
         when(securityService.hasAccess(anyObject())).thenReturn(hasAccess);
         
-        Item item = itemService.getItemById(id, null, null);
+        Item item = itemService.getItemById(id, null, "metadata");
         
         assertNotNull("Item should not be null", item);
         assertNotNull("Item should have mods", item.getMods());

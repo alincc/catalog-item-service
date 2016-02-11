@@ -16,14 +16,16 @@ public class Item implements Identifiable<String> {
     private boolean hasAccess;
     private RelatedItems relatedItems;
     private ItemResource itemResource;
+    private String expand;
 
-    private Item(String id, List<String> fields, Mods mods, boolean hasAccess, RelatedItems relatedItems, ItemResource itemResource) {
+    private Item(String id, List<String> fields, Mods mods, boolean hasAccess, RelatedItems relatedItems, ItemResource itemResource, String expand) {
         this.id = id;
         this.setFields(fields);
         this.mods = mods;
         this.hasAccess = hasAccess;
         this.relatedItems = relatedItems;
         this.itemResource = itemResource;
+        this.expand = expand;
     }
 
     @Override
@@ -58,6 +60,14 @@ public class Item implements Identifiable<String> {
         this.fields = fields;
     }
 
+    public String getExpand() {
+        return expand;
+    }
+
+    public void setExpand(String expand) {
+        this.expand = expand;
+    }
+
     public static class ItemBuilder  {
         private String id;
         private List<String> fields;
@@ -65,6 +75,7 @@ public class Item implements Identifiable<String> {
         private boolean hasAccess;
         private RelatedItems relatedItems;
         private ItemResource itemResource;
+        private String expand;
         
         public ItemBuilder(final String id) {
             this.id = id;
@@ -95,6 +106,11 @@ public class Item implements Identifiable<String> {
             return this;
         }
 
+        public ItemBuilder withExpand(final String expand) {
+            this.expand = expand;
+            return this;
+        }
+
         public Item build() {
             if(mods != null) {
                 final List<Identifier> identifiers = mods.getIdentifiers();
@@ -106,7 +122,7 @@ public class Item implements Identifiable<String> {
                     }
                 }
             }
-            return new Item(id, fields, mods, hasAccess, relatedItems, itemResource);
+            return new Item(id, fields, mods, hasAccess, relatedItems, itemResource, expand);
         }
 
     }

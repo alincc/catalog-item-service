@@ -57,7 +57,7 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
                             getAsArray(searchRequest.getFilter()), getAsArray(searchRequest.getBoost()), searchRequest.getBottomLeft(),
                             searchRequest.getTopRight(), searchRequest.getPrecision(), getAsArray(searchRequest.getFields()),
                             searchRequest.isExplain(), searchRequest.isGrouping(),
-                            getAsArray(searchRequest.getShould()), getAsArray(searchRequest.getSort()),
+                            getAsArray(searchRequest.getShould()), getAsArray(searchRequest.getSort()), searchRequest.getExpand(),
                             new PageRequest(page.getNumber(), page.getSize())))
                     .toUriComponentsBuilder()
                     .toUriString());

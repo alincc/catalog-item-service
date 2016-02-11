@@ -63,10 +63,11 @@ public class SearchController {
                                                      @RequestParam(value = "grouping", required = false) boolean grouping,
                                                      @RequestParam(value = "should", required = false) String[] should,
                                                      @RequestParam(value = "sort", required = false) String[] sort,
+                                                     @RequestParam(value = "expand", required = false) String expand,
                                                      @PageableDefault Pageable pageable) {
 
         SearchRequest searchRequest = new SearchRequestBuilder(q, aggs, searchType, filter, boost, bottomLeft, topRight,
-                precision, fields, sort, explain, grouping, should).build();
+                precision, fields, sort, explain, grouping, should, expand).build();
 
         SearchAggregated result = searchService.search(searchRequest, pageable);
 

@@ -1,12 +1,18 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nb.microservices.catalogsearchindex.NBSearchType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,6 +28,7 @@ public class SearchRequest implements Serializable {
     private String precision;
     private boolean grouping;
     private boolean explain;
+    private String expand;
     private List<String> filter = new ArrayList<>();
     private List<String> mediatypes = new ArrayList<>();
 
@@ -153,6 +160,14 @@ public class SearchRequest implements Serializable {
                 params.set(i, params.get(i).replace("%2C",","));
             }
         }
+    }
+
+    public String getExpand() {
+        return expand;
+    }
+
+    public void setExpand(String expand) {
+        this.expand = expand;
     }
 
 }

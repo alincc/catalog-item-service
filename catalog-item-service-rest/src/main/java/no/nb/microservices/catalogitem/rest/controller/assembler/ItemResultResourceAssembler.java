@@ -1,17 +1,14 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
-import java.util.List;
-
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.utils.ItemFields;
+import no.nb.microservices.catalogitem.core.utils.ItemUtils;
 import no.nb.microservices.catalogitem.rest.controller.ItemController;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import java.util.List;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
     
@@ -22,22 +19,22 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     @Override
     public ItemResource toResource(Item item) {
         ItemResource resource = new ItemResource(item.getId());
-        if (ItemFields.show(item.getFields(), "_links")) {
+        if (ItemUtils.showField(item.getFields(), "_links")) {
             createLinks(item, resource);
         }
 
-        if (ItemFields.show(item.getFields(), "mediatypes")) {
+        if (ItemUtils.showField(item.getFields(), "mediatypes")) {
             if (item.getItemResource() != null && !item.getItemResource().getMediaTypes().isEmpty()) {
                 resource.setMediatypes(item.getItemResource().getMediaTypes());
             }
         }
 
-        if (ItemFields.show(item.getFields(), "creators")) {
+        if (ItemUtils.showField(item.getFields(), "creators")) {
             if (item.getItemResource() != null && !item.getItemResource().getCreators().isEmpty())
             resource.setCreators(item.getItemResource().getCreators());
         }
 
-        if (ItemFields.show(item.getFields(), "title")) {
+        if (ItemUtils.showField(item.getFields(), "title")) {
             resource.setTitle(createTitle(item));
         }
 
@@ -45,14 +42,14 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
             resource.setExpand("relatedItems");
         }
         
-        if (ItemFields.show(item.getFields(), "accessInfo")) {
+        if (ItemUtils.showField(item.getFields(), "accessInfo")) {
             resource.setAccessInfo(new AccessInfoBuilder()
                     .setItemResource(item.getItemResource())
                     .access(item.hasAccess())
                     .build());
         }
         
-        if (ItemFields.show(item.getFields(), "metadata")) {
+        if (ItemUtils.isExpand(item.getExpand(), "metadata")) {
             resource.setMetadata(new MetadataBuilder()
                     .withItem(item)
                     .build());

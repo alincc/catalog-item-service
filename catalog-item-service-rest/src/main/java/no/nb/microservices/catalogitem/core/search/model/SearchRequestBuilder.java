@@ -20,13 +20,14 @@ public class SearchRequestBuilder {
     private boolean explain;
     private boolean grouping;
     private List<String> should;
+    private String expand;
 
     public SearchRequestBuilder() {
     }
 
     public SearchRequestBuilder(String q, String aggs, NBSearchType searchType, String[] filter, String[] boost,
                                 String bottomLeft, String topRight, String precision, String[] fields, String[] sort,
-                                boolean explain, boolean grouping, String[] should) {
+                                boolean explain, boolean grouping, String[] should, String expand) {
         this.q = q;
         this.aggs = aggs;
         this.searchType = searchType;
@@ -40,24 +41,7 @@ public class SearchRequestBuilder {
         this.explain = explain;
         this.grouping = grouping;
         this.should = getAsList(should);
-    }
-
-    public SearchRequestBuilder(String q, String aggs, NBSearchType searchType, List<String> filter, List<String> boost,
-                                String bottomLeft, String topRight, String precision, List<String> fields, List<String> sort,
-                                boolean explain, boolean grouping, List<String> should) {
-        this.q = q;
-        this.aggs = aggs;
-        this.searchType = searchType;
-        this.filter = filter;
-        this.boost = boost;
-        this.bottomLeft = bottomLeft;
-        this.topRight = topRight;
-        this.precision = precision;
-        this.fields = fields;
-        this.sort = sort;
-        this.explain = explain;
-        this.grouping = grouping;
-        this.should = should;
+        this.expand = expand;
     }
 
     public SearchRequestBuilder(SearchRequest searchRequest) {
@@ -114,6 +98,10 @@ public class SearchRequestBuilder {
 
         if(sort != null) {
             searchRequest.setSort(getAsArray(sort));
+        }
+
+        if(!"".equalsIgnoreCase(expand)) {
+            searchRequest.setExpand(expand);
         }
 
         searchRequest.setBottomLeft(bottomLeft);

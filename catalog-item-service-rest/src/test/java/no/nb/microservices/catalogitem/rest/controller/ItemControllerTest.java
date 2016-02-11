@@ -51,7 +51,7 @@ public class ItemControllerTest {
                 .hasAccess(true)
                 .build();
 
-        when(itemService.getItemById("id1", null, null)).thenReturn(item);
+        when(itemService.getItemById("id1", null, "metadata")).thenReturn(item);
 
         mockMvc.perform(get("/catalog/v1/items/id1"))
             .andExpect(status().is2xxSuccessful());
@@ -64,7 +64,7 @@ public class ItemControllerTest {
                 .hasAccess(true)
                 .build();
 
-        when(itemService.getItemById("id1", null, null)).thenReturn(item);
+        when(itemService.getItemById("id1", null, "metadata")).thenReturn(item);
 
         mockMvc.perform(get("/catalog/v1/items/id1"))
             .andExpect(status().is2xxSuccessful());
