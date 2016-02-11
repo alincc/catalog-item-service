@@ -44,7 +44,6 @@ public final class MetadataBuilder {
                 .build());
         metadata.setRecordInfo(new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo()).build());
         metadata.setSubject(new SubjectBuilder().withSubjects(mods.getSubjects()).build());
-        metadata.setMediaTypes(getMediaTypes());
         metadata.setSummary(getSummary());
         metadata.setTypeOfResource(getTypeOfResource());
         metadata.setGenre(getGenre());
@@ -88,11 +87,11 @@ public final class MetadataBuilder {
             return null;
         }
     }
-    
+
     private List<String> getMediaTypes() {
         return getItemResource().getMediaTypes();
     }
-    
+
     private String getSummary() {
         if (mods != null) {
             List<Abstract> abstracts = mods.getAbstracts();

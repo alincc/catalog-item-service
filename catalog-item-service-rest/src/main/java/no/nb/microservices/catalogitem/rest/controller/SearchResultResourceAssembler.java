@@ -46,13 +46,13 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
 
     private ItemSearchResource addPaginationLinks(ItemSearchResource resources, SearchAggregated result) {
         if (result.getScrollId() != null) {
-            resources.add(linkTo(methodOn(ItemController.class).search(result.getScrollId())).withRel(Link.REL_NEXT));
+            resources.add(linkTo(methodOn(SearchController.class).search(result.getScrollId())).withRel(Link.REL_NEXT));
         } else {
             Page<?> page = result.getPage();
 
             SearchRequest searchRequest = result.getSearchRequest();
 
-            UriTemplate base = new UriTemplate(linkTo(methodOn(ItemController.class)
+            UriTemplate base = new UriTemplate(linkTo(methodOn(SearchController.class)
                     .search(searchRequest.getQ(), searchRequest.getAggs(), searchRequest.getSearchType(),
                             getAsArray(searchRequest.getFilter()), getAsArray(searchRequest.getBoost()), searchRequest.getBottomLeft(),
                             searchRequest.getTopRight(), searchRequest.getPrecision(), getAsArray(searchRequest.getFields()),
