@@ -3,54 +3,8 @@ info:
     name: catalog-item-service
     description: Finds metadata and content links about a item
 
-spring:
-    application:
-        name: catalog-item-service
-
-endpoints:
-  restart:
-    enabled: true
-  refresh:
-    enabled: true
-
 server:
-  port: 9082
-
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+  port: 0
 
 zipkin:
     collector-hostname: localhost
-
----
-spring:
-    profiles: dev
-
-ni:
-  servers:
-    - localhost:7654
-
----
-spring:
-    profiles: docker
-
-server:
-    port: 8080
-
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
-
-ni:
-  servers:
-    - niserver:7654
-
-zipkin:
-    collector-hostname: zipkinCollector
