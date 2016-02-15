@@ -1,6 +1,7 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import org.springframework.data.domain.Page;
 
@@ -11,6 +12,7 @@ public class SearchAggregated {
     private List<AggregationResource> aggregations;
     private String scrollId;
     private SearchRequest searchRequest;
+    private List<ContentSearch> contentSearches;
 
     public SearchAggregated(Page<Item> page, List<AggregationResource> aggregations, String scrollId, SearchRequest searchRequest) {
         this.page = page;
@@ -49,5 +51,13 @@ public class SearchAggregated {
 
     public void setSearchRequest(SearchRequest searchRequest) {
         this.searchRequest = searchRequest;
+    }
+
+    public void setContentSearches(List<ContentSearch> contentSearches) {
+        this.contentSearches = contentSearches;
+    }
+
+    public List<ContentSearch> getContentSearches() {
+        return contentSearches;
     }
 }

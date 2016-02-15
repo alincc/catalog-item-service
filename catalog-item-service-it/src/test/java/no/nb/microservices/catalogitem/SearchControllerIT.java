@@ -84,6 +84,7 @@ public class SearchControllerIT {
         String searchResource1 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
         String searchResultMock = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service.json"));
         String searchResultMockWithAggragations = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service-aggregations.json"));
+        String contentSearchResultMock = IOUtils.toString(this.getClass().getResourceAsStream("catalog-iiif-content-service.json"));
 
         server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
@@ -115,6 +116,12 @@ public class SearchControllerIT {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().equals("/catalog/v1/search?q=*+AND+%28mediatype%3Ab%C3%B8ker%29&page=0&size=10&grouping=false&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
+                } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&should=title%2Cpeter&explain=false")) {
+                    return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
+                } else if(request.getPath().equals("/catalog/v1/search?q=London&page=0&size=1&grouping=false&aggs=mediatype&explain=false")) {
+                    return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
+                } else if(request.getPath().startsWith("/catalog/v1/contentsearch/")) {
+                    return new MockResponse().setBody(contentSearchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 }
                 logger.error("Request \"" + request.getPath() +"\"not found");
                 return new MockResponse().setResponseCode(404);
@@ -159,9 +166,8 @@ public class SearchControllerIT {
 
     @Test
     public void testSuperSearch() throws Exception {
-        HttpHeaders headers = defaultHeaders();
         String url = "http://localhost:" + port + "/catalog/v1/search/superSearch?q=*";
-        ResponseEntity<SuperItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), SuperItemSearchResource.class);
+        ResponseEntity<SuperItemSearchResource> entity = getEntity(url, SuperItemSearchResource.class);
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
@@ -170,15 +176,25 @@ public class SearchControllerIT {
 
     @Test
     public void whenSuperSearchWithMediaTypesThenReturnOtherMediaType() throws Exception {
-        HttpHeaders headers = defaultHeaders();
         String url = "http://localhost:" + port + "/catalog/v1/search/superSearch?q=*&mediatypes=radio";
-        ResponseEntity<SuperItemSearchResource> entity = new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), SuperItemSearchResource.class);
+        ResponseEntity<SuperItemSearchResource> entity = getEntity(url, SuperItemSearchResource.class);
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
         assertThat(entity.getBody().getEmbedded().getOthers().getEmbedded().getItems(), hasSize(4));
     }
 
+    @Test
+    public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
+        String url = "http://localhost:" + port + "/catalog/v1/search/superSearch?q=*";
+        ResponseEntity<SuperItemSearchResource> entity = getEntity(url, SuperItemSearchResource.class);
+
+        assertThat(entity.getStatusCode().value(), is(200));
+        assertThat(entity.getBody().getId().getHref(), is(url));
+        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getContentSearch(), hasSize(4));
+    }
+
+    @Test
     public void testSearchWithShould() throws Exception {
         String url = "http://localhost:" + port + "/catalog/v1/search?q=*&should=title,peter";
         ResponseEntity<ItemSearchResource> entity = getEntity(url, ItemSearchResource.class);
@@ -197,13 +213,6 @@ public class SearchControllerIT {
     public void tearDown() throws IOException {
         server.shutdown();
         RequestContextHolder.resetRequestAttributes();
-    }
-
-    private HttpHeaders defaultHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(UserUtils.SSO_HEADER, "token");
-        headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
-        return headers;
     }
 }
 

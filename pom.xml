@@ -22,6 +22,7 @@
         <sonar.language>java</sonar.language>
         <catalog-metadata-service.version>0.0.1-148</catalog-metadata-service.version>
         <catalog-search-index-service.version>0.0.1-86</catalog-search-index-service.version>
+        <catalog-iiif-content-search-service.version>1.0.0-28</catalog-iiif-content-search-service.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +55,11 @@
                 <artifactId>catalog-metadata-test</artifactId>
                 <version>${catalog-metadata-service.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nb.microservices.catalogsearchwithin</groupId>
+                <artifactId>catalog-iiif-content-search-service-model</artifactId>
+                <version>${catalog-iiif-content-search-service.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

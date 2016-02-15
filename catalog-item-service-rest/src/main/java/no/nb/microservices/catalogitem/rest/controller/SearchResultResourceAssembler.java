@@ -38,6 +38,8 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
             resources.getEmbedded().getItems().add(itemResource);
         }
 
+        resources.getEmbedded().setContentSearch(result.getContentSearches());
+
         JsonNode jsonNode = objectMapper.convertValue(result.getAggregations(), JsonNode.class);
         resources.getEmbedded().setAggregations(jsonNode);
 

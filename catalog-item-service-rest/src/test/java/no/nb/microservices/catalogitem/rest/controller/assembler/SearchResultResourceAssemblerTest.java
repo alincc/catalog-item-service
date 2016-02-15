@@ -6,6 +6,7 @@ import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequestBuilder;
 import no.nb.microservices.catalogitem.rest.controller.SearchResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.FacetValueResource;
 import org.junit.After;
@@ -20,8 +21,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 
 public class SearchResultResourceAssemblerTest {
@@ -177,5 +181,20 @@ public class SearchResultResourceAssemblerTest {
         ItemSearchResource searchResultResource = searchResultResourceAssembler.toResource(searchAggregated);
 
         assertEquals("Should have 2 aggregations", 2, searchResultResource.getEmbedded().getAggregations().size());
+    }
+
+    @Test
+    public void whenSearchAggregatedHasContentSearchesThenItShouldBeIncludedInResource() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setQ("b");
+        Page<Item> page = new PageImpl<>(Arrays.asList(new Item.ItemBuilder("id1").build()), new PageRequest(0, 1), 1);
+        SearchAggregated searchAggregated = new SearchAggregated(page, Collections.emptyList(), null, searchRequest);
+        List<ContentSearch> contentSearches = Arrays.asList(new ContentSearch("id1", "a <em>b</em> c "));
+        searchAggregated.setContentSearches(contentSearches);
+
+        SearchResultResourceAssembler searchResultResourceAssembler = new SearchResultResourceAssembler();
+        ItemSearchResource itemSearchResource = searchResultResourceAssembler.toResource(searchAggregated);
+
+        assertThat(itemSearchResource.getEmbedded().getContentSearch(), hasSize(1));
     }
 }

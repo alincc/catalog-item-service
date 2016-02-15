@@ -48,6 +48,10 @@
             <artifactId>catalog-metadata-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nb.microservices.catalogsearchwithin</groupId>
+            <artifactId>catalog-iiif-content-search-service-model</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.nb.sesam.ni</groupId>

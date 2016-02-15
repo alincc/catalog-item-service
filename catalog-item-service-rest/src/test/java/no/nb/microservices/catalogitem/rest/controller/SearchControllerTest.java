@@ -1,12 +1,12 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.item.service.ItemService;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.NBSearchType;
@@ -144,6 +144,14 @@ public class SearchControllerTest {
 
         SearchAggregated searchAggregated = new SearchAggregated(pageBooks, Collections.emptyList(), null, searchRequest);
 
+        List<ContentSearch> contentSearches = new ArrayList<>();
+        contentSearches.add(new ContentSearch("id1", "Det var fint vært i <em>London</em> i 1994"));
+        contentSearches.add(new ContentSearch("id2", "Det var fint vært i <em>London</em> i 1995"));
+        contentSearches.add(new ContentSearch("id3", "Det var fint vært i <em>London</em> i 1996"));
+        contentSearches.add(new ContentSearch("id4", "Det var fint vært i <em>London</em> i 1997"));
+        contentSearches.add(new ContentSearch("id5", "Det var fint vært i <em>London</em> i 1998"));
+        searchAggregated.setContentSearches(contentSearches);
+
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         searchAggregateds.put("bøker", searchAggregated);
         return new SuperSearchAggregated(searchAggregateds);
@@ -163,5 +171,19 @@ public class SearchControllerTest {
                 null, null, false, false, null, null, null, pageable);
 
         verify(searchService, times(1)).search(any(SearchRequest.class), any(Pageable.class));
+    }
+
+    @Test
+    public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setQ("London");
+
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        when(searchService.superSearch(searchRequest, pageRequest)).thenReturn(getSuperSearchAggregated(searchRequest));
+
+        ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
+
+        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getContentSearch(), hasSize(5));
     }
 }

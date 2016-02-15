@@ -1,0 +1,32 @@
+{
+  "@context": "http://iiif.io/api/search/0/context.json",
+  "@id": "http:localhost/catalog/v1/contentsearch/id1/search?q=london",
+  "@type": "sc:AnnotationList",
+  "resources": [],
+  "hits": [
+    {
+      "@type": "search:Hit",
+      "annotations": [
+        "id1"
+      ],
+      "before": "i byen ",
+      "after": "bor det folk"
+    },
+    {
+      "@type": "search:Hit",
+      "annotations": [
+        "id1"
+      ],
+      "before": "hei ",
+      "after": ""
+    },
+    {
+      "@type": "search:Hit",
+      "annotations": [
+        "id1"
+      ],
+      "before": "",
+      "after": "er en by"
+    }
+  ]
+}
