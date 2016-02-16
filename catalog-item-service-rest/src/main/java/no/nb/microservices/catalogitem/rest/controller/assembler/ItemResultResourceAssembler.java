@@ -9,6 +9,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
     
@@ -18,6 +19,9 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
 
     @Override
     public ItemResource toResource(Item item) {
+    	StringJoiner expand = new StringJoiner(",");
+    	expand.add("metadata");
+    	
         ItemResource resource = new ItemResource(item.getId());
         if (ItemUtils.showField(item.getFields(), "_links")) {
             createLinks(item, resource);
@@ -39,8 +43,10 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
         }
 
         if (hasRelatedItems(item)) {
-            resource.setExpand("relatedItems");
+        	expand.add("relatedItems");
         }
+        
+        resource.setExpand(expand.toString());
         
         if (ItemUtils.showField(item.getFields(), "accessInfo")) {
             resource.setAccessInfo(new AccessInfoBuilder()

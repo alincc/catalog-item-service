@@ -22,7 +22,8 @@ public class RecordInfoBuilderTest {
     public void whenRecordInfoIsvalid() {
         no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo recordInfo = new no.nb.microservices.catalogmetadata.model.mods.v3.RecordInfo();
         recordInfo.setRecordIdentifier(getRecordIdentifier());
-        recordInfo.setCreationDate(new Date());
+        Date creationDate = new Date();
+		recordInfo.setCreationDate(creationDate);
 
         Mods mods = new Mods();
         mods.setRecordInfo(recordInfo);
@@ -32,7 +33,7 @@ public class RecordInfoBuilderTest {
 
         assertEquals("111321352", build.getIdentifier());
         assertEquals("NO-TrBIB", build.getIdentifierSource());
-        assertEquals(new Date().toString(), build.getCreated());
+        assertEquals(creationDate.toString(), build.getCreated());
     }
 
     private RecordIdentifier getRecordIdentifier() {
