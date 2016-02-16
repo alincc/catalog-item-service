@@ -3,8 +3,9 @@ package no.nb.microservices.catalogitem.core.content.service;
 import no.nb.microservices.catalogcontentsearch.rest.model.AnnotationList;
 import no.nb.microservices.catalogcontentsearch.rest.model.Hit;
 import no.nb.microservices.catalogitem.core.content.repository.ContentRepository;
-import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
+import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
+import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -24,13 +25,14 @@ public class IIIFContentSearchService implements ContentSearchService {
 
     @Override
     @Async
-    public Future<ContentSearch> search(String id, String queryString, SecurityInfo securityInfo) {
-        AnnotationList annotationList = contentRepository.search(id,
+    public Future<ContentSearch> search(String queryString, TracableId tracableId) {
+        Trace.continueSpan(tracableId.getSpan());
+        AnnotationList annotationList = contentRepository.search(tracableId.getId(),
                 queryString,
-                securityInfo.getxHost(),
-                securityInfo.getxPort(),
-                securityInfo.getxRealIp(),
-                securityInfo.getSsoToken());
+                tracableId.getSecurityInfo().getxHost(),
+                tracableId.getSecurityInfo().getxPort(),
+                tracableId.getSecurityInfo().getxRealIp(),
+                tracableId.getSecurityInfo().getSsoToken());
 
         if(annotationList.getHits() != null && !annotationList.getHits().isEmpty()) {
             Hit hit = annotationList.getHits().get(0);
@@ -42,7 +44,7 @@ public class IIIFContentSearchService implements ContentSearchService {
                     .append(" ")
                     .append(hit.getAfter())
                     .toString();
-            return new AsyncResult<>(new ContentSearch(id, text));
+            return new AsyncResult<>(new ContentSearch(tracableId.getId(), text));
         }
         return null;
     }

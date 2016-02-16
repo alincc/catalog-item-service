@@ -7,6 +7,7 @@ import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
+import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
@@ -88,8 +89,7 @@ public class SearchServiceImplTest {
 
         when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
         Future<ContentSearch> futureContentSearch = new AsyncResult<>(new ContentSearch("123", "det var <em>q</em>"));
-        when(contentSearchService.search(eq("123"), eq(searchRequest.getQ()), any(SecurityInfo.class))).thenReturn(futureContentSearch);
-
+        when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
         SearchResult searchResultBooks = new SearchResult(Arrays.asList(new ItemResource()), 40, Collections.emptyList(), null);
         when(indexService.search(argThat(new IsSameSearchRequest(createBookSearchRequest())), any(), any())).thenReturn(searchResultBooks);
 
@@ -106,7 +106,7 @@ public class SearchServiceImplTest {
 
         when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
         Future<ContentSearch> futureContentSearch = new AsyncResult<>(new ContentSearch("123", "det var <em>q</em>"));
-        when(contentSearchService.search(eq("123"), eq(searchRequest.getQ()), any(SecurityInfo.class))).thenReturn(futureContentSearch);
+        when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
 
         SearchResult searchResultBooks = new SearchResult(Arrays.asList(new ItemResource()), 1, Collections.emptyList(), null);
         when(indexService.search(argThat(new IsSameSearchRequest(createBookSearchRequest())), any(), any())).thenReturn(searchResultBooks);
@@ -117,7 +117,7 @@ public class SearchServiceImplTest {
         assertThat(superSearchAggregated.getSearchAggregateds().get("bøker").getContentSearches(), hasSize(1));
 
         verify(indexService, times(2)).search(any(SearchRequest.class), any(Pageable.class), any(SecurityInfo.class));
-        verify(contentSearchService, times(1)).search(eq("123"), eq(searchRequest.getQ()), any(SecurityInfo.class));
+        verify(contentSearchService, times(1)).search(eq(searchRequest.getQ()), any(TracableId.class));
     }
 
     private SearchResult createMediaTypeAggsSearchResult() {

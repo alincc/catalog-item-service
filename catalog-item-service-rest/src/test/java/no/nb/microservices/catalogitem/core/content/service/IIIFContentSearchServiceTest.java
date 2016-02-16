@@ -4,6 +4,7 @@ import no.nb.microservices.catalogcontentsearch.rest.model.AnnotationList;
 import no.nb.microservices.catalogcontentsearch.rest.model.Hit;
 import no.nb.microservices.catalogitem.core.content.repository.ContentRepository;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
+import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ public class IIIFContentSearchServiceTest {
         AnnotationList annotationList = createAnnotationList("id1", "text before ", "text after");
         when(contentRepository.search("id1", "queryString", null, null, null, null)).thenReturn(annotationList);
 
-        Future<ContentSearch> futureSearch = contentSearchService.search("id1", "queryString", new SecurityInfo());
+        Future<ContentSearch> futureSearch = contentSearchService.search("queryString", new TracableId(null, "id1", new SecurityInfo()));
 
         while(!futureSearch.isDone()) { Thread.sleep(1L); }
         ContentSearch contentSearch = futureSearch.get();
@@ -47,8 +48,7 @@ public class IIIFContentSearchServiceTest {
         AnnotationList annotationList = createAnnotationList("id1", "text before ", "text after");
         when(contentRepository.search("id1", "queryString", null, null, null, null)).thenReturn(annotationList);
 
-        Future<ContentSearch> futureSearch = contentSearchService.search("id1", "queryString", new SecurityInfo());
-
+        Future<ContentSearch> futureSearch = contentSearchService.search("queryString", new TracableId(null, "id1", new SecurityInfo()));
 
         while(!futureSearch.isDone()) { Thread.sleep(1L); }
         ContentSearch contentSearch = futureSearch.get();

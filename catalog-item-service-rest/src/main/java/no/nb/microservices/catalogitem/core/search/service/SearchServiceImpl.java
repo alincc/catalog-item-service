@@ -8,6 +8,7 @@ import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
+import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.exception.LatchException;
 import no.nb.microservices.catalogitem.core.search.model.*;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
@@ -103,7 +104,8 @@ public class SearchServiceImpl implements ISearchService {
     private List<ContentSearch> getContentSearchs(List<Item> content, String searchQuery, SecurityInfo securityInfo) {
         List<Future<ContentSearch>> futureContentSearches = new ArrayList<>();
         for(Item item : content) {
-            futureContentSearches.add(contentSearchService.search(item.getId(), searchQuery, securityInfo));
+            TracableId tracableId = new TracableId(Trace.currentSpan(), item.getId(), securityInfo);
+            futureContentSearches.add(contentSearchService.search(searchQuery, tracableId));
         }
 
         for(Future<ContentSearch> contentSearchFuture : futureContentSearches) {
