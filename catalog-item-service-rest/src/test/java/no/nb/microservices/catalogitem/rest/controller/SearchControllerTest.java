@@ -72,8 +72,7 @@ public class SearchControllerTest {
         SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null, searchRequest);
         when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
 
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest.getQ(), null, null, null, null, null, null,
-                null, null, false, false, null, null, null, pageable);
+        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
 
         assertNotNull("Search result should not be null", result);
         assertTrue("Status code should be successful", result.getStatusCode().is2xxSuccessful());
@@ -98,8 +97,7 @@ public class SearchControllerTest {
 
         when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
         
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest.getQ(), searchRequest.getAggs(), null, null, null, null, null,
-                null, null, false, false, null, null, null, pageable);
+        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
 
         assertEquals(2, result.getBody().getEmbedded().getAggregations().size());
     }
@@ -116,8 +114,7 @@ public class SearchControllerTest {
 
         SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null, searchRequest);
         when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest.getQ(), null, searchRequest.getSearchType(), null, null, null, null,
-                null, null, false, false, null, null, null, pageable);
+        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
 
         assertEquals(1, result.getBody().getEmbedded().getItems().size());
     }
@@ -167,8 +164,7 @@ public class SearchControllerTest {
         SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 10), null, null, searchRequest);
         when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
 
-        searchController.search(searchRequest.getQ(), null, null, null, new String[]{"title,10", "name,4"}, null, null,
-                null, null, false, false, null, null, null, pageable);
+        searchController.search(searchRequest, pageable);
 
         verify(searchService, times(1)).search(any(SearchRequest.class), any(Pageable.class));
     }

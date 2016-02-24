@@ -101,6 +101,10 @@ public class SearchRequestBuilder {
             searchRequest.setSort(getAsArray(sort));
         }
 
+        if(should != null) {
+            searchRequest.setShould(getAsArray(should));
+        }
+
         if(!"".equalsIgnoreCase(expand)) {
             searchRequest.setExpand(expand);
         }
@@ -111,7 +115,6 @@ public class SearchRequestBuilder {
         searchRequest.setFields(fields);
         searchRequest.setGrouping(grouping);
         searchRequest.setExplain(explain);
-        searchRequest.setShould(should);
 
         return searchRequest;
     }

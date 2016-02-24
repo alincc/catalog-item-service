@@ -3,8 +3,6 @@ package no.nb.microservices.catalogitem.core.search.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nb.microservices.catalogsearchindex.NBSearchType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -124,8 +122,8 @@ public class SearchRequest implements Serializable {
         return should;
     }
 
-    public void setShould(List<String> should) {
-        this.should = should;
+    public void setShould(String[] should) {
+        this.should = Arrays.asList(should);
     }
 
     public boolean isExplain() {
@@ -169,5 +167,4 @@ public class SearchRequest implements Serializable {
     public void setExpand(String expand) {
         this.expand = expand;
     }
-
 }

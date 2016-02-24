@@ -16,8 +16,11 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources.PageMetadata;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.UriTemplate;
+import org.springframework.hateoas.mvc.ControllerLinkBuilderFactory;
+import org.springframework.hateoas.mvc.UriComponentsContributor;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -54,15 +57,15 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
 
             SearchRequest searchRequest = result.getSearchRequest();
 
-            UriTemplate base = new UriTemplate(linkTo(methodOn(SearchController.class)
-                    .search(searchRequest.getQ(), searchRequest.getAggs(), searchRequest.getSearchType(),
-                            getAsArray(searchRequest.getFilter()), getAsArray(searchRequest.getBoost()), searchRequest.getBottomLeft(),
-                            searchRequest.getTopRight(), searchRequest.getPrecision(), getAsArray(searchRequest.getFields()),
-                            searchRequest.isExplain(), searchRequest.isGrouping(),
-                            getAsArray(searchRequest.getShould()), getAsArray(searchRequest.getSort()), searchRequest.getExpand(),
-                            new PageRequest(page.getNumber(), page.getSize())))
-                    .toUriComponentsBuilder()
-                    .toUriString());
+            ControllerLinkBuilderFactory controllerLinkBuilderFactory = new ControllerLinkBuilderFactory();
+            List<UriComponentsContributor> uriComponentsContributors = new ArrayList<>();
+            uriComponentsContributors.add(new SearchRequestUriComponentsContributor());
+            controllerLinkBuilderFactory.setUriComponentsContributors(uriComponentsContributors);
+            String uri = controllerLinkBuilderFactory
+                    .linkTo(methodOn(SearchController.class).search(searchRequest, new PageRequest(page.getNumber(), page.getSize())))
+                    .toString();
+
+            UriTemplate base = new UriTemplate(uri);
 
             if (page.hasPrevious()) {
                 resources.add(createLink(base, new PageRequest(0, page.getSize(), page.getSort()), Link.REL_FIRST));
@@ -100,15 +103,6 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
     private static <T> PageMetadata asPageMetadata(Page<T> page) {
 
         return new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages());
-    }
-
-    private String[] getAsArray(List<String> list) {
-        String[] tmp = null;
-        if(list != null && !list.isEmpty()) {
-            tmp = new String[list.size()];
-            tmp = list.toArray(tmp);
-        }
-        return tmp;
     }
 }
 

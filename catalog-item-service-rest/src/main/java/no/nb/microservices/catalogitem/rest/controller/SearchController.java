@@ -7,12 +7,10 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequestBuilder;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
-import no.nb.microservices.catalogsearchindex.NBSearchType;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
@@ -44,33 +42,15 @@ public class SearchController {
     @InitBinder
     public void sortBinderInit(WebDataBinder binder) {
         binder.registerCustomEditor(String[].class, new StringArrayPropertyEditor(null));
+        binder.registerCustomEditor(String[].class, "mediatypes", new StringArrayPropertyEditor(","));
     }
 
     @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
     @Traceable(description="search")
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<ItemSearchResource> search(@RequestParam("q") String q,
-                                                     @RequestParam(value = "aggs", required = false) String aggs,
-                                                     @RequestParam(value = "searchType", required = false) NBSearchType searchType,
-                                                     @RequestParam(value = "filter", required = false) String[] filter,
-                                                     @RequestParam(value = "boost", required = false) String[] boost,
-                                                     @RequestParam(value = "bottomLeft", required = false) String bottomLeft,
-                                                     @RequestParam(value = "topRight", required = false) String topRight,
-                                                     @RequestParam(value = "precision", required = false) String precision,
-                                                     @RequestParam(value = "fields", required = false) String[] fields,
-                                                     @RequestParam(value = "explain", required = false) boolean explain,
-                                                     @RequestParam(value = "grouping", required = false) boolean grouping,
-                                                     @RequestParam(value = "should", required = false) String[] should,
-                                                     @RequestParam(value = "sort", required = false) String[] sort,
-                                                     @RequestParam(value = "expand", required = false) String expand,
-                                                     @PageableDefault Pageable pageable) {
-
-        SearchRequest searchRequest = new SearchRequestBuilder(q, aggs, searchType, filter, boost, bottomLeft, topRight,
-                precision, fields, sort, explain, grouping, should, expand).build();
-
+    public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, @PageableDefault Pageable pageable) {
         SearchAggregated result = searchService.search(searchRequest, pageable);
-
         ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
