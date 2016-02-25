@@ -16,6 +16,8 @@ import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.FacetValueResource;
 import org.apache.htrace.Trace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +35,8 @@ import java.util.concurrent.Future;
 
 @Service
 public class SearchServiceImpl implements ISearchService {
+    private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
+
     private final IndexService indexService;
     private final ItemWrapperService itemWrapperService;
     private final ContentSearchService contentSearchService;
@@ -53,41 +57,52 @@ public class SearchServiceImpl implements ISearchService {
     }
 
     @Override
-    public SuperSearchAggregated superSearch(SearchRequest searchRequest, Pageable pageable) {
-        List<String> possibleMediaTypesToSearch = getPossibleMediaTypesToSearch(searchRequest);
-        SuperSearchRequest superSearchRequest = new SuperSearchRequest(searchRequest, possibleMediaTypesToSearch);
+    public SuperSearchAggregated superSearch(SuperSearchRequest superSearchRequest, Pageable pageable) {
+        List<String> possibleMediaTypesToSearch = getPossibleMediaTypesToSearch(superSearchRequest);
         SecurityInfo securityInfo = getSecurityInfo();
 
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
-        for (String mediaType : superSearchRequest.getMediaTypesToSearchFor()) {
+        List<String> wantedMediaTypes = superSearchRequest.getWantedMediaTypes(possibleMediaTypesToSearch);
+        for (String mediaType : wantedMediaTypes) {
             searchAggregateds.put(mediaType, searchForMediaTypes(mediaType, pageable, superSearchRequest, securityInfo));
         }
 
-        if(!superSearchRequest.getOtherMediaTypes().isEmpty()) {
-            searchAggregateds.put("other", searchForOtherMediaTypes(pageable, superSearchRequest, securityInfo));
+        List<String> otherMediaTypes = superSearchRequest.getOtherMediaTypes(possibleMediaTypesToSearch, wantedMediaTypes);
+        if(!otherMediaTypes.isEmpty()) {
+            searchAggregateds.put("other", searchForOtherMediaTypes(pageable, superSearchRequest, otherMediaTypes));
         }
 
         return new SuperSearchAggregated(searchAggregateds);
     }
 
     private SearchAggregated searchForMediaTypes(String mediaType, Pageable pageable, SuperSearchRequest superSearchRequest, SecurityInfo securityInfo) {
-        SearchRequest mediaTypeSearchRequest = new SearchRequestBuilder(superSearchRequest.getSearchRequest())
-                .withFilter(new String[]{"mediatype:" + mediaType})
-                .build();
+        SearchRequest mediaTypeSearchRequest = createNewSearchRequestInstance(superSearchRequest);
+        mediaTypeSearchRequest.setFilter(new String[]{"mediatype:" + mediaType});
 
         SearchAggregated search = search(mediaTypeSearchRequest, new PageRequest(0, pageable.getPageSize()));
-        search.setContentSearches(getContentSearchs(search.getPage().getContent(), superSearchRequest.getSearchRequest().getQ(), securityInfo));
+
+        if("aviser".equalsIgnoreCase(mediaType)) {
+            search.setContentSearches(getContentSearchs(search.getPage().getContent(), mediaTypeSearchRequest.getQ(), securityInfo));
+        }
         return search;
     }
 
-    private SearchAggregated searchForOtherMediaTypes(Pageable pageable, SuperSearchRequest superSearchRequest, SecurityInfo securityInfo) {
-        SearchRequest otherSearchRequest = new SearchRequestBuilder(superSearchRequest.getSearchRequest())
-                .withQ(superSearchRequest.getSearchRequest().getQ() + " AND (" + String.join(" OR ", superSearchRequest.getOtherMediaTypes()) + ")")
-                .build();
+    private SearchAggregated searchForOtherMediaTypes(Pageable pageable, SuperSearchRequest superSearchRequest, List<String> otherMediaTypes) {
+        SearchRequest otherSearchRequest = createNewSearchRequestInstance(superSearchRequest);
+        otherSearchRequest.setQ(superSearchRequest.getQ() + " AND (" + String.join(" OR ", otherMediaTypes) + ")");
 
-        SearchAggregated search = search(otherSearchRequest, new PageRequest(0, pageable.getPageSize()));
-        search.setContentSearches(getContentSearchs(search.getPage().getContent(), superSearchRequest.getSearchRequest().getQ(), securityInfo));
-        return search;
+        return search(otherSearchRequest, new PageRequest(0, pageable.getPageSize()));
+    }
+
+    private SearchRequest createNewSearchRequestInstance(SearchRequest searchRequest) {
+        try {
+            return (SearchRequest)searchRequest.clone();
+        } catch (CloneNotSupportedException e) {
+            LOG.error("Cant clone searchRequest", e);
+        }
+        SearchRequest newSearchRequest = new SearchRequest();
+        newSearchRequest.setQ(searchRequest.getQ());
+        return newSearchRequest;
     }
 
     private SecurityInfo getSecurityInfo() {
@@ -125,10 +140,9 @@ public class SearchServiceImpl implements ISearchService {
                 if(contentSearch != null) {
                     contentSearches.add(contentSearch);
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.debug("Cant get contentSearch", e);
+                LOG.error("Cant get contentSearch", e.getMessage());
             }
         }
         return contentSearches;

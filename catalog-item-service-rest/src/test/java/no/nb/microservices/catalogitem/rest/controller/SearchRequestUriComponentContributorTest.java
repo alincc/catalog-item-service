@@ -74,15 +74,15 @@ public class SearchRequestUriComponentContributorTest {
     }
 
     @Test
-    public void whenSearchingWithTwoMediaTypesThenOneMediaTypeParameterWithTwoValuesShouldBeInUri() throws Exception {
+    public void whenSearchingWithExplainTrueThenExplainShouldBeInUri() throws Exception {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("*");
-        searchRequest.setMediatypes(new String[]{"aviser", "radio"});
+        searchRequest.setExplain(true);
         UriComponentsBuilder builder = getUriComponentsBuilder(searchRequest);
 
         searchRequestUriComponentsContributor.enhance(builder, null, searchRequest);
 
-        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/search?q=*&mediatypes=aviser,radio"));
+        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/search?q=*&explain=true"));
     }
 
     private UriComponentsBuilder getUriComponentsBuilder(SearchRequest searchRequest) {

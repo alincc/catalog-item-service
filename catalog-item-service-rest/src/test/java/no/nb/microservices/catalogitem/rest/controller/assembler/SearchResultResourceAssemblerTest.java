@@ -3,7 +3,6 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequestBuilder;
 import no.nb.microservices.catalogitem.rest.controller.SearchResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
@@ -34,13 +33,13 @@ public class SearchResultResourceAssemblerTest {
 
     @Before
     public void init() {
-
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/search?q=Junit");
         ServletRequestAttributes attributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(attributes);
 
-        searchRequest = new SearchRequestBuilder().withQ("q").build();
+        searchRequest = new SearchRequest();
+        searchRequest.setQ("q");
     }
 
     @After

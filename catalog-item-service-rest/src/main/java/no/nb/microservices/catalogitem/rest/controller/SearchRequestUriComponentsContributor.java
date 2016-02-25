@@ -41,7 +41,7 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
     }
 
     private boolean isGetMethodForField(String fieldName, Method method) {
-        return method.getName().equalsIgnoreCase("get" + fieldName);
+        return (method.getName().equalsIgnoreCase("get" + fieldName) || method.getName().equalsIgnoreCase("is" + fieldName)) ;
     }
 
     private Object getValueFromMethod(SearchRequest searchRequest, Method method) {
@@ -49,7 +49,7 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
             try {
                 return method.invoke(searchRequest);
             } catch (IllegalAccessException e) {
-                LOG.info("Cant access method {}", method.getName(), e);
+                LOG.debug("Cant access method {}", method.getName(), e);
                 LOG.error("Cant access method {}", method.getName());
             } catch (InvocationTargetException e) {
                 LOG.debug("Cant invoke method {}", method.getName(), e);

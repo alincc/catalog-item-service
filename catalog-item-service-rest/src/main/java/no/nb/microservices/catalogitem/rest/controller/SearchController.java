@@ -8,6 +8,7 @@ import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
+import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
@@ -59,7 +60,7 @@ public class SearchController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
     @Traceable(description="superSearch")
     @RequestMapping(value = "/superSearch", method = RequestMethod.GET)
-    public ResponseEntity<SuperItemSearchResource> superSearch(SearchRequest searchRequest,
+    public ResponseEntity<SuperItemSearchResource> superSearch(SuperSearchRequest searchRequest,
                                                                @PageableDefault Pageable pageable) {
         SuperItemSearchResource resource = new SuperItemSearchResource();
 

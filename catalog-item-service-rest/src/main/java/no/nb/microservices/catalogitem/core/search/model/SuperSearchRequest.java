@@ -1,46 +1,43 @@
 package no.nb.microservices.catalogitem.core.search.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SuperSearchRequest {
-    private final SearchRequest searchRequest;
-    private final List<String> possibleMediaTypesToSearch;
-    private List<String> wantedMediaTypesToSearch;
-    private List<String> otherMediaTypesToSearch;
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SuperSearchRequest extends SearchRequest {
+    private List<String> mediatypes = new ArrayList<>();
 
-    public SuperSearchRequest(SearchRequest searchRequest, List<String> possibleMediaTypesToSearch) {
-        this.searchRequest = searchRequest;
-        this.possibleMediaTypesToSearch = possibleMediaTypesToSearch;
-        initWantedMediaTypesToSearch();
-        initOtherMediaTypes();
+    public SuperSearchRequest() {
     }
 
-    private void initWantedMediaTypesToSearch() {
-        if(searchRequest.getMediatypes().isEmpty()) {
-            wantedMediaTypesToSearch = possibleMediaTypesToSearch;
+    public List<String> getWantedMediaTypes(List<String> possibleMediaTypesToSearch) {
+        if(mediatypes.isEmpty()) {
+            return possibleMediaTypesToSearch;
         } else {
-            wantedMediaTypesToSearch = searchRequest.getMediatypes().stream().map(String::toLowerCase).collect(Collectors.toList());
+            return mediatypes.stream().filter(possibleMediaTypesToSearch::contains).map(String::toLowerCase).collect(Collectors.toList());
         }
     }
 
-    private void initOtherMediaTypes() {
-         otherMediaTypesToSearch = possibleMediaTypesToSearch
+    public List<String> getOtherMediaTypes(List<String> possibleMediaTypesToSearch, List<String> wantedMediaTypesToSearch) {
+         return possibleMediaTypesToSearch
                 .stream()
                 .filter(mediaType -> !wantedMediaTypesToSearch.contains(mediaType))
                 .map(mediaType -> "mediatype:" + mediaType)
                 .collect(Collectors.toList());
     }
 
-    public List<String> getMediaTypesToSearchFor() {
-        return wantedMediaTypesToSearch;
+    public List<String> getMediatypes() {
+        super.removeEncoding(mediatypes);
+        return mediatypes;
     }
 
-    public List<String> getOtherMediaTypes() {
-        return otherMediaTypesToSearch;
-    }
-
-    public SearchRequest getSearchRequest() {
-        return searchRequest;
+    public void setMediatypes(String[] mediatypes) {
+        this.mediatypes = Arrays.asList(mediatypes);
     }
 }

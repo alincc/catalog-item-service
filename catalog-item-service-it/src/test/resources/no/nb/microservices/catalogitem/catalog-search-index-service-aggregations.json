@@ -37,6 +37,10 @@
           {
             "key": "bøker",
             "count": 10
+          },
+          {
+            "key": "aviser",
+            "count": 10
           }
         ]
       }

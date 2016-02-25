@@ -11,7 +11,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SearchRequest implements Serializable {
+public class SearchRequest implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
     private String q;
@@ -28,7 +28,6 @@ public class SearchRequest implements Serializable {
     private boolean explain;
     private String expand;
     private List<String> filter = new ArrayList<>();
-    private List<String> mediatypes = new ArrayList<>();
 
     public SearchRequest() {
         super();
@@ -116,7 +115,6 @@ public class SearchRequest implements Serializable {
     }
 
 
-
     public List<String> getShould() {
         removeEncoding(should);
         return should;
@@ -143,16 +141,7 @@ public class SearchRequest implements Serializable {
         this.filter = Arrays.asList(filter);
     }
 
-    public List<String> getMediatypes() {
-        removeEncoding(mediatypes);
-        return mediatypes;
-    }
-
-    public void setMediatypes(String[] mediatypes) {
-        this.mediatypes = Arrays.asList(mediatypes);
-    }
-
-    private void removeEncoding(List<String> params) {
+    protected void removeEncoding(List<String> params) {
         if (params != null) {
             for (int i = 0; i < params.size(); i++) {
                 params.set(i, params.get(i).replace("%2C",","));
@@ -166,5 +155,10 @@ public class SearchRequest implements Serializable {
 
     public void setExpand(String expand) {
         this.expand = expand;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

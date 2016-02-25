@@ -4,6 +4,7 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
+import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
@@ -121,7 +122,7 @@ public class SearchControllerTest {
 
     @Test
     public void whenSuperSearchAndOnlyHitOnBooksThenReturnSuperItemSearchResourceWithOnlyBooks() throws Exception {
-        SearchRequest searchRequest = new SearchRequest();
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
         PageRequest pageRequest = new PageRequest(0, 5);
         when(searchService.superSearch(searchRequest, pageRequest)).thenReturn(getSuperSearchAggregated(searchRequest));
@@ -171,7 +172,7 @@ public class SearchControllerTest {
 
     @Test
     public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
-        SearchRequest searchRequest = new SearchRequest();
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("London");
 
         PageRequest pageRequest = new PageRequest(0, 5);

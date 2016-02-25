@@ -114,7 +114,7 @@ public class SearchControllerIT {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().startsWith("/catalog/v1/search?q=*&page=0&size=10&grouping=false&explain=false&filter=mediatype%3A")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
-                } else if (request.getPath().equals("/catalog/v1/search?q=*+AND+%28mediatype%3Ab%C3%B8ker%29&page=0&size=10&grouping=false&explain=false")) {
+                } else if (request.getPath().equals("/catalog/v1/search?q=*+AND+%28mediatype%3Ab%C3%B8ker+OR+mediatype%3Aaviser%29&page=0&size=10&grouping=false&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=10&grouping=false&should=title%2Cpeter&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
@@ -191,7 +191,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getContentSearch(), hasSize(4));
+        assertThat(entity.getBody().getEmbedded().getNewspapers().getEmbedded().getContentSearch(), hasSize(4));
     }
 
     @Test
