@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.core.metadata.service;
 
 import java.util.concurrent.Future;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -26,11 +27,17 @@ public class MetadataServiceImpl  implements MetadataService{
 
     @Override
     @Async
+    @HystrixCommand(fallbackMethod = "getModsFallback")
     public Future<Mods> getModsById(TracableId id) {
       Trace.continueSpan(id.getSpan());
       SecurityInfo securityInfo = id.getSecurityInfo();
       Mods mods = metadataRepository.getModsById(id.getId(), securityInfo.getxHost(), securityInfo.getxPort(), securityInfo.getxRealIp(), securityInfo.getSsoToken());
       return new AsyncResult<Mods>(mods);
+    }
+
+    private Mods getModsFallback(TracableId id) {
+        Trace.continueSpan(id.getSpan());
+        return new Mods();
     }
 
 }
