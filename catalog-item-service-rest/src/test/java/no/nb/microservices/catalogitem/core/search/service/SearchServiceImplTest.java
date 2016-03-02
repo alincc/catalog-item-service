@@ -8,14 +8,11 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.service.ItemWrapperService;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
-import no.nb.microservices.catalogitem.core.search.model.ItemWrapper;
-import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.search.model.*;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +34,11 @@ import java.util.concurrent.Future;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchServiceImplTest {
@@ -84,24 +82,25 @@ public class SearchServiceImplTest {
 
     @Test
     public void whenSuperSearchAndIndexReturnResultsThenResultShouldContainMultipleResultsWithMultipleItems() throws Exception {
-        SearchRequest searchRequest = new SearchRequest();
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
 
         when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
         Future<ContentSearch> futureContentSearch = new AsyncResult<>(new ContentSearch("123", "det var <em>q</em>"));
         when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
         SearchResult searchResultBooks = new SearchResult(Arrays.asList(new ItemResource()), 40, Collections.emptyList(), null);
-        when(indexService.search(argThat(new IsSameSearchRequest(createBookSearchRequest())), any(), any())).thenReturn(searchResultBooks);
+        when(indexService.search(argThat(new IsSameSearchRequest(createSearchRequest(new String[]{"mediatype:bøker"}))), any(), any())).thenReturn(searchResultBooks);
+        when(indexService.search(argThat(new IsSameSearchRequest(createSearchRequest(new String[]{"mediatype:aviser"}))), any(), any())).thenReturn(searchResultBooks);
 
-//        SuperSearchAggregated superSearchAggregated = searchService.superSearch(searchRequest, new PageRequest(0, 1));
-//
-//        assertThat(superSearchAggregated.getSearchAggregateds().keySet(), hasSize(1));
-//        assertThat(superSearchAggregated.getSearchAggregateds().get("bøker").getPage().getContent(), hasSize(1));
+        SuperSearchAggregated superSearchAggregated = searchService.superSearch(searchRequest, new PageRequest(0, 1));
+
+        assertThat(superSearchAggregated.getSearchAggregateds().keySet(), hasSize(2));
+        assertThat(superSearchAggregated.getSearchAggregateds().get("bøker").getPage().getContent(), hasSize(1));
     }
 
     @Test
     public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
-        SearchRequest searchRequest = new SearchRequest();
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
 
         when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
@@ -109,28 +108,29 @@ public class SearchServiceImplTest {
         when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
 
         SearchResult searchResultBooks = new SearchResult(Arrays.asList(new ItemResource()), 1, Collections.emptyList(), null);
-        when(indexService.search(argThat(new IsSameSearchRequest(createBookSearchRequest())), any(), any())).thenReturn(searchResultBooks);
+        when(indexService.search(argThat(new IsSameSearchRequest(createSearchRequest(new String[]{"mediatype:bøker"}))), any(), any())).thenReturn(searchResultBooks);
+        when(indexService.search(argThat(new IsSameSearchRequest(createSearchRequest(new String[]{"mediatype:aviser"}))), any(), any())).thenReturn(searchResultBooks);
 
-//        SuperSearchAggregated superSearchAggregated = searchService.superSearch(searchRequest, new PageRequest(0, 5));
-//
-//        assertThat(superSearchAggregated.getSearchAggregateds().keySet(), hasSize(1));
-//        assertThat(superSearchAggregated.getSearchAggregateds().get("bøker").getContentSearches(), hasSize(1));
-//
-//        verify(indexService, times(2)).search(any(SearchRequest.class), any(Pageable.class), any(SecurityInfo.class));
-//        verify(contentSearchService, times(1)).search(eq(searchRequest.getQ()), any(TracableId.class));
+        SuperSearchAggregated superSearchAggregated = searchService.superSearch(searchRequest, new PageRequest(0, 5));
+
+        assertThat(superSearchAggregated.getSearchAggregateds().keySet(), hasSize(2));
+        assertThat(superSearchAggregated.getSearchAggregateds().get("aviser").getContentSearches(), hasSize(1));
+
+        verify(indexService, times(3)).search(any(SearchRequest.class), any(Pageable.class), any(SecurityInfo.class));
+        verify(contentSearchService, times(1)).search(eq(searchRequest.getQ()), any(TracableId.class));
     }
 
     private SearchResult createMediaTypeAggsSearchResult() {
         AggregationResource aggregationResource = new AggregationResource("mediatype");
-        aggregationResource.setFacetValues(Arrays.asList(new FacetValueResource("bøker", 1)));
+        aggregationResource.setFacetValues(Arrays.asList(new FacetValueResource("bøker", 1), new FacetValueResource("aviser", 1)));
         List<AggregationResource> aggregations = Arrays.asList(aggregationResource);
         return new SearchResult(Collections.emptyList(), 1, aggregations, null);
     }
 
-    private SearchRequest createBookSearchRequest() {
+    private SearchRequest createSearchRequest(String[] filter) {
         SearchRequest searchRequestBooks = new SearchRequest();
         searchRequestBooks.setQ("q");
-        searchRequestBooks.setFilter(new String[]{"mediatype:bøker"});
+        searchRequestBooks.setFilter(filter);
         return searchRequestBooks;
     }
 }
