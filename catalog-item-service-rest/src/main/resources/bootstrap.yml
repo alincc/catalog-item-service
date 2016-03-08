@@ -7,6 +7,10 @@ spring:
       discovery:
         enabled: true
 
+server:
+  port: 0
+
+
 ---
 
 spring:
