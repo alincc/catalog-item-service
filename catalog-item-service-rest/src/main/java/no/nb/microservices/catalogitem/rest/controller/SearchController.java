@@ -1,17 +1,7 @@
 package no.nb.microservices.catalogitem.rest.controller;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-import no.nb.htrace.annotation.Traceable;
-import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
-import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
-import no.nb.microservices.catalogitem.core.search.service.ISearchService;
-import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
-import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
+import java.util.Map;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
@@ -22,15 +12,25 @@ import org.springframework.hateoas.UriTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Map;
+import no.nb.htrace.annotation.Traceable;
+import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
+import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
+import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
+import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
+import no.nb.microservices.catalogitem.core.search.service.ISearchService;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
 
 @RestController
-@RequestMapping(value = "/catalog/v1/search")
-@Api(value = "/catalog/v1/search", description = "Home api")
+@RequestMapping(value = "/catalog/v1")
 public class SearchController {
 
     private final ISearchService searchService;
@@ -46,20 +46,16 @@ public class SearchController {
         binder.registerCustomEditor(String[].class, "mediatypes", new StringArrayPropertyEditor(","));
     }
 
-    @ApiOperation(value = "Hello World", notes = "Hello World notes", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
-    @Traceable(description="search")
-    @RequestMapping(method = RequestMethod.GET)
+    @Traceable(description="items")
+    @RequestMapping(value = "/items", method = RequestMethod.GET)
     public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, @PageableDefault Pageable pageable) {
         SearchAggregated result = searchService.search(searchRequest, pageable);
         ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "SuperSearch", notes = "SuperSearch", response = String.class)
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful response") })
-    @Traceable(description="superSearch")
-    @RequestMapping(value = "/superSearch", method = RequestMethod.GET)
+    @Traceable(description="search")
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ResponseEntity<SuperItemSearchResource> superSearch(SuperSearchRequest searchRequest,
                                                                @PageableDefault Pageable pageable) {
         SuperItemSearchResource resource = new SuperItemSearchResource();

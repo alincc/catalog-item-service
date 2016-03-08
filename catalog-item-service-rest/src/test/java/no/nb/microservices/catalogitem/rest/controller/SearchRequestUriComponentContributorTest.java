@@ -58,7 +58,7 @@ public class SearchRequestUriComponentContributorTest {
 
         searchRequestUriComponentsContributor.enhance(builder, null, searchRequest);
 
-        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/search?q=*&should=title,peter"));
+        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/items?q=*&should=title,peter"));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class SearchRequestUriComponentContributorTest {
 
         searchRequestUriComponentsContributor.enhance(builder, null, searchRequest);
 
-        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/search?q=*&should=title,peter&should=title,pan"));
+        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/items?q=*&should=title,peter&should=title,pan"));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class SearchRequestUriComponentContributorTest {
 
         searchRequestUriComponentsContributor.enhance(builder, null, searchRequest);
 
-        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/search?q=*&explain=true"));
+        assertThat(builder.toUriString(), is("http://localhost/catalog/v1/items?q=*&explain=true"));
     }
 
     private UriComponentsBuilder getUriComponentsBuilder(SearchRequest searchRequest) {
