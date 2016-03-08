@@ -19,7 +19,7 @@ public class ItemResource extends ResourceSupport {
     private AccessInfo accessInfo;
     private RelatedItemResource relatedItems;
     private JsonNode explain;
-    private List<String> mediatypes;
+    private List<String> mediaTypes;
     private List<String> creators;
 
     @JsonCreator
@@ -84,12 +84,12 @@ public class ItemResource extends ResourceSupport {
         this.explain = explain;
     }
 
-    public List<String> getMediatypes() {
-        return mediatypes;
+    public List<String> getMediaTypes() {
+        return mediaTypes;
     }
 
-    public void setMediatypes(List<String> mediatypes) {
-        this.mediatypes = mediatypes;
+    public void setMediaTypes(List<String> mediatypes) {
+        this.mediaTypes = mediatypes;
     }
 
     public List<String> getCreators() {

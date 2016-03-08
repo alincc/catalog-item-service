@@ -29,7 +29,7 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
 
         if (ItemUtils.showField(item.getFields(), "mediatypes")) {
             if (item.getItemResource() != null && !item.getItemResource().getMediaTypes().isEmpty()) {
-                resource.setMediatypes(item.getItemResource().getMediaTypes());
+                resource.setMediaTypes(item.getItemResource().getMediaTypes());
             }
         }
 
