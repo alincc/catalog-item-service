@@ -1,23 +1,24 @@
 spring:
   application:
     name: catalog-item-service
+
+---
+spring:
+  profiles: local
   cloud:
     config:
-      failFast: false
       discovery:
-        enabled: true
-
-server:
-  port: 0
+        enabled: false
 
 
 ---
-
 spring:
   profiles: docker
   cloud:
     config:
       failFast: true
+      discovery:
+        enabled: true
 
 eureka:
   instance:

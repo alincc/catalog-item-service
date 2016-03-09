@@ -39,7 +39,7 @@ public class SearchRequestUriComponentContributorTest {
 
     @Test
     public void whenSearchRequestIsParameterThenSupportParameter() throws Exception {
-        MethodParameter m = new MethodParameter(SearchController.class.getMethod("search", SearchRequest.class, Pageable.class), 0);
+        MethodParameter m = new MethodParameter(ItemController.class.getMethod("search", SearchRequest.class, Pageable.class), 0);
         assertThat(searchRequestUriComponentsContributor.supportsParameter(m), is(true));
     }
 
@@ -86,6 +86,6 @@ public class SearchRequestUriComponentContributorTest {
     }
 
     private UriComponentsBuilder getUriComponentsBuilder(SearchRequest searchRequest) {
-        return linkTo(methodOn(SearchController.class).search(searchRequest, new PageRequest(0, 10))).toUriComponentsBuilder();
+        return linkTo(methodOn(ItemController.class).search(searchRequest, new PageRequest(0, 10))).toUriComponentsBuilder();
     }
 }

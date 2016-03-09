@@ -62,65 +62,6 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void whenSearchThenReturnItems() {
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setQ("Supersonic");
-
-        PageRequest pageable = new PageRequest(0, 10);
-
-        List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build(), new Item.ItemBuilder("456").build());
-
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null, searchRequest);
-        when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
-
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
-
-        assertNotNull("Search result should not be null", result);
-        assertTrue("Status code should be successful", result.getStatusCode().is2xxSuccessful());
-        assertEquals("It should have two items", 2, result.getBody().getEmbedded().getItems().size());
-    }
-
-    @Test
-    public void whenSearchWithAggregationThenReturnListOfAggregations() {
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setQ("TestSearch");
-        searchRequest.setAggs("ddc1, mediatype");
-
-        PageRequest pageable = new PageRequest(0, 10);
-
-        List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
-
-        List<AggregationResource> aggregations = new ArrayList<>();
-        aggregations.add(new AggregationResource("ddc1"));
-        aggregations.add(new AggregationResource("mediatype"));
-
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), aggregations, null, searchRequest);
-
-        when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
-        
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
-
-        assertEquals(2, result.getBody().getEmbedded().getAggregations().size());
-    }
-
-    @Test
-    public void whenSearchInFreeText() {
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setQ("TestSearch");
-        searchRequest.setSearchType(NBSearchType.TEXT_SEARCH);
-
-        PageRequest pageable = new PageRequest(0, 10);
-
-        List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
-
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), null, null, searchRequest);
-        when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
-        ResponseEntity<ItemSearchResource> result = searchController.search(searchRequest, pageable);
-
-        assertEquals(1, result.getBody().getEmbedded().getItems().size());
-    }
-
-    @Test
     public void whenSuperSearchAndOnlyHitOnBooksThenReturnSuperItemSearchResourceWithOnlyBooks() throws Exception {
         SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
@@ -153,21 +94,6 @@ public class SearchControllerTest {
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         searchAggregateds.put("bøker", searchAggregated);
         return new SuperSearchAggregated(searchAggregateds);
-    }
-
-    @Test
-    public void testBoosting() {
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setQ("boost me");
-        searchRequest.setBoost(new String[]{"title,10", "name,4"});
-        PageRequest pageable = new PageRequest(0, 10);
-        List<Item> items = Arrays.asList(new Item.ItemBuilder("123").build());
-        SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 10), null, null, searchRequest);
-        when(searchService.search(any(SearchRequest.class), any(Pageable.class))).thenReturn(searchResult);
-
-        searchController.search(searchRequest, pageable);
-
-        verify(searchService, times(1)).search(any(SearchRequest.class), any(Pageable.class));
     }
 
     @Test

@@ -22,7 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import no.nb.htrace.annotation.Traceable;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
-import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
@@ -43,15 +42,7 @@ public class SearchController {
     @InitBinder
     public void sortBinderInit(WebDataBinder binder) {
         binder.registerCustomEditor(String[].class, new StringArrayPropertyEditor(null));
-        binder.registerCustomEditor(String[].class, "mediatypes", new StringArrayPropertyEditor(","));
-    }
-
-    @Traceable(description="items")
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public ResponseEntity<ItemSearchResource> search(SearchRequest searchRequest, @PageableDefault Pageable pageable) {
-        SearchAggregated result = searchService.search(searchRequest, pageable);
-        ItemSearchResource resource = new SearchResultResourceAssembler().toResource(result);
-        return new ResponseEntity<>(resource, HttpStatus.OK);
+        binder.registerCustomEditor(String[].class, "mediaTypes", new StringArrayPropertyEditor(","));
     }
 
     @Traceable(description="search")

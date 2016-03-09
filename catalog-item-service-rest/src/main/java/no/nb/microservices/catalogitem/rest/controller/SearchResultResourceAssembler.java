@@ -62,7 +62,7 @@ public class SearchResultResourceAssembler implements ResourceAssembler<SearchAg
             uriComponentsContributors.add(new SearchRequestUriComponentsContributor());
             controllerLinkBuilderFactory.setUriComponentsContributors(uriComponentsContributors);
             String uri = controllerLinkBuilderFactory
-                    .linkTo(methodOn(SearchController.class).search(searchRequest, new PageRequest(page.getNumber(), page.getSize())))
+                    .linkTo(methodOn(ItemController.class).search(searchRequest, new PageRequest(page.getNumber(), page.getSize())))
                     .toString();
 
             UriTemplate base = new UriTemplate(uri);

@@ -3,5 +3,16 @@ info:
     name: catalog-item-service
     description: Finds metadata and content links about a item
 
+server:
+  port: 0
+  
 zipkin:
     collector-hostname: localhost
+    
+---
+spring:
+  profiles: local
+  
+server: 
+  port: 9082
+    
