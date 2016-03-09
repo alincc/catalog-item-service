@@ -25,3 +25,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://discovery:8761/eureka/
+
+---
+spring:
+  profiles: local
+
+server:
+  port: 9999
