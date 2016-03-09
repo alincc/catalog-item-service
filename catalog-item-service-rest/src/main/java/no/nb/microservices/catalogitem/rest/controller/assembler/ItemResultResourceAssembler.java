@@ -27,21 +27,6 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
             createLinks(item, resource);
         }
 
-        if (ItemUtils.showField(item.getFields(), "mediatypes")) {
-            if (item.getItemResource() != null && !item.getItemResource().getMediaTypes().isEmpty()) {
-                resource.setMediaTypes(item.getItemResource().getMediaTypes());
-            }
-        }
-
-        if (ItemUtils.showField(item.getFields(), "creators")) {
-            if (item.getItemResource() != null && !item.getItemResource().getCreators().isEmpty())
-            resource.setCreators(item.getItemResource().getCreators());
-        }
-
-        if (ItemUtils.showField(item.getFields(), "title")) {
-            resource.setTitle(createTitle(item));
-        }
-
         if (hasRelatedItems(item)) {
         	expand.add("relatedItems");
         }
@@ -70,14 +55,6 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
                 .build());
 
         return resource;
-    }
-
-    private String createTitle(Item item) {
-        if (item.getItemResource() != null) {
-            return item.getItemResource().getTitle();
-        } else {
-            return null;
-        }
     }
 
     private void createLinks(Item item, ItemResource resource) {

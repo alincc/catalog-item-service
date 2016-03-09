@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"docker", "dev"})
+@Profile({"docker", "dev", "local"})
 public class NiConfig {
 
     @Autowired
