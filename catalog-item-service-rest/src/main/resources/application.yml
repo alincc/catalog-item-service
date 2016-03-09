@@ -8,3 +8,11 @@ server:
   
 zipkin:
     collector-hostname: localhost
+    
+---
+spring:
+  profiles: local
+  
+server: 
+  port: 9082
+    
