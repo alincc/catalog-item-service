@@ -1,10 +1,5 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
@@ -12,6 +7,11 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.Location;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class MetadataBuilder {
 
@@ -51,20 +51,13 @@ public final class MetadataBuilder {
         metadata.setStatementOfResponsibility(getNotes(getStatementOfResponsibilityPredicate()));
         metadata.setLanguages(new LanguageBuilder(mods).build());
         metadata.setPageCount(getPageCount());
-        
+        metadata.setMediaTypes(getMediaTypes());
+        metadata.setCreators(getCreators());
+
         StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());
         metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
 
         return metadata;
-    }
-
-    private Integer getPageCount() {
-        if (getItemResource() != null){
-            return getItemResource().getPageCount();
-        }
-        else {
-            return 0;
-        }
     }
 
     private ItemResource getItemResource() {
@@ -77,19 +70,6 @@ public final class MetadataBuilder {
 
     private Location getLocation() {
         return getItemResource().getLocation();
-    }
-
-    private String getFirstMediatype() {
-        List<String> mediaTypes = getMediaTypes();
-        if (mediaTypes != null && !mediaTypes.isEmpty()) {
-            return mediaTypes.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    private List<String> getMediaTypes() {
-        return getItemResource().getMediaTypes();
     }
 
     private String getSummary() {
@@ -131,9 +111,37 @@ public final class MetadataBuilder {
     private Predicate<? super Note> getNotesPredicate() {
         return q -> q.getType() == null;
     }
-    
+
     private Predicate<? super Note> getStatementOfResponsibilityPredicate() {
         return q -> "statement of responsibility".equalsIgnoreCase(q.getType());
     }
 
+    private Integer getPageCount() {
+        if (getItemResource() != null){
+            return getItemResource().getPageCount();
+        }
+        else {
+            return 0;
+        }
+    }
+
+    private List<String> getMediaTypes() {
+        return getItemResource().getMediaTypes();
+    }
+
+    private List<String> getCreators() {
+        if (getItemResource() != null) {
+            return getItemResource().getCreators();
+        }
+        return null;
+    }
+
+    private String getFirstMediatype() {
+        List<String> mediaTypes = getMediaTypes();
+        if (mediaTypes != null && !mediaTypes.isEmpty()) {
+            return mediaTypes.get(0);
+        } else {
+            return null;
+        }
+    }
 }

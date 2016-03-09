@@ -3,13 +3,9 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
 import no.nb.microservices.catalogmetadata.model.mods.v3.*;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogsearchindex.SearchResource;
 import no.nb.microservices.catalogsearchindex.TestItemResource;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -152,6 +148,8 @@ public class ItemResultResourceAssemblerTest {
         mods.setTitleInfos(Arrays.asList(titleInfo, alternativeTitleInfo));
         no.nb.microservices.catalogsearchindex.ItemResource searchIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
         searchIndexResource.setTitle(titleInfo.getTitle() + " ct");
+        searchIndexResource.setMediaTypes(Arrays.asList("Bøker"));
+        searchIndexResource.setCreators(Arrays.asList("Ola"));
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
                 .withItemResource(searchIndexResource)
@@ -161,22 +159,10 @@ public class ItemResultResourceAssemblerTest {
         ItemResource itemResource = resource.toResource(item );
         
         assertNotNull("Should not be null", itemResource);
-        assertTrue("Title shoud be \"Supersonic\"", !itemResource.getMetadata().getTitleInfos().isEmpty());
+        assertThat("Title should be \"Supersonic\"", itemResource.getMetadata().getTitleInfos().get(0).getTitle(), is("Supersonic"));
+        assertThat("Mediatype should be \"Bøker\"", itemResource.getMetadata().getMediaTypes().get(0), is("Bøker"));
+        assertThat("Creator should be \"Ola\"", itemResource.getMetadata().getCreators().get(0), is("Ola"));
         
-    }
-    
-    @Test
-    public void testTitle() {
-        no.nb.microservices.catalogsearchindex.ItemResource searchIndexResource = new no.nb.microservices.catalogsearchindex.ItemResource();
-        searchIndexResource.setTitle("Supersonic");
-
-        Item item = new Item.ItemBuilder("id1")
-                .withItemResource(searchIndexResource)
-                .build();
-        
-        ItemResource itemResource = resource.toResource(item);
-        
-        assertEquals("Supersonic", itemResource.getTitle());
     }
     
     @Test

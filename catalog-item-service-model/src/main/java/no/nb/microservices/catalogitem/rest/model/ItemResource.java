@@ -1,14 +1,12 @@
 package no.nb.microservices.catalogitem.rest.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.hateoas.ResourceSupport;
-
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({"expand", "id", "title", "mediatypes", "creators", "_links", "accessInfo", "metadata" })
+@JsonPropertyOrder({"expand", "id", "title", "_links", "accessInfo", "metadata" })
 public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
@@ -19,8 +17,6 @@ public class ItemResource extends ResourceSupport {
     private AccessInfo accessInfo;
     private RelatedItemResource relatedItems;
     private JsonNode explain;
-    private List<String> mediaTypes;
-    private List<String> creators;
 
     @JsonCreator
     public ItemResource() {
@@ -82,21 +78,5 @@ public class ItemResource extends ResourceSupport {
 
     public void setExplain(JsonNode explain) {
         this.explain = explain;
-    }
-
-    public List<String> getMediaTypes() {
-        return mediaTypes;
-    }
-
-    public void setMediaTypes(List<String> mediatypes) {
-        this.mediaTypes = mediatypes;
-    }
-
-    public List<String> getCreators() {
-        return creators;
-    }
-
-    public void setCreators(List<String> creators) {
-        this.creators = creators;
     }
 }

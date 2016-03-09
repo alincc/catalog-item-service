@@ -26,6 +26,8 @@ public class Metadata {
     private List<String> languages;
     private List<StreamingInfo> streamingInfo;
     private Integer pageCount;
+    private List<String> mediaTypes;
+    private List<String> creators;
 
     public List<TitleInfo> getTitleInfos() {
         if (titleInfos == null) {
@@ -167,4 +169,19 @@ public class Metadata {
         this.pageCount = pageCount;
     }
 
+    public List<String> getMediaTypes() {
+        return mediaTypes;
+    }
+
+    public void setMediaTypes(List<String> mediaTypes) {
+        this.mediaTypes = mediaTypes;
+    }
+
+    public List<String> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(List<String> creators) {
+        this.creators = creators;
+    }
 }
