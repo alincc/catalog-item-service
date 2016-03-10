@@ -4,7 +4,14 @@ info:
     description: Finds metadata and content links about a item
 
 server:
-  port: 8004
+  port: 0
 
 zipkin:
     collector-hostname: localhost
+
+---
+spring:
+  profiles: local
+
+server:
+  port: 9082
