@@ -2,14 +2,12 @@ spring:
   application:
     name: catalog-item-service
 
----
 spring:
-  profiles: local
   cloud:
     config:
+      failFast: false
       discovery:
-        enabled: false
-
+        enabled: true
 
 ---
 spring:
