@@ -8,7 +8,6 @@ import no.nb.microservices.catalogitem.core.metadata.repository.MetadataReposito
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Future;
@@ -24,7 +23,6 @@ public class MetadataServiceImpl  implements MetadataService{
         this.metadataRepository = metadataRepository;
     }
 
-    @Async
     @Override
     @HystrixCommand(fallbackMethod = "getModsFallback")
     public Future<Mods> getModsById(TracableId id) {
@@ -38,7 +36,7 @@ public class MetadataServiceImpl  implements MetadataService{
         };
     }
 
-    public Mods getModsFallback(TracableId id) {
+    private Mods getModsFallback(TracableId id) {
         Trace.continueSpan(id.getSpan());
         return new Mods();
     }
