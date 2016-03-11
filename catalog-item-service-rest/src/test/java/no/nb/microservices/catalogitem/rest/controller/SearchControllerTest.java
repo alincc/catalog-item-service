@@ -6,11 +6,9 @@ import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
-import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
-import no.nb.microservices.catalogsearchindex.AggregationResource;
-import no.nb.microservices.catalogsearchindex.NBSearchType;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,10 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -75,11 +69,11 @@ public class SearchControllerTest {
 
     private SuperSearchAggregated getSuperSearchAggregated(SearchRequest searchRequest) {
         Page<Item> pageBooks = new PageImpl<>(Arrays.asList(
-                new Item.ItemBuilder("id1").build(),
-                new Item.ItemBuilder("id2").build(),
-                new Item.ItemBuilder("id3").build(),
-                new Item.ItemBuilder("id4").build(),
-                new Item.ItemBuilder("id5").build()), new PageRequest(0, 5), 18);
+                new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build(),
+                new Item.ItemBuilder("id2").withItemResource(TestItemResource.aDefaultBook().build()).build(),
+                new Item.ItemBuilder("id3").withItemResource(TestItemResource.aDefaultBook().build()).build(),
+                new Item.ItemBuilder("id4").withItemResource(TestItemResource.aDefaultBook().build()).build(),
+                new Item.ItemBuilder("id5").withItemResource(TestItemResource.aDefaultBook().build()).build()), new PageRequest(0, 5), 18);
 
         SearchAggregated searchAggregated = new SearchAggregated(pageBooks, Collections.emptyList(), null, searchRequest);
 

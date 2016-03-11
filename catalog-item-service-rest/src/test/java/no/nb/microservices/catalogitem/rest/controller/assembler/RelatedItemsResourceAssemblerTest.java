@@ -4,6 +4,7 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.item.model.RelatedItems;
 import no.nb.microservices.catalogitem.rest.model.RelatedItemResource;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +40,12 @@ public class RelatedItemsResourceAssemblerTest {
         
         Item host = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicAlbum().build())
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
         Item item = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicTrack().build())
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .withRelatedItems(relatedItems)
                 .build();
 
@@ -51,5 +54,4 @@ public class RelatedItemsResourceAssemblerTest {
         assertThat(relatedItemsResource.getId().getHref(), is("http://localhost/catalog/v1/items/id1/relatedItems"));
         
     }
-
 }

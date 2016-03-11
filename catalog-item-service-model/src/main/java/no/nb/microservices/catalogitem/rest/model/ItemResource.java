@@ -6,17 +6,19 @@ import org.springframework.hateoas.ResourceSupport;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({"expand", "id", "title", "_links", "accessInfo", "metadata" })
+@JsonPropertyOrder({"expand", "id", "urn", "title", "dateIssued", "_links", "accessInfo", "metadata" })
 public class ItemResource extends ResourceSupport {
     
     @JsonProperty(value="id")
     private String id;
+    private String urn;
     private String title;
     private String expand;
     private Metadata metadata;
     private AccessInfo accessInfo;
     private RelatedItemResource relatedItems;
     private JsonNode explain;
+    private String dateIssued;
 
     @JsonCreator
     public ItemResource() {
@@ -30,6 +32,14 @@ public class ItemResource extends ResourceSupport {
     
     public String geItemtId() {
         return id;
+    }
+
+    public String getUrn() {
+        return urn;
+    }
+
+    public void setUrn(String urn) {
+        this.urn = urn;
     }
 
     public String getTitle() {
@@ -78,5 +88,13 @@ public class ItemResource extends ResourceSupport {
 
     public void setExplain(JsonNode explain) {
         this.explain = explain;
+    }
+
+    public String getDateIssued() {
+        return dateIssued;
+    }
+
+    public void setDateIssued(String dateIssued) {
+        this.dateIssued = dateIssued;
     }
 }

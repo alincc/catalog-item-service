@@ -1,34 +1,18 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogmetadata.model.mods.v3.*;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import org.junit.Test;
-
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogmetadata.model.fields.FieldResource;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Language;
-import no.nb.microservices.catalogmetadata.model.mods.v3.LanguageTerm;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
-import no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Place;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Subject;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Topic;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogsearchindex.SearchResource;
-import no.nb.microservices.catalogsearchindex.TestItemResource;
+import static org.junit.Assert.*;
 
 public class MetadataBuilderTest {
 
@@ -60,6 +44,7 @@ public class MetadataBuilderTest {
         
         Metadata metadata = new MetadataBuilder()
                 .withItem(item)
+                .withExpand()
                 .build();
 
         assertTrue("Should have titles", !metadata.getTitleInfos().isEmpty());
@@ -85,6 +70,7 @@ public class MetadataBuilderTest {
         
         Metadata metadata = new MetadataBuilder()
                 .withItem(item)
+                .withExpand()
                 .build();
         
         assertNotNull("Should have a streamingInfo", metadata.getStreamingInfo());
@@ -185,6 +171,4 @@ public class MetadataBuilderTest {
         topic.setValue("Ski");
         return Arrays.asList(topic);
     }
-    
-
 }

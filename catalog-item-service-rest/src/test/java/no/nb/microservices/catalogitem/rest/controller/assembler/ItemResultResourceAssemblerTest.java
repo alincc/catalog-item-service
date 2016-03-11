@@ -40,7 +40,7 @@ public class ItemResultResourceAssemblerTest {
     
     @Test
     public void testSelfLink() {
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertNotNull("Links should not be null", itemResource.getLinks());
         assertEquals("Should have a self-referential link element", "self", itemResource.getId().getRel());
@@ -48,28 +48,28 @@ public class ItemResultResourceAssemblerTest {
 
     @Test
     public void testModsLink() {
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a mods-referential link element", "mods", itemResource.getLink("mods").getRel());
     }
 
     @Test
     public void testPresentationLink() {
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a presentation-referential link element", "presentation", itemResource.getLink("presentation").getRel());
     }
 
     @Test
     public void testEnwRefererLink() {
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a enw-referential link element", "enw", itemResource.getLink("enw").getRel());
     }
 
     @Test
     public void testRisRefererLink() {
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a ris-referential link element", "ris", itemResource.getLink("ris").getRel());
     }
@@ -77,7 +77,7 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testWikiRefererLink() {
         ItemResultResourceAssembler resource = new ItemResultResourceAssembler();
-        Item item = new Item.ItemBuilder("id1").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build();
         ItemResource itemResource = resource.toResource(item );
         assertEquals("Should have a wiki-referential link element", "wiki", itemResource.getLink("wiki").getRel());
     }
@@ -111,10 +111,12 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testRelatedItemsLink() {
         Item host = new Item.ItemBuilder("id1")
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .mods(TestMods.aDefaultMusicAlbum().build())
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
         Item item = new Item.ItemBuilder("id1")
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .mods(TestMods.aDefaultMusicTrack().build())
                 .withRelatedItems(relatedItems)
                 .build();
@@ -129,6 +131,7 @@ public class ItemResultResourceAssemblerTest {
     public void testNoRelatedItemsLink() {
         Item item = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultBookMods().build())
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .build();
         
         ItemResource itemResource = resource.toResource(item );
@@ -168,15 +171,17 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testHosts() {
         Item host = new Item.ItemBuilder("id1")
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .mods(TestMods.aDefaultMusicAlbum().build())
                 .build();
         RelatedItems relatedItems = new RelatedItems(null, Arrays.asList(host));
         Item item = new Item.ItemBuilder("id1")
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .mods(TestMods.aDefaultMusicTrack().build())
                 .withRelatedItems(relatedItems)
                 .build();
 
-        ItemResource itemResource = resource.toResource(item );
+        ItemResource itemResource = resource.toResource(item);
         
         assertTrue("Should have hosts", !itemResource.getRelatedItems().getHosts().isEmpty());
     }
@@ -184,11 +189,13 @@ public class ItemResultResourceAssemblerTest {
     @Test
     public void testConstitutent() {
         Item track = new Item.ItemBuilder("id1")
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .mods(TestMods.aDefaultMusicTrack().build())
                 .build();
         RelatedItems relatedItems = new RelatedItems(Arrays.asList(track), null);
         Item item = new Item.ItemBuilder("id1")
                 .mods(TestMods.aDefaultMusicAlbum().build())
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .withRelatedItems(relatedItems)
                 .build();
 
@@ -210,6 +217,7 @@ public class ItemResultResourceAssemblerTest {
 
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .withExpand("metadata")
                 .build();
         ItemResource itemResource = resource.toResource(item);
@@ -229,7 +237,7 @@ public class ItemResultResourceAssemblerTest {
         recordInfo.setRecordIdentifier(recordIdentifier);
         mods.setRecordInfo(recordInfo);
 
-        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getRecordInfo());
@@ -246,7 +254,7 @@ public class ItemResultResourceAssemblerTest {
         originInfo.setPlace(place);
         mods.setOriginInfo(originInfo);
 
-        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getGeographic());
@@ -283,6 +291,7 @@ public class ItemResultResourceAssemblerTest {
         
         Item item = new Item.ItemBuilder("id1")
                 .mods(mods)
+                .withItemResource(TestItemResource.aDefaultBook().build())
                 .withExpand("metadata")
                 .build();
         ItemResource itemResource = resource.toResource(item);
@@ -310,7 +319,7 @@ public class ItemResultResourceAssemblerTest {
         mods.setNames(Arrays.asList(
                 name,
                 createName("Nordland Teater", null, Arrays.asList(roleTerm), "corporate")));
-        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource);
@@ -329,7 +338,7 @@ public class ItemResultResourceAssemblerTest {
         classifications.add(createUdcClassification("456[S]"));
         mods.setClassifications(classifications);
         
-        Item item = new Item.ItemBuilder("id1").mods(mods).withExpand("metadata").build();
+        Item item = new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).mods(mods).withExpand("metadata").build();
         ItemResource itemResource = resource.toResource(item);
 
         assertNotNull("Should not be null", itemResource.getMetadata().getClassification());

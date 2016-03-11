@@ -8,6 +8,7 @@ import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,9 +86,9 @@ public class SearchResultResourceAssemblerTest {
         SearchResultResourceAssembler searchResultResourceAssembler = new SearchResultResourceAssembler();
 
         ArrayList<Item> items = new ArrayList<>();
-        items.add(new Item.ItemBuilder("id1").build());
-        items.add(new Item.ItemBuilder("id2").build());
-        items.add(new Item.ItemBuilder("id3").build());
+        items.add(new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build());
+        items.add(new Item.ItemBuilder("id2").withItemResource(TestItemResource.aDefaultBook().build()).build());
+        items.add(new Item.ItemBuilder("id3").withItemResource(TestItemResource.aDefaultBook().build()).build());
 
         Page<Item> page = new PageImpl<>(items, new PageRequest(0, 2) , 1000);
         SearchAggregated searchAggregated = new SearchAggregated(page, null, null, searchRequest);
@@ -134,8 +135,8 @@ public class SearchResultResourceAssemblerTest {
         SearchResultResourceAssembler searchResultResourceAssembler = new SearchResultResourceAssembler();
 
         ArrayList<Item> items = new ArrayList<>();
-        items.add(new Item.ItemBuilder("id1").build());
-        items.add(new Item.ItemBuilder("id2").build());
+        items.add(new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build());
+        items.add(new Item.ItemBuilder("id2").withItemResource(TestItemResource.aDefaultBook().build()).build());
 
         Page<Item> page = new PageImpl<>(items, new PageRequest(0, 10) , 1000);
         SearchAggregated searchAggregated = new SearchAggregated(page, null, null, searchRequest);
@@ -186,7 +187,7 @@ public class SearchResultResourceAssemblerTest {
     public void whenSearchAggregatedHasContentSearchesThenItShouldBeIncludedInResource() throws Exception {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQ("b");
-        Page<Item> page = new PageImpl<>(Arrays.asList(new Item.ItemBuilder("id1").build()), new PageRequest(0, 1), 1);
+        Page<Item> page = new PageImpl<>(Arrays.asList(new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build()), new PageRequest(0, 1), 1);
         SearchAggregated searchAggregated = new SearchAggregated(page, Collections.emptyList(), null, searchRequest);
         List<ContentSearch> contentSearches = Arrays.asList(new ContentSearch("id1", "a <em>b</em> c "));
         searchAggregated.setContentSearches(contentSearches);

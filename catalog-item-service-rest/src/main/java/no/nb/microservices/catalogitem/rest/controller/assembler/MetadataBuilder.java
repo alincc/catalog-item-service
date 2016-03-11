@@ -2,12 +2,14 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.Location;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,18 +19,41 @@ public final class MetadataBuilder {
 
     private Mods mods;
     private ItemResource itemResource;
-    
+    private boolean simplified;
+
     public MetadataBuilder withItem(Item item) {
         this.mods = item.getMods();
         this.itemResource = item.getItemResource();
+        this.simplified = true;
+        return this;
+    }
+
+    public MetadataBuilder withExpand() {
+        this.simplified = false;
         return this;
     }
     
     public Metadata build() {
+        if (this.simplified) {
+            return buildSimplified();
+        }
+        return buildFull();
+    }
+
+    public Metadata buildSimplified() {
+        Metadata metadata = new Metadata();
+        metadata.setTitleInfos(createTitleInfos());
+        metadata.setMediaTypes(getMediaTypes());
+        metadata.setCreators(getCreators());
+
+        return metadata;
+    }
+
+    public Metadata buildFull() {
         Metadata metadata = new Metadata();
         metadata.setTitleInfos(new TitleInfosBuilder()
-            .withTitleInfos(mods.getTitleInfos())
-            .build());
+                .withTitleInfos(mods.getTitleInfos())
+                .build());
 
         metadata.setPeople(new NamesBuilder()
                 .withNames(mods.getNames())
@@ -58,6 +83,15 @@ public final class MetadataBuilder {
         metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
 
         return metadata;
+    }
+
+    public List<TitleInfo> createTitleInfos() {
+        TitleInfo titleInfo = new TitleInfo();
+        titleInfo.setTitle(itemResource.getTitle());
+        List<TitleInfo> titleInfos = new ArrayList<>();
+        titleInfos.add(titleInfo);
+
+        return titleInfos;
     }
 
     private ItemResource getItemResource() {
