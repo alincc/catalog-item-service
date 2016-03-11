@@ -33,9 +33,6 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
 
         resource.setExpand(expand.toString());
 
-        resource.setUrn(getUrn(item));
-        resource.setDateIssued(getDateIssued(item));
-
         if (ItemUtils.showField(item.getFields(), "accessInfo")) {
             resource.setAccessInfo(new AccessInfoBuilder()
                     .setItemResource(item.getItemResource())
@@ -105,20 +102,6 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
     private boolean hasRelatedItemIdentifier(RelatedItem r) {
         return (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null)
                    || r.getIdentifier() != null;
-    }
-
-    private String getUrn(Item item) {
-        if (item != null && item.getItemResource() != null) {
-            return item.getItemResource().getUrn();
-        }
-        return null;
-    }
-
-    private String getDateIssued(Item item) {
-        if (item != null && item.getItemResource() != null) {
-            return item.getItemResource().getDateIssued();
-        }
-        return null;
     }
 
     private Link createSelfLink(Item item) {

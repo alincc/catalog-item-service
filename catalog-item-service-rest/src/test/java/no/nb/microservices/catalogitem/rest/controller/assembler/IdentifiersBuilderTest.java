@@ -1,17 +1,14 @@
 package no.nb.microservices.catalogitem.rest.controller.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
-import org.junit.Test;
-
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import org.junit.Test;
 
 import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 public class IdentifiersBuilderTest {
 
@@ -29,6 +26,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(Arrays.asList(sesamid))
+                .withExpand()
                 .build();
 
         assertNull("urn should be empty not null", identifiers.getUrn());
@@ -40,6 +38,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("URN should not be empty", !identifiers.getUrn().isEmpty());
@@ -52,6 +51,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("sesamId should not be empty", !identifiers.getSesamId().isEmpty());
@@ -64,6 +64,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("oaiId should not be empty", !identifiers.getOaiId().isEmpty());
@@ -77,6 +78,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("isbn13 should not be empty", !identifiers.getIsbn13().isEmpty());
@@ -89,6 +91,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("isbn10 should not be empty", !identifiers.getIsbn10().isEmpty());
@@ -102,6 +105,7 @@ public class IdentifiersBuilderTest {
 
         Identifiers identifiers = new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build();
 
         assertTrue("isbn10 should not be empty", !identifiers.getIssn().isEmpty());

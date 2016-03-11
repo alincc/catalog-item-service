@@ -14,7 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public final class MetadataBuilder {
-
     private Mods mods;
     private ItemResource itemResource;
     private boolean simplified;
@@ -43,7 +42,8 @@ public final class MetadataBuilder {
         metadata.setTitle(getTitle());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setCreators(getCreators());
-
+        metadata.setOriginInfo(new OriginInfoBuilder().withItemResource(getItemResource()).build());
+        metadata.setIdentifiers(new IdentifiersBuilder().withItemResource(itemResource).build());
         return metadata;
     }
 
@@ -60,11 +60,12 @@ public final class MetadataBuilder {
         metadata.setCorporates(new NamesBuilder()
                 .withNames(mods.getNames())
                 .buildCorporatesList());
-        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).build());
+        metadata.setOriginInfo(new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).withExpand().build());
         metadata.setGeographic(new GeographicBuilder().withOriginInfo(mods.getOriginInfo()).withLocation(getLocation()).build());
         metadata.setClassification(new ClassificationBuilder().withClassifications(mods.getClassifications()).build());
         metadata.setIdentifiers(new IdentifiersBuilder()
                 .withIdentifiers(mods.getIdentifiers())
+                .withExpand()
                 .build());
         metadata.setRecordInfo(new RecordInfoBuilder().withRecordInfo(mods.getRecordInfo()).build());
         metadata.setSubject(new SubjectBuilder().withSubjects(mods.getSubjects()).build());
@@ -84,19 +85,19 @@ public final class MetadataBuilder {
         return metadata;
     }
 
-    public String getTitle() {
-        if (itemResource != null) {
-            return itemResource.getTitle();
-        }
-        return null;
-    }
-
     private ItemResource getItemResource() {
         if (itemResource == null) {
             return new ItemResource();
         } else {
             return itemResource;
         }
+    }
+
+    public String getTitle() {
+        if (itemResource != null) {
+            return itemResource.getTitle();
+        }
+        return null;
     }
 
     private Location getLocation() {

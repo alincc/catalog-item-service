@@ -2,6 +2,7 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.rest.model.Identifiers;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Identifier;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.ArrayList;
@@ -10,21 +11,46 @@ import java.util.stream.Collectors;
 
 
 public class IdentifiersBuilder {
+    private ItemResource itemResource;
     private List<Identifier> identifiers;
+    private boolean simplified = true;
 
     public IdentifiersBuilder withIdentifiers(final List<Identifier> identifiers) {
         this.identifiers = identifiers;
         return this;
     }
 
+    public IdentifiersBuilder withItemResource(final ItemResource itemResource) {
+        this.itemResource = itemResource;
+        return this;
+    }
+
+    public IdentifiersBuilder withExpand() {
+        this.simplified = false;
+        return this;
+    }
+
     public Identifiers build() {
+        if (this.simplified) {
+            return buildSimplified();
+        }
         if (identifiers == null) {
             return null;
         }
-        
+        return buildFull();
+    }
+
+    public Identifiers buildSimplified() {
+        Identifiers ids = new Identifiers();
+        ids.setUrn(getUrn());
+
+        return ids.isEmpty() ? null : ids;
+    }
+
+    public Identifiers buildFull() {
         Identifiers ids = new Identifiers(getIsbn10(), getIsbn13(), getMultipleIdentifierByType("issn"),
                 getIdentifierByType("sesamid"), getIdentifierByType("oaiid"), getIdentifierByType("urn"));
-        
+
         return ids.isEmpty() ? null : ids;
     }
 
@@ -46,6 +72,13 @@ public class IdentifiersBuilder {
             }
         }
         return identifierByType;
+    }
+
+    private String getUrn() {
+        if (itemResource != null) {
+            return itemResource.getUrn();
+        }
+        return null;
     }
 
     private List<String> getMultipleIdentifierByType(String type) {

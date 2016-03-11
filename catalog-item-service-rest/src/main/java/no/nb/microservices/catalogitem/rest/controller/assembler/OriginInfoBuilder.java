@@ -12,6 +12,7 @@ public class OriginInfoBuilder {
 
     private no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo;
     private no.nb.microservices.catalogsearchindex.ItemResource itemResource;
+    private boolean simplified = true;
     
     public OriginInfoBuilder withOriginInfo(final no.nb.microservices.catalogmetadata.model.mods.v3.OriginInfo originInfo) {
         this.originInfo = originInfo;
@@ -23,13 +24,31 @@ public class OriginInfoBuilder {
         return this;
     }
 
+    public OriginInfoBuilder withExpand() {
+        this.simplified = false;
+        return this;
+    }
+
     public OriginInfo build() {
+        if (this.simplified) {
+            return buildSimplified();
+        }
+
         if (originInfo == null) {
             return null;
         }
+        return buildFull();
+    }
 
+    public OriginInfo buildSimplified() {
+        OriginInfo originInfo = new OriginInfo();
+        originInfo.setIssued(getDateIssued());
+        return originInfo.isEmpty() ? null : originInfo;
+    }
+
+    public OriginInfo buildFull() {
         OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
-                    getDateCreated(), getDateCaptured(), getDateModified(), getEdition(), getFirstIndexTime());
+                getDateCreated(), getDateCaptured(), getDateModified(), getEdition(), getFirstIndexTime());
         return originInfo.isEmpty() ? null : originInfo;
     }
     
@@ -70,40 +89,6 @@ public class OriginInfoBuilder {
         }
         return null;
     }
-    private String getDateIssued() {
-        String dateIssued = null;
-        dateIssued = getEncodedDateValue(d -> "w3cdtf".equals(d.getEncoding()));
-        if (dateIssued == null) {
-            dateIssued = getEncodedDateValue(d -> "marc".equals(d.getEncoding()));
-        }
-        if (dateIssued == null) {
-            dateIssued = getNotEncodedDateValue();
-        }
-        return dateIssued;
-    }
-
-    private String getEncodedDateValue(Predicate<? super DateMods> predicate) {
-        String dateIssued = null;
-        List<DateMods> dateIssueds = originInfo.getDateIssuedList();
-        if (dateIssueds != null) {
-            Optional<DateMods> date = dateIssueds.stream()
-                .filter(predicate)
-                .findFirst();
-            if (date.isPresent() ) {
-                dateIssued = date.get().getValue();
-            }
-        }
-        
-        if (isValidDate(dateIssued)) {
-            return dateIssued;
-        } else {
-            return null;
-        }
-    }
-    
-    private String getNotEncodedDateValue() {
-         return getEncodedDateValue(d -> d != null && d.getPoint() == null);
-    }
 
     private boolean isValidDate(String date) {
         if (date != null) {
@@ -129,5 +114,46 @@ public class OriginInfoBuilder {
             return itemResource.getFirstIndexTime();
         }
         return null;
+    }
+
+    private String getDateIssued() {
+        String dateIssued = null;
+        if (itemResource == null) {
+            dateIssued = getEncodedDateValue(d -> "w3cdtf".equals(d.getEncoding()));
+            if (dateIssued == null) {
+                dateIssued = getEncodedDateValue(d -> "marc".equals(d.getEncoding()));
+            }
+            if (dateIssued == null) {
+                dateIssued = getNotEncodedDateValue();
+            }
+        } else {
+            if (isValidDate(itemResource.getDateIssued())) {
+                dateIssued = itemResource.getDateIssued();
+            }
+        }
+        return dateIssued;
+    }
+
+    private String getEncodedDateValue(Predicate<? super DateMods> predicate) {
+        String dateIssued = null;
+        List<DateMods> dateIssueds = originInfo.getDateIssuedList();
+        if (dateIssueds != null) {
+            Optional<DateMods> date = dateIssueds.stream()
+                    .filter(predicate)
+                    .findFirst();
+            if (date.isPresent() ) {
+                dateIssued = date.get().getValue();
+            }
+        }
+
+        if (isValidDate(dateIssued)) {
+            return dateIssued;
+        } else {
+            return null;
+        }
+    }
+
+    private String getNotEncodedDateValue() {
+        return getEncodedDateValue(d -> d != null && d.getPoint() == null);
     }
 }

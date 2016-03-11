@@ -18,7 +18,7 @@ public class OriginInfoBuilderTest {
 
     @Test
     public void whenNoOriginInfoItShouldReturnNull() {
-        OriginInfo originInfo = new OriginInfoBuilder().withOriginInfo(null).build();
+        OriginInfo originInfo = new OriginInfoBuilder().withOriginInfo(null).withExpand().build();
         assertNull("originInfo should be null", originInfo);
     }
 
@@ -49,7 +49,7 @@ public class OriginInfoBuilderTest {
         ItemResource itemResource = new ItemResource();
         itemResource.setFirstIndexTime("2015-05-05");
 
-        OriginInfo build = new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(itemResource).build();
+        OriginInfo build = new OriginInfoBuilder().withOriginInfo(mods.getOriginInfo()).withItemResource(getItemResource()).withExpand().build();
 
         assertEquals("1969-04-01", build.getCaptured());
         assertEquals("1969-04-01", build.getCreated());
@@ -83,7 +83,7 @@ public class OriginInfoBuilderTest {
 
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
-                .withItemResource(getItemResource())
+                .withExpand()
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -109,7 +109,7 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
-                .withItemResource(getItemResource())
+                .withExpand()
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -133,7 +133,7 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
-                .withItemResource(getItemResource())
+                .withExpand()
                 .build();        
         
         assertEquals("2008", originInfo.getIssued());
@@ -152,7 +152,7 @@ public class OriginInfoBuilderTest {
         
         OriginInfo originInfo = new OriginInfoBuilder()
                 .withOriginInfo(mods.getOriginInfo())
-                .withItemResource(getItemResource())
+                .withExpand()
                 .build();        
         
         assertEquals("2009", originInfo.getIssued());
@@ -161,6 +161,7 @@ public class OriginInfoBuilderTest {
     private ItemResource getItemResource() {
         ItemResource itemResource = new ItemResource();
         itemResource.setFirstIndexTime("2015-05-05");
+        itemResource.setDateIssued("1969-04-01");
         return itemResource;
     }
 }
