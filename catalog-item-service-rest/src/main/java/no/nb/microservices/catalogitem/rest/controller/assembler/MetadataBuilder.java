@@ -2,14 +2,12 @@ package no.nb.microservices.catalogitem.rest.controller.assembler;
 
 import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogitem.rest.model.TitleInfo;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Abstract;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Note;
 import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.Location;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -42,7 +40,7 @@ public final class MetadataBuilder {
 
     public Metadata buildSimplified() {
         Metadata metadata = new Metadata();
-        metadata.setTitleInfos(createTitleInfos());
+        metadata.setTitle(getTitle());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setCreators(getCreators());
 
@@ -51,6 +49,7 @@ public final class MetadataBuilder {
 
     public Metadata buildFull() {
         Metadata metadata = new Metadata();
+        metadata.setTitle(getTitle());
         metadata.setTitleInfos(new TitleInfosBuilder()
                 .withTitleInfos(mods.getTitleInfos())
                 .build());
@@ -85,13 +84,11 @@ public final class MetadataBuilder {
         return metadata;
     }
 
-    public List<TitleInfo> createTitleInfos() {
-        TitleInfo titleInfo = new TitleInfo();
-        titleInfo.setTitle(itemResource.getTitle());
-        List<TitleInfo> titleInfos = new ArrayList<>();
-        titleInfos.add(titleInfo);
-
-        return titleInfos;
+    public String getTitle() {
+        if (itemResource != null) {
+            return itemResource.getTitle();
+        }
+        return null;
     }
 
     private ItemResource getItemResource() {

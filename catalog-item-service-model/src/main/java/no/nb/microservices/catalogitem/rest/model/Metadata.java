@@ -9,6 +9,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Metadata {
+    private String title;
     private List<TitleInfo> titleInfos;
     private String typeOfResource;
     private String genre;
@@ -28,6 +29,14 @@ public class Metadata {
     private Integer pageCount;
     private List<String> mediaTypes;
     private List<String> creators;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public List<TitleInfo> getTitleInfos() {
         if (titleInfos == null) {
