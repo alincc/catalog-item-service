@@ -13,6 +13,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 
 import no.nb.htrace.annotation.EnableTracing;
+import no.nb.metrics.annotation.EnableMetrics;
 
 @SpringBootApplication
 @ComponentScan
@@ -23,6 +24,7 @@ import no.nb.htrace.annotation.EnableTracing;
 @EnableCircuitBreaker
 @RefreshScope
 @EnableTracing
+@EnableMetrics
 @EnableHypermediaSupport(type= {HypermediaType.HAL})
 public class Application {
 
