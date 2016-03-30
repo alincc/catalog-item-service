@@ -3,7 +3,7 @@ package no.nb.microservices.catalogitem.core.item.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.concurrent.Future;
@@ -86,7 +86,34 @@ public class ItemServiceImplTest {
         assertNotNull("Item should have preceding in relatedItems", item.getRelatedItems().getPreceding());
         assertNotNull("Item should have succeeding in relatedItems", item.getRelatedItems().getSucceding());
     }
-    
+
+    @Test
+    public void whenSearchReturnItemsFromOutsideOfNbThenGetModsToGetThumbnailUrl() throws Exception {
+        ItemResource resource = new ItemResource();
+        resource.setContentClasses(Arrays.asList("public", "jpeg"));
+        resource.setMediaTypes(Arrays.asList("bilder"));
+        Mods mods = TestMods.aDefaultMods().build();
+        when(metadataService.getModsById(anyObject())).thenReturn(new AsyncResult<>(mods));
+        when(securityService.hasAccess(anyObject())).thenReturn(new AsyncResult<>(true));
+
+        itemService.getItemWithResource(resource, null, null, null);
+
+        verify(metadataService, times(1)).getModsById(anyObject());
+        verifyNoMoreInteractions(metadataService);
+    }
+
+    @Test
+    public void whenSearchReturnItemsFromInsideOfNbThenDoNotGetModsToGetThumbnailUrl() throws Exception {
+        ItemResource resource = new ItemResource();
+        resource.setContentClasses(Arrays.asList("public", "jp2"));
+        resource.setMediaTypes(Arrays.asList("bilder"));
+        when(securityService.hasAccess(anyObject())).thenReturn(new AsyncResult<>(true));
+
+        itemService.getItemWithResource(resource, null, null, null);
+
+        verifyNoMoreInteractions(metadataService);
+    }
+
     private void mockRequest() {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/catalog/v1/search?q=Junit");
         String ip = "123.45.123.123";

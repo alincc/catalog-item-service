@@ -13,16 +13,44 @@
    "_embedded":{
       "items":[  
          {  
-            "itemId":"id1"
+            "itemId":"id1",
+            "contentClasses":[
+               "public",
+               "jp2"
+            ],
+            "mediaTypes":[
+               "Aviser"
+            ]
          },
          {
-            "itemId":"id2"
+            "itemId":"id2",
+           "contentClasses":[
+             "public",
+             "jp2"
+           ],
+           "mediaTypes":[
+             "Aviser"
+           ]
          },
          {
-            "itemId":"id3"
+            "itemId":"id3",
+           "contentClasses":[
+             "public",
+             "jp2"
+           ],
+           "mediaTypes":[
+             "Aviser"
+           ]
          }
          ,{
-            "itemId":"id4"
+            "itemId":"id4",
+          "contentClasses":[
+            "public",
+            "jp2"
+          ],
+          "mediaTypes":[
+            "Aviser"
+          ]
          }
       ]
    }

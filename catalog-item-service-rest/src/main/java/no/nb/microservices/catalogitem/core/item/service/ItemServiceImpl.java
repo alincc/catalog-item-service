@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import no.nb.microservices.catalogitem.rest.controller.assembler.NoStreamableStrategy;
+import no.nb.microservices.catalogitem.rest.controller.assembler.StreamingInfoFactory;
+import no.nb.microservices.catalogitem.rest.controller.assembler.StreamingInfoStrategy;
 import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
@@ -64,9 +67,8 @@ public class ItemServiceImpl implements ItemService {
 
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), resource.getItemId(), securityInfo);
-
             Future<Mods> mods = null;
-            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems")) {
+            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems") || isOutsideOfNb(resource)) {
                 mods = metadataService.getModsById(tracableId);
             } else {
                 mods = new AsyncResult<Mods>(new Mods());
@@ -104,22 +106,22 @@ public class ItemServiceImpl implements ItemService {
 
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
-            
+
             Future<Mods> mods = null;
             if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems")) {
                 mods = metadataService.getModsById(tracableId);
             } else {
                 mods = new AsyncResult<Mods>(new Mods());
             }
-            
+
             Future<Boolean> hasAccess = null;
-            
+
             if (ItemUtils.showField(fields, "accessInfo")) {
                 hasAccess = securityService.hasAccess(tracableId);
             } else {
                 hasAccess = new AsyncResult<Boolean>(new Boolean(false));
             }
-            
+
             Future<SearchResource> search = indexService.getSearchResource(tracableId);
 
             while (!(mods.isDone() && hasAccess.isDone() && search.isDone())) {
@@ -132,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
                     .hasAccess(true)
                     .withExpand(expand)
                     .withRelatedItems(relatedItems);
-            
+
             SearchResource searchResource = search.get();
             if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
                 itemBuilder.withItemResource(searchResource.getEmbedded().getItems().get(0));
@@ -142,6 +144,15 @@ public class ItemServiceImpl implements ItemService {
             LOG.warn("Failed getting item for id " + id, ex);
         }
         return new ItemBuilder(id).build();
+    }
+
+    private boolean isOutsideOfNb(ItemResource resource) {
+        if(!resource.getMediaTypes().isEmpty()) {
+            StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(resource.getMediaTypes().get(0));
+            return (streamingInfoStrategy instanceof NoStreamableStrategy && !resource.getContentClasses().contains("jp2"));
+        } else {
+            return true;
+        }
     }
 
     private RelatedItems getRelatedItems(String expand,
@@ -169,7 +180,7 @@ public class ItemServiceImpl implements ItemService {
     private SecurityInfo getSecurityInfo() {
         SecurityInfo securityInfo = new SecurityInfo();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        
+
         securityInfo.setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));
         securityInfo.setxPort(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_PORT));
         securityInfo.setxRealIp(UserUtils.getClientIp(request));
@@ -186,13 +197,13 @@ public class ItemServiceImpl implements ItemService {
             .stream()
             .filter(r -> type.equalsIgnoreCase(r.getType()))
             .collect(Collectors.toList());
-        
+
         relatedItem.forEach(r -> {
             String query = getQueryFromRecordIdentifier(mods, r);
             if (query == null) {
                 query = getQueryFromIdentifier(mods, r);
             }
-             
+
             if (query != null) {
                 SearchRequest searchRequest = new SearchRequest();
                 searchRequest.setQ(query);
@@ -226,7 +237,7 @@ public class ItemServiceImpl implements ItemService {
         if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
             String source = null;
             String identifier = null;
-            source = r.getRecordInfo().getRecordIdentifier().getSource(); 
+            source = r.getRecordInfo().getRecordIdentifier().getSource();
             if (source == null && mods.getRecordInfo() != null && mods.getRecordInfo().getRecordIdentifier() != null) {
                 source = mods.getRecordInfo().getRecordIdentifier().getSource();
             }
