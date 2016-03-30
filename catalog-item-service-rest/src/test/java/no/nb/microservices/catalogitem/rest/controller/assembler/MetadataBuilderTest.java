@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 public class MetadataBuilderTest {
@@ -36,6 +39,8 @@ public class MetadataBuilderTest {
         ItemResource itemResource = new ItemResource();
         itemResource.setPageCount(70);
         itemResource.setMediaTypes(createMediaTypes());
+        itemResource.setContentClasses(Arrays.asList("public","jp2"));
+        itemResource.setMetadataClasses(Arrays.asList("public","restricted"));
 
         Item item = new Item.ItemBuilder(id)
                 .mods(mods)
@@ -47,16 +52,18 @@ public class MetadataBuilderTest {
                 .withExpand()
                 .build();
 
-        assertTrue("Should have titles", !metadata.getTitleInfos().isEmpty());
-        assertNotNull("Should have placeString", metadata.getGeographic().getPlaceString());
-        assertEquals("It's a summary", metadata.getSummary());
-        assertEquals("still image", metadata.getTypeOfResource());
-        assertEquals("drama", metadata.getGenre());
-        assertEquals(1, metadata.getNotes().size());
-        assertNotNull("Should have subject", metadata.getSubject());
-        assertNotNull("Should have Statement Of Responsibility", metadata.getStatementOfResponsibility());
-        assertTrue("Should have language", metadata.getLanguages().equals(Arrays.asList("nob", "eng")));
-        assertEquals(70, metadata.getPageCount().intValue());
+        assertThat("metadata has titles", metadata.getTitleInfos().size(), is(2));
+        assertThat("metadata has placeString", metadata.getGeographic().getPlaceString(), is("Norge;Telemark;Kviteseid;;;;;"));
+        assertThat("metadata has summary", metadata.getSummary(), is("It's a summary"));
+        assertThat("type of resource is still image", metadata.getTypeOfResource(), is("still image"));
+        assertThat("genre is drama", metadata.getGenre(), is("drama"));
+        assertThat("metadata has notes", metadata.getNotes().size(), is(1));
+        assertThat("metadata has subject", metadata.getSubject(), is(not(nullValue())));
+        assertThat("metadata has statement of responsibility", metadata.getStatementOfResponsibility(), is(not(nullValue())));
+        assertThat("metadata has language", metadata.getLanguages().size(), is(2));
+        assertThat("metadata has pagecount", metadata.getPageCount(), is(70));
+        assertThat("metadata has contentClasses", metadata.getContentClasses().size(), is(2));
+        assertThat("metadata has metadataClasses", metadata.getMetadataClasses().size(), is(2));
     }
 
     @Test

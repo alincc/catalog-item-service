@@ -29,6 +29,8 @@ public class Metadata {
     private Integer pageCount;
     private List<String> mediaTypes;
     private List<String> creators;
+    private List<String> contentClasses;
+    private List<String> metadataClasses;
 
     public String getTitle() {
         return title;
@@ -192,5 +194,21 @@ public class Metadata {
 
     public void setCreators(List<String> creators) {
         this.creators = creators;
+    }
+
+    public List<String> getContentClasses() {
+        return contentClasses;
+    }
+
+    public void setContentClasses(List<String> contentClasses) {
+        this.contentClasses = contentClasses;
+    }
+
+    public List<String> getMetadataClasses() {
+        return metadataClasses;
+    }
+
+    public void setMetadataClasses(List<String> metadataClasses) {
+        this.metadataClasses = metadataClasses;
     }
 }
