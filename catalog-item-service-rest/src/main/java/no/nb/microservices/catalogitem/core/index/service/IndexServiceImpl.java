@@ -5,7 +5,6 @@ import no.nb.microservices.catalogitem.core.index.repository.IndexRepository;
 import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
-import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.apache.htrace.Trace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 @Service
 public class IndexServiceImpl implements IndexService {

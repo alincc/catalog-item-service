@@ -127,8 +127,8 @@ public class SearchServiceImpl implements ISearchService {
             while(!contentSearchFuture.isDone()) {
                 try {
                     Thread.sleep(1L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ex) {
+                    LOG.error("Interrupted", ex);
                 }
             }
         }
@@ -183,7 +183,7 @@ public class SearchServiceImpl implements ISearchService {
             try {
                 items.add(item.get());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("Interrupted", ex);
             }
         }
         return items;

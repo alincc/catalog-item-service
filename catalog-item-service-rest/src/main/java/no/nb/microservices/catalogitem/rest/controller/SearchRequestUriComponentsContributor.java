@@ -21,7 +21,7 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return (parameter.getParameterType() == SearchRequest.class);
+        return parameter.getParameterType() == SearchRequest.class;
     }
 
     @Override

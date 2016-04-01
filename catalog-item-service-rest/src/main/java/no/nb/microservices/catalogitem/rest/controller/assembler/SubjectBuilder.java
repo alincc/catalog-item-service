@@ -21,8 +21,8 @@ public class SubjectBuilder {
         if (subjects == null) {
             return null;
         }
-        
-        no.nb.microservices.catalogitem.rest.model.Subject subject = new no.nb.microservices.catalogitem.rest.model.Subject(getTopics(),getPersons());
+
+        no.nb.microservices.catalogitem.rest.model.Subject subject = new no.nb.microservices.catalogitem.rest.model.Subject(getTopics(), getPersons());
         return subject.isEmpty() ? null : subject;
     }
 
@@ -41,14 +41,14 @@ public class SubjectBuilder {
         List<Person> persons = new ArrayList<>();
         if (subjects != null && !subjects.isEmpty()) {
             for (Subject subject : subjects) {
-            	List<Name> names = subject.getNames();
-            	if (names != null)  {
-            		for(Name name : names) {
-            			if ("personal".equals(name.getType())) {
-            				persons.add(new NameBuilder(name).createPerson());			
-            			}
-            		}
-            	}
+                List<Name> names = subject.getNames();
+                if (names != null) {
+                    for (Name name : names) {
+                        if ("personal".equals(name.getType())) {
+                            persons.add(new NameBuilder(name).createPerson());
+                        }
+                    }
+                }
             }
         }
 
