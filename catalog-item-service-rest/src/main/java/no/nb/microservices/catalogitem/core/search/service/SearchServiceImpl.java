@@ -1,7 +1,5 @@
 package no.nb.microservices.catalogitem.core.search.service;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
 import no.nb.microservices.catalogitem.core.content.service.ContentSearchService;
 import no.nb.microservices.catalogitem.core.index.model.SearchResult;
 import no.nb.microservices.catalogitem.core.index.service.IndexService;
@@ -11,10 +9,11 @@ import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.exception.LatchException;
 import no.nb.microservices.catalogitem.core.search.model.*;
+import no.nb.microservices.catalogitem.core.utils.SecurityInfoService;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
-import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -59,7 +55,7 @@ public class SearchServiceImpl implements ISearchService {
     @Override
     public SuperSearchAggregated superSearch(SuperSearchRequest superSearchRequest, Pageable pageable) {
         List<String> possibleMediaTypesToSearch = getPossibleMediaTypesToSearch(superSearchRequest);
-        SecurityInfo securityInfo = getSecurityInfo();
+        SecurityInfo securityInfo = new SecurityInfoService().getSecurityInfo();
 
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         List<String> wantedMediaTypes = superSearchRequest.getWantedMediaTypes(possibleMediaTypesToSearch);
@@ -103,17 +99,6 @@ public class SearchServiceImpl implements ISearchService {
         SearchRequest newSearchRequest = new SearchRequest();
         newSearchRequest.setQ(searchRequest.getQ());
         return newSearchRequest;
-    }
-
-    private SecurityInfo getSecurityInfo() {
-        SecurityInfo securityInfo = new SecurityInfo();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        securityInfo.setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));
-        securityInfo.setxPort(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_PORT));
-        securityInfo.setxRealIp(UserUtils.getClientIp(request));
-        securityInfo.setSsoToken(UserUtils.getSsoToken(request));
-        return securityInfo;
     }
 
     private List<ContentSearch> getContentSearchs(List<Item> content, String searchQuery, SecurityInfo securityInfo) {
@@ -199,12 +184,7 @@ public class SearchServiceImpl implements ISearchService {
 
     private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, ItemResource itemResource, SearchRequest searchRequest) {
         ItemWrapper itemWrapper = new ItemWrapper(itemResource, latch, items, searchRequest);
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        itemWrapper.getSecurityInfo().setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));
-        itemWrapper.getSecurityInfo().setxPort(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_PORT));
-        itemWrapper.getSecurityInfo().setxRealIp(UserUtils.getClientIp(request));
-        itemWrapper.getSecurityInfo().setSsoToken(UserUtils.getSsoToken(request));
+        itemWrapper.setSecurityInfo(new SecurityInfoService().getSecurityInfo());
         itemWrapper.setSpan(Trace.currentSpan());
 
         return itemWrapper;

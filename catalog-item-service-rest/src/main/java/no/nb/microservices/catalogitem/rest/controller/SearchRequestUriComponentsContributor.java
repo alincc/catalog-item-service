@@ -41,7 +41,7 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
     }
 
     private boolean isGetMethodForField(String fieldName, Method method) {
-        return (method.getName().equalsIgnoreCase("get" + fieldName) || method.getName().equalsIgnoreCase("is" + fieldName)) ;
+        return method.getName().equalsIgnoreCase("get" + fieldName) || method.getName().equalsIgnoreCase("is" + fieldName);
     }
 
     private Object getValueFromMethod(SearchRequest searchRequest, Method method) {
@@ -64,7 +64,7 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
             if (fieldValue instanceof List) {
                 List list = (List) fieldValue;
                 if(!list.isEmpty()) {
-                    if (fieldName.equalsIgnoreCase("mediatypes")) {
+                    if ("mediatypes".equalsIgnoreCase(fieldName)) {
                         builder.queryParam(fieldName, String.join(",", list));
                     } else {
                         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

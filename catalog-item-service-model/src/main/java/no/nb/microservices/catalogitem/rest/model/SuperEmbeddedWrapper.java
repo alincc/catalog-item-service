@@ -17,6 +17,7 @@ public class SuperEmbeddedWrapper {
     private ItemSearchResource newspapers;
     private ItemSearchResource others;
     private ItemSearchResource posters;
+    private ItemSearchResource privateArchiveMaterial;
     private ItemSearchResource programReports;
     private ItemSearchResource radio;
     private ItemSearchResource soundRecords;
@@ -108,6 +109,14 @@ public class SuperEmbeddedWrapper {
 
     public void setPosters(ItemSearchResource posters) {
         this.posters = posters;
+    }
+
+    public ItemSearchResource getPrivateArchiveMaterial() {
+        return privateArchiveMaterial;
+    }
+
+    public void setPrivateArchiveMaterial(ItemSearchResource privateArchiveMaterial) {
+        this.privateArchiveMaterial = privateArchiveMaterial;
     }
 
     public ItemSearchResource getProgramReports() {
