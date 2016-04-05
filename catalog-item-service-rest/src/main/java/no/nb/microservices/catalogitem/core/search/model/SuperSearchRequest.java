@@ -11,16 +11,16 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SuperSearchRequest extends SearchRequest {
-    private List<String> mediatypes = new ArrayList<>();
+    private List<String> mediaTypes = new ArrayList<>();
 
     public SuperSearchRequest() {
     }
 
     public List<String> getWantedMediaTypes(List<String> possibleMediaTypesToSearch) {
-        if(mediatypes.isEmpty()) {
+        if (mediaTypes.isEmpty()) {
             return possibleMediaTypesToSearch;
         } else {
-            return mediatypes.stream().filter(possibleMediaTypesToSearch::contains).map(String::toLowerCase).collect(Collectors.toList());
+            return mediaTypes.stream().filter(possibleMediaTypesToSearch::contains).map(String::toLowerCase).collect(Collectors.toList());
         }
     }
 
@@ -32,12 +32,12 @@ public class SuperSearchRequest extends SearchRequest {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getMediatypes() {
-        super.removeEncoding(mediatypes);
-        return mediatypes;
+    public List<String> getMediaTypes() {
+        super.removeEncoding(mediaTypes);
+        return mediaTypes;
     }
 
-    public void setMediatypes(String[] mediatypes) {
-        this.mediatypes = Arrays.asList(mediatypes);
+    public void setMediaTypes(String[] mediaTypes) {
+        this.mediaTypes = Arrays.asList(mediaTypes);
     }
 }

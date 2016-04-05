@@ -41,15 +41,15 @@ public class OriginInfoBuilder {
     }
 
     public OriginInfo buildSimplified() {
-        OriginInfo originInfo = new OriginInfo();
-        originInfo.setIssued(getDateIssued());
-        return originInfo.isEmpty() ? null : originInfo;
+        OriginInfo originInfoSimple = new OriginInfo();
+        originInfoSimple.setIssued(getDateIssued());
+        return originInfoSimple.isEmpty() ? null : originInfoSimple;
     }
 
     public OriginInfo buildFull() {
-        OriginInfo originInfo = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
+        OriginInfo originInfoFull = new OriginInfo(getPublisher(), getDateIssued(), getFrequency(),
                 getDateCreated(), getDateCaptured(), getDateModified(), getEdition(), getFirstIndexTime());
-        return originInfo.isEmpty() ? null : originInfo;
+        return originInfoFull.isEmpty() ? null : originInfoFull;
     }
     
     private String getPublisher() {

@@ -127,12 +127,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void waitForAsyncCalls(Future... futures) throws InterruptedException {
-        for (int i = 0; i < futures.length; i++) {
-            if (!futures[i].isDone()) {
-                i = i - 1;
-                Thread.sleep(1);
+        boolean done;
+        do {
+            done = true;
+            for (Future future : futures) {
+                if (!future.isDone()) {
+                    done = false;
+                    Thread.sleep(1);
+                    break;
+                }
             }
-        }
+        } while (!done);
     }
 
     private Future<Mods> getModsFuture(String expand, TracableId tracableId) {

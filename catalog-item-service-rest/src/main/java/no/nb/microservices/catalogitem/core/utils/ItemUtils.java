@@ -14,13 +14,9 @@ public class ItemUtils {
     }
     
     public static boolean showField(List<String> fields, String field) {
-        if ((fields == null || fields.isEmpty()) ||
-            (fields != null && fields.stream().anyMatch(s -> "*".equals(s))) ||
-            (fields != null && fields.stream().anyMatch(s -> s.startsWith(field)))) {
-            return true;
-        } else {
-            return false;
-        }
+        return (fields == null || fields.isEmpty()) ||
+                (fields.stream().anyMatch(s -> "*".equals(s))) ||
+                (fields.stream().anyMatch(s -> s.startsWith(field)));
     }
 
     public static boolean isExpand(String expand, String field) {
@@ -41,7 +37,7 @@ public class ItemUtils {
     public static boolean isOutsideOfNb(ItemResource resource) {
         if (resource != null && !resource.getMediaTypes().isEmpty()) {
             StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(resource.getMediaTypes().get(0));
-            return (streamingInfoStrategy instanceof NoStreamableStrategy && !resource.getContentClasses().contains("jp2"));
+            return streamingInfoStrategy instanceof NoStreamableStrategy && !resource.getContentClasses().contains("jp2");
         } else {
             return false;
         }

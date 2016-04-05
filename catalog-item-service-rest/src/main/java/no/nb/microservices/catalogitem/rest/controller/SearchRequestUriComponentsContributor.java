@@ -44,40 +44,28 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
         return method.getName().equalsIgnoreCase("get" + fieldName) || method.getName().equalsIgnoreCase("is" + fieldName);
     }
 
-    private Object getValueFromMethod(SearchRequest searchRequest, Method method) {
-        if(searchRequest != null) {
-            try {
-                return method.invoke(searchRequest);
-            } catch (IllegalAccessException e) {
-                LOG.debug("Cant access method {}", method.getName(), e);
-                LOG.error("Cant access method {}", method.getName());
-            } catch (InvocationTargetException e) {
-                LOG.debug("Cant invoke method {}", method.getName(), e);
-                LOG.error("Cant invoke method {}", method.getName());
-            }
-        }
-        return null;
-    }
-
     private UriComponentsBuilder populateUriWithQueryParam(UriComponentsBuilder builder, String fieldName, Object fieldValue) {
         if(fieldValue != null) {
             if (fieldValue instanceof List) {
-                List list = (List) fieldValue;
-                if(!list.isEmpty()) {
-                    if ("mediatypes".equalsIgnoreCase(fieldName)) {
-                        builder.queryParam(fieldName, String.join(",", list));
-                    } else {
-                        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-                        params.put(fieldName, list);
-                        builder.queryParams(params);
-                    }
-                }
+                populateUriWithQueryParamFromList(builder, fieldName, (List) fieldValue);
             } else if (shouldAddQueryParam(fieldValue)) {
                 builder.queryParam(fieldName, fieldValue);
             }
         }
 
         return builder;
+    }
+
+    private void populateUriWithQueryParamFromList(UriComponentsBuilder builder, String fieldName, List list) {
+        if (!list.isEmpty()) {
+            if ("mediatypes".equalsIgnoreCase(fieldName)) {
+                builder.queryParam(fieldName, String.join(",", list));
+            } else {
+                MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+                params.put(fieldName, list);
+                builder.queryParams(params);
+            }
+        }
     }
 
     private boolean shouldAddQueryParam(Object fieldValue) {
@@ -89,5 +77,20 @@ public class SearchRequestUriComponentsContributor implements UriComponentsContr
             return (boolean) fieldValue;
         }
         return false;
+    }
+
+    private Object getValueFromMethod(SearchRequest searchRequest, Method method) {
+        if (searchRequest != null) {
+            try {
+                return method.invoke(searchRequest);
+            } catch (IllegalAccessException e) {
+                LOG.debug("Cant access method {}", method.getName(), e);
+                LOG.error("Cant access method {}", method.getName());
+            } catch (InvocationTargetException e) {
+                LOG.debug("Cant invoke method {}", method.getName(), e);
+                LOG.error("Cant invoke method {}", method.getName());
+            }
+        }
+        return null;
     }
 }
