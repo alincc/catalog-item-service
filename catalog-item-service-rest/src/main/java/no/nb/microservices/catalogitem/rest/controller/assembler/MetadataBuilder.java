@@ -44,9 +44,25 @@ public final class MetadataBuilder {
         metadata.setCreators(getCreators());
         metadata.setOriginInfo(new OriginInfoBuilder().withItemResource(getItemResource()).build());
         metadata.setIdentifiers(new IdentifiersBuilder().withItemResource(itemResource).build());
-        metadata.setContentClasses(itemResource.getContentClasses());
-        metadata.setMetadataClasses(itemResource.getMetadataClasses());
+        metadata.setContentClasses(getContentClasses());
+        metadata.setMetadataClasses(getMetadataClasses());
         return metadata;
+    }
+
+    private List<String> getMetadataClasses() {
+        if (itemResource != null) {
+            return itemResource.getMetadataClasses();
+        } else {
+            return null;
+        }
+    }
+
+    private List<String> getContentClasses() {
+        if (itemResource != null) {
+            return itemResource.getContentClasses();
+        } else {
+            return null;
+        }
     }
 
     public Metadata buildFull() {
@@ -80,8 +96,8 @@ public final class MetadataBuilder {
         metadata.setPageCount(getPageCount());
         metadata.setMediaTypes(getMediaTypes());
         metadata.setCreators(getCreators());
-        metadata.setContentClasses(itemResource.getContentClasses());
-        metadata.setMetadataClasses(itemResource.getMetadataClasses());
+        metadata.setContentClasses(getContentClasses());
+        metadata.setMetadataClasses(getMetadataClasses());
 
         StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(getFirstMediatype());
         metadata.setStreamingInfo(streamingInfoStrategy.getStreamingInfo(mods));
