@@ -185,7 +185,7 @@ public final class MetadataBuilder {
         if (getItemResource() != null) {
             return getItemResource().getCreators();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private String getFirstMediatype() {

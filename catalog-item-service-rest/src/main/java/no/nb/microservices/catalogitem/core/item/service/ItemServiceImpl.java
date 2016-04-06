@@ -1,29 +1,5 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import no.nb.microservices.catalogitem.rest.controller.assembler.NoStreamableStrategy;
-import no.nb.microservices.catalogitem.rest.controller.assembler.StreamingInfoFactory;
-import no.nb.microservices.catalogitem.rest.controller.assembler.StreamingInfoStrategy;
-import no.nb.microservices.catalogsearchindex.ItemResource;
-import org.apache.htrace.Trace;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import no.nb.commons.web.util.UserUtils;
-import no.nb.commons.web.xforwarded.feign.XForwardedFeignInterceptor;
 import no.nb.microservices.catalogitem.core.index.model.SearchResult;
 import no.nb.microservices.catalogitem.core.index.service.IndexService;
 import no.nb.microservices.catalogitem.core.item.model.Item;
@@ -33,10 +9,25 @@ import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.security.service.SecurityService;
 import no.nb.microservices.catalogitem.core.utils.ItemUtils;
+import no.nb.microservices.catalogitem.core.utils.SecurityInfoService;
 import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
 import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import no.nb.microservices.catalogmetadata.model.mods.v3.TitleInfo;
+import no.nb.microservices.catalogsearchindex.ItemResource;
 import no.nb.microservices.catalogsearchindex.SearchResource;
+import org.apache.htrace.Trace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -58,38 +49,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(String id, List<String> fields, String expand) {
-        SecurityInfo securityInfo = getSecurityInfo();
+        SecurityInfo securityInfo = new SecurityInfoService().getSecurityInfo();
         return getItemById(id, fields, expand, securityInfo);
     }
 
     @Override
     public Item getItemWithResource(ItemResource resource, List<String> fields, String expand, SecurityInfo securityInfo) {
-
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), resource.getItemId(), securityInfo);
-            Future<Mods> mods = null;
-            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems") || isOutsideOfNb(resource)) {
-                mods = metadataService.getModsById(tracableId);
-            } else {
-                mods = new AsyncResult<Mods>(new Mods());
-            }
-
-            Future<Boolean> hasAccess = null;
-
-            if (ItemUtils.showField(fields, "accessInfo")) {
-                hasAccess = securityService.hasAccess(tracableId);
-            } else {
-                hasAccess = new AsyncResult<Boolean>(new Boolean(false));
-            }
-
-            while (!(mods.isDone() && hasAccess.isDone())) {
-                Thread.sleep(1);
-            }
+            Future<Mods> mods = getModsFuture(resource, expand, tracableId);
+            Future<Boolean> hasAccess = getAccessFuture(fields, tracableId);
+            waitForAsyncCalls(mods, hasAccess);
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
             ItemBuilder itemBuilder = new ItemBuilder(resource.getItemId())
                     .mods(mods.get())
                     .withFields(fields)
-                    .hasAccess(true)
+                    .hasAccess(hasAccess.get())
                     .withExpand(expand)
                     .withItemResource(resource)
                     .withRelatedItems(relatedItems);
@@ -103,41 +78,26 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(String id, List<String> fields, String expand, SecurityInfo securityInfo) {
-
         try {
             TracableId tracableId = new TracableId(Trace.currentSpan(), id, securityInfo);
-
-            Future<Mods> mods = null;
-            if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems")) {
-                mods = metadataService.getModsById(tracableId);
-            } else {
-                mods = new AsyncResult<Mods>(new Mods());
-            }
-
-            Future<Boolean> hasAccess = null;
-
-            if (ItemUtils.showField(fields, "accessInfo")) {
-                hasAccess = securityService.hasAccess(tracableId);
-            } else {
-                hasAccess = new AsyncResult<Boolean>(new Boolean(false));
-            }
-
+            Future<Mods> mods = getModsFuture(expand, tracableId);
+            Future<Boolean> hasAccess = getAccessFuture(fields, tracableId);
             Future<SearchResource> search = indexService.getSearchResource(tracableId);
+            waitForAsyncCalls(mods, hasAccess, search);
 
-            while (!(mods.isDone() && hasAccess.isDone() && search.isDone())) {
-                Thread.sleep(1);
-            }
             RelatedItems relatedItems = getRelatedItems(expand, securityInfo, mods.get());
             ItemBuilder itemBuilder = new ItemBuilder(id)
                     .mods(mods.get())
                     .withFields(fields)
-                    .hasAccess(true)
+                    .hasAccess(hasAccess.get())
                     .withExpand(expand)
                     .withRelatedItems(relatedItems);
 
             SearchResource searchResource = search.get();
             if (searchResource != null && !searchResource.getEmbedded().getItems().isEmpty()) {
                 itemBuilder.withItemResource(searchResource.getEmbedded().getItems().get(0));
+            } else {
+                itemBuilder.withItemResource(new ItemResource());
             }
             return itemBuilder.build();
         } catch (Exception ex) {
@@ -146,13 +106,42 @@ public class ItemServiceImpl implements ItemService {
         return new ItemBuilder(id).build();
     }
 
-    private boolean isOutsideOfNb(ItemResource resource) {
-        if(!resource.getMediaTypes().isEmpty()) {
-            StreamingInfoStrategy streamingInfoStrategy = StreamingInfoFactory.getStreamingInfoStrategy(resource.getMediaTypes().get(0));
-            return (streamingInfoStrategy instanceof NoStreamableStrategy && !resource.getContentClasses().contains("jp2"));
+    private Future<Mods> getModsFuture(ItemResource resource, String expand, TracableId tracableId) {
+        Future<Mods> mods;
+        if (ItemUtils.isExpand(expand, "metadata") || ItemUtils.isExpand(expand, "relatedItems") || ItemUtils.isOutsideOfNb(resource)) {
+            mods = metadataService.getModsById(tracableId);
         } else {
-            return true;
+            mods = new AsyncResult<>(new Mods());
         }
+        return mods;
+    }
+
+    private Future<Boolean> getAccessFuture(List<String> fields, TracableId tracableId) {
+        Future<Boolean> hasAccess;
+        if (ItemUtils.showField(fields, "accessInfo")) {
+            hasAccess = securityService.hasAccess(tracableId);
+        } else {
+            hasAccess = new AsyncResult<>(new Boolean(false));
+        }
+        return hasAccess;
+    }
+
+    private void waitForAsyncCalls(Future... futures) throws InterruptedException {
+        boolean done;
+        do {
+            done = true;
+            for (Future future : futures) {
+                if (!future.isDone()) {
+                    done = false;
+                    Thread.sleep(1);
+                    break;
+                }
+            }
+        } while (!done);
+    }
+
+    private Future<Mods> getModsFuture(String expand, TracableId tracableId) {
+        return getModsFuture(null, expand, tracableId);
     }
 
     private RelatedItems getRelatedItems(String expand,
@@ -175,17 +164,6 @@ public class ItemServiceImpl implements ItemService {
     private Item getSeries(Mods mods, SecurityInfo securityInfo) {
         List<Item> series = getItemByRelatedItemType("series", mods, securityInfo);
         return !series.isEmpty() ? series.get(0) : null;
-    }
-
-    private SecurityInfo getSecurityInfo() {
-        SecurityInfo securityInfo = new SecurityInfo();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        securityInfo.setxHost(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_HOST));
-        securityInfo.setxPort(request.getHeader(XForwardedFeignInterceptor.X_FORWARDED_PORT));
-        securityInfo.setxRealIp(UserUtils.getClientIp(request));
-        securityInfo.setSsoToken(UserUtils.getSsoToken(request));
-        return securityInfo;
     }
 
     private List<Item> getItemByRelatedItemType(String type, Mods mods, SecurityInfo securityInfo) {
@@ -220,29 +198,29 @@ public class ItemServiceImpl implements ItemService {
         return items;
     }
 
-    private String getQueryFromIdentifier(Mods mods, RelatedItem r) {
-        String query = null;
-        if (r.getIdentifier() != null) {
-            if ("oaiid".equals(r.getIdentifier().getType())) {
-                query = "oaiid:\""+r.getIdentifier().getValue()  + "\"";
-            } else if ("local".equals(r.getIdentifier().getType())) {
-                query = "oaiid:\"oai:"+mods.getRecordInfo().getRecordIdentifier().getSource()+":" + r.getIdentifier().getValue() + "\"";
-            }
-        }
-        return query;
-    }
-
     private String getQueryFromRecordIdentifier(Mods mods, RelatedItem r) {
         String query = null;
         if (r.getRecordInfo() != null && r.getRecordInfo().getRecordIdentifier() != null) {
-            String source = null;
-            String identifier = null;
+            String source;
+            String identifier;
             source = r.getRecordInfo().getRecordIdentifier().getSource();
             if (source == null && mods.getRecordInfo() != null && mods.getRecordInfo().getRecordIdentifier() != null) {
                 source = mods.getRecordInfo().getRecordIdentifier().getSource();
             }
             identifier = r.getRecordInfo().getRecordIdentifier().getValue();
             query = "oaiid:\"oai:"+source+":" + identifier + "\"";
+        }
+        return query;
+    }
+
+    private String getQueryFromIdentifier(Mods mods, RelatedItem r) {
+        String query = null;
+        if (r.getIdentifier() != null) {
+            if ("oaiid".equals(r.getIdentifier().getType())) {
+                query = "oaiid:\"" + r.getIdentifier().getValue() + "\"";
+            } else if ("local".equals(r.getIdentifier().getType())) {
+                query = "oaiid:\"oai:" + mods.getRecordInfo().getRecordIdentifier().getSource() + ":" + r.getIdentifier().getValue() + "\"";
+            }
         }
         return query;
     }

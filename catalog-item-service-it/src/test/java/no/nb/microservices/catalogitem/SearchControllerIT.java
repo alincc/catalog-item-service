@@ -1,18 +1,18 @@
 package no.nb.microservices.catalogitem;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.util.Arrays;
-
+import com.netflix.loadbalancer.BaseLoadBalancer;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.Server;
+import com.squareup.okhttp.mockwebserver.Dispatcher;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import no.nb.commons.web.util.UserUtils;
+import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
+import no.nb.sesam.ni.niclient.NiClient;
+import no.nb.sesam.ni.niserver.NiServer;
 import org.apache.commons.io.IOUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,38 +32,26 @@ import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.netflix.loadbalancer.BaseLoadBalancer;
-import com.netflix.loadbalancer.ILoadBalancer;
-import com.netflix.loadbalancer.Server;
-import com.squareup.okhttp.mockwebserver.Dispatcher;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import java.io.IOException;
+import java.util.Arrays;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
-import no.nb.sesam.ni.niclient.NiClient;
-import no.nb.sesam.ni.niserver.NiServer;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TestConfig.class, RibbonClientConfiguration.class, TestNiConfig2.class })
 @WebIntegrationTest("server.port: 0")
 public class SearchControllerIT {
+    public static String TEST_SERVER_ADDR;
+    private static int TEST_SERVER_PORT;
+    private static NiServer niServer;
     Logger logger = LoggerFactory.getLogger(SearchControllerIT.class);
-
     @Value("${local.server.port}")
     int port;
-
     RestTemplate template = new TestRestTemplate();
-
     @Autowired
     ILoadBalancer lb;
-
-    private static int TEST_SERVER_PORT;
-    public static String TEST_SERVER_ADDR;
-
-    private static NiServer niServer;
-
     MockWebServer server;
 
     @BeforeClass
@@ -127,7 +115,7 @@ public class SearchControllerIT {
 
     @Test
     public void whenSuperSearchWithMediaTypesThenReturnOtherMediaType() throws Exception {
-        String url = "http://localhost:" + port + "/catalog/v1/search?q=*&mediatypes=radio";
+        String url = "http://localhost:" + port + "/catalog/v1/search?q=*&mediaTypes=radio";
         ResponseEntity<SuperItemSearchResource> entity = getEntity(url, SuperItemSearchResource.class);
 
         assertThat(entity.getStatusCode().value(), is(200));

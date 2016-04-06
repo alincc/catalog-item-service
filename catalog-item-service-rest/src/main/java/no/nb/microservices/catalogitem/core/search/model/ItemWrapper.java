@@ -50,6 +50,10 @@ public class ItemWrapper implements Traceable {
         return securityInfo;
     }
 
+    public void setSecurityInfo(SecurityInfo securityInfo) {
+        this.securityInfo = securityInfo;
+    }
+
     @Override
     public Span getSpan() {
         return span;

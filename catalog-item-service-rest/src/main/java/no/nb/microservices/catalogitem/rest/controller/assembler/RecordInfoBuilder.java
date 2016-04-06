@@ -15,10 +15,10 @@ public class RecordInfoBuilder {
         if (recordInfo == null) {
             return null;
         }
-        
-        RecordInfo recordInfo = new RecordInfo(getIdentifier(), getIdentifierSource(), getCreated());
-        
-        return recordInfo.isEmpty() ? null : recordInfo;
+
+        RecordInfo recordInfoBuild = new RecordInfo(getIdentifier(), getIdentifierSource(), getCreated());
+
+        return recordInfoBuild.isEmpty() ? null : recordInfoBuild;
     }
 
     private String getIdentifier() {

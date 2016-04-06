@@ -14,7 +14,7 @@ import java.util.List;
 public class SearchRequest implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
-    private String q;
+    private String q = "*";
     private List<String> fields;
     private List<String> sort = new ArrayList<>();
     private List<String> boost = new ArrayList<>();

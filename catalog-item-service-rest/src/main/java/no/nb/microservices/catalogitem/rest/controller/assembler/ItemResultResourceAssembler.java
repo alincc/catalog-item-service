@@ -8,11 +8,13 @@ import no.nb.microservices.catalogmetadata.model.mods.v3.RelatedItem;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
 public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, ItemResource> {
 
+    public static final List<String> SUPPORTED_RELATED_ITEMS = Arrays.asList("constituent", "host", "preceding", "succeeding", "series");
     public ItemResultResourceAssembler() {
         super(ItemController.class, ItemResource.class);
     }
@@ -79,12 +81,11 @@ public class ItemResultResourceAssembler extends ResourceAssemblerSupport<Item, 
                     .filter(r -> isSupportedRelatedItems(r) && hasRelatedItemIdentifier(r)).count();
 
         }
-        return count > 0 ? true : false;
+        return count > 0;
     }
 
     private boolean isSupportedRelatedItems(RelatedItem r) {
-        return "constituent".equals(r.getType()) || "host".equals(r.getType()) || "preceding".equals(r.getType())
-                || "succeeding".equals(r.getType()) || "series".equals(r.getType());
+        return ItemResultResourceAssembler.SUPPORTED_RELATED_ITEMS.contains(r.getType());
     }
 
     private boolean hasRelatedItemIdentifier(RelatedItem r) {
