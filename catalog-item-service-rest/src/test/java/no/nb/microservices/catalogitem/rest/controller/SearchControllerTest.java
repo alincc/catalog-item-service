@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,6 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -67,6 +69,29 @@ public class SearchControllerTest {
         assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getItems(), hasSize(5));
     }
 
+    @Test
+    public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
+        searchRequest.setQ("London");
+        PageRequest pageRequest = new PageRequest(0, 5);
+        when(searchService.superSearch(searchRequest, pageRequest)).thenReturn(getSuperSearchAggregated(searchRequest));
+
+        ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
+
+        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getContentSearch(), hasSize(5));
+    }
+
+    @Test
+    public void whenSuperSearchThenReturnTotalHits() throws Exception {
+        SuperSearchRequest searchRequest = new SuperSearchRequest();
+        PageRequest pageRequest = new PageRequest(0, 2);
+        when(searchService.superSearch(searchRequest, pageRequest)).thenReturn(getSuperSearchAggregated(searchRequest));
+
+        ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
+
+        assertThat(entity.getBody().getMetadata().getTotalElements(), is(5L));
+    }
+
     private SuperSearchAggregated getSuperSearchAggregated(SearchRequest searchRequest) {
         Page<Item> pageBooks = new PageImpl<>(Arrays.asList(
                 new Item.ItemBuilder("id1").withItemResource(TestItemResource.aDefaultBook().build()).build(),
@@ -87,20 +112,6 @@ public class SearchControllerTest {
 
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         searchAggregateds.put("bøker", searchAggregated);
-        return new SuperSearchAggregated(searchAggregateds);
-    }
-
-    @Test
-    public void whenSuperSearchThenReturnTextAroundSearchString() throws Exception {
-        SuperSearchRequest searchRequest = new SuperSearchRequest();
-        searchRequest.setQ("London");
-
-        PageRequest pageRequest = new PageRequest(0, 5);
-
-        when(searchService.superSearch(searchRequest, pageRequest)).thenReturn(getSuperSearchAggregated(searchRequest));
-
-        ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
-
-        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getContentSearch(), hasSize(5));
+        return new SuperSearchAggregated(new PagedResources.PageMetadata(5, 0, 5), searchAggregateds);
     }
 }

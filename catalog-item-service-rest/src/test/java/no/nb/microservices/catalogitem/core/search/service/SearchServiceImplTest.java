@@ -42,13 +42,11 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchServiceImplTest {
-    private SearchServiceImpl searchService;
-
     @Mock
     ContentSearchService contentSearchService;
-
     @Mock
     IndexService indexService;
+    private SearchServiceImpl searchService;
 
     @Before
     public void setup() {
@@ -85,7 +83,7 @@ public class SearchServiceImplTest {
         SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
 
-        when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
+        when(indexService.search(any(), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
         Future<ContentSearch> futureContentSearch = new AsyncResult<>(new ContentSearch("123", "det var <em>q</em>"));
         when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
         SearchResult searchResultBooks = new SearchResult(Arrays.asList(new ItemResource()), 40, Collections.emptyList(), null);
@@ -103,7 +101,7 @@ public class SearchServiceImplTest {
         SuperSearchRequest searchRequest = new SuperSearchRequest();
         searchRequest.setQ("q");
 
-        when(indexService.search(argThat(new IsSameSearchRequest(searchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
+        when(indexService.search(any(), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
         Future<ContentSearch> futureContentSearch = new AsyncResult<>(new ContentSearch("123", "det var <em>q</em>"));
         when(contentSearchService.search(eq(searchRequest.getQ()), any(TracableId.class))).thenReturn(futureContentSearch);
 

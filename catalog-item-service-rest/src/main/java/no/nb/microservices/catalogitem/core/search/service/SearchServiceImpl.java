@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -54,21 +55,92 @@ public class SearchServiceImpl implements ISearchService {
 
     @Override
     public SuperSearchAggregated superSearch(SuperSearchRequest superSearchRequest, Pageable pageable) {
-        List<String> possibleMediaTypesToSearch = getPossibleMediaTypesToSearch(superSearchRequest);
-        SecurityInfo securityInfo = new SecurityInfoService().getSecurityInfo();
+        SearchAggregated result = doAggsSearch(superSearchRequest);
+        if (result != null) {
+            List<String> possibleMediaTypesToSearch = getPossibleMediaTypesToSearch(result.getAggregations());
+            SecurityInfo securityInfo = new SecurityInfoService().getSecurityInfo();
 
-        Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
-        List<String> wantedMediaTypes = superSearchRequest.getWantedMediaTypes(possibleMediaTypesToSearch);
-        for (String mediaType : wantedMediaTypes) {
-            searchAggregateds.put(mediaType, searchForMediaTypes(mediaType, pageable, superSearchRequest, securityInfo));
+            Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
+            List<String> wantedMediaTypes = superSearchRequest.getWantedMediaTypes(possibleMediaTypesToSearch);
+            for (String mediaType : wantedMediaTypes) {
+                searchAggregateds.put(mediaType, searchForMediaTypes(mediaType, pageable, superSearchRequest, securityInfo));
+            }
+
+            List<String> otherMediaTypes = superSearchRequest.getOtherMediaTypes(possibleMediaTypesToSearch, wantedMediaTypes);
+            if (!otherMediaTypes.isEmpty()) {
+                searchAggregateds.put("other", searchForOtherMediaTypes(pageable, superSearchRequest, otherMediaTypes));
+            }
+
+            PagedResources.PageMetadata pageMetadata = new PagedResources.PageMetadata(result.getPage().getSize(), result.getPage().getNumber(), result.getPage().getTotalElements(), result.getPage().getTotalPages());
+            return new SuperSearchAggregated(pageMetadata, searchAggregateds);
+        }
+        return new SuperSearchAggregated(new PagedResources.PageMetadata(0, 0, 0), new HashMap<>());
+    }
+
+    private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {
+        final CountDownLatch latch = new CountDownLatch(result.getItems().size());
+        List<Item> items = Collections.synchronizedList(new ArrayList<>());
+        List<Future<Item>> workList = new ArrayList<>();
+
+        for (ItemResource itemResource : result.getItems()) {
+
+            ItemWrapper itemWrapper = createItemWrapper(latch, items, itemResource, searchRequest);
+            Future<Item> item = itemWrapperService.getById(itemWrapper);
+            workList.add(item);
         }
 
-        List<String> otherMediaTypes = superSearchRequest.getOtherMediaTypes(possibleMediaTypesToSearch, wantedMediaTypes);
-        if(!otherMediaTypes.isEmpty()) {
-            searchAggregateds.put("other", searchForOtherMediaTypes(pageable, superSearchRequest, otherMediaTypes));
+        waitForAllItemsToFinish(latch);
+
+        for (Future<Item> item : workList) {
+            try {
+                items.add(item.get());
+            } catch (Exception ex) {
+                LOG.error("Interrupted", ex);
+            }
+        }
+        return items;
+    }
+
+    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, ItemResource itemResource, SearchRequest searchRequest) {
+        ItemWrapper itemWrapper = new ItemWrapper(itemResource, latch, items, searchRequest);
+        itemWrapper.setSecurityInfo(new SecurityInfoService().getSecurityInfo());
+        itemWrapper.setSpan(Trace.currentSpan());
+
+        return itemWrapper;
+    }
+
+    private void waitForAllItemsToFinish(final CountDownLatch latch) {
+        try {
+            latch.await();
+        } catch (InterruptedException ex) {
+            throw new LatchException(ex);
+        }
+    }
+
+    private SearchAggregated doAggsSearch(SearchRequest searchRequest) {
+        try {
+            SearchRequest aggsSearchRequest = (SearchRequest) searchRequest.clone();
+            aggsSearchRequest.setAggs("mediatype");
+            return search(aggsSearchRequest, new PageRequest(0, 1));
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<String> getPossibleMediaTypesToSearch(List<AggregationResource> aggregations) {
+        List<String> mediaTypes = new ArrayList<>();
+        if (aggregations != null) {
+            for (AggregationResource aggregationResource : aggregations) {
+                if ("mediatype".equalsIgnoreCase(aggregationResource.getName())) {
+                    for (FacetValueResource facetValueResource : aggregationResource.getFacetValues()) {
+                        mediaTypes.add(facetValueResource.getKey().toLowerCase());
+                    }
+                }
+            }
         }
 
-        return new SuperSearchAggregated(searchAggregateds);
+        return mediaTypes;
     }
 
     private SearchAggregated searchForMediaTypes(String mediaType, Pageable pageable, SuperSearchRequest superSearchRequest, SecurityInfo securityInfo) {
@@ -132,62 +204,4 @@ public class SearchServiceImpl implements ISearchService {
         }
         return contentSearches;
     }
-
-    private List<String> getPossibleMediaTypesToSearch(SearchRequest searchRequest) {
-        searchRequest.setAggs("mediatype");
-        SearchAggregated search = search(searchRequest, new PageRequest(0, 1));
-
-        List<String> mediaTypes = new ArrayList<>();
-        List<AggregationResource> aggregations = search.getAggregations();
-        for(AggregationResource aggregationResource : aggregations) {
-            if("mediatype".equalsIgnoreCase(aggregationResource.getName())) {
-                for (FacetValueResource facetValueResource : aggregationResource.getFacetValues()) {
-                    mediaTypes.add(facetValueResource.getKey().toLowerCase());
-                }
-            }
-        }
-        searchRequest.setAggs(null);
-        return mediaTypes;
-    }
-
-    private List<Item> consumeItems(SearchRequest searchRequest, SearchResult result) {
-        final CountDownLatch latch = new CountDownLatch(result.getItems().size());
-        List<Item> items = Collections.synchronizedList(new ArrayList<>());
-        List<Future<Item>> workList = new ArrayList<>();
-
-        for (ItemResource itemResource : result.getItems()) {
-
-            ItemWrapper itemWrapper = createItemWrapper(latch, items, itemResource, searchRequest);
-            Future<Item> item = itemWrapperService.getById(itemWrapper);
-            workList.add(item);
-        }
-
-        waitForAllItemsToFinish(latch);
-
-        for (Future<Item> item : workList) {
-            try {
-                items.add(item.get());
-            } catch (Exception ex) {
-                LOG.error("Interrupted", ex);
-            }
-        }
-        return items;
-    }
-
-    private void waitForAllItemsToFinish(final CountDownLatch latch) {
-        try {
-            latch.await();
-        } catch (InterruptedException ex) {
-            throw new LatchException(ex);
-        }
-    }
-
-    private ItemWrapper createItemWrapper(final CountDownLatch latch, List<Item> items, ItemResource itemResource, SearchRequest searchRequest) {
-        ItemWrapper itemWrapper = new ItemWrapper(itemResource, latch, items, searchRequest);
-        itemWrapper.setSecurityInfo(new SecurityInfoService().getSecurityInfo());
-        itemWrapper.setSpan(Trace.currentSpan());
-
-        return itemWrapper;
-    }
-
 }
