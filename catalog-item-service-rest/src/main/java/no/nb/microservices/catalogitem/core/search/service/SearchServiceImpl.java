@@ -145,7 +145,7 @@ public class SearchServiceImpl implements ISearchService {
 
     private SearchAggregated searchForMediaTypes(String mediaType, Pageable pageable, SuperSearchRequest superSearchRequest, SecurityInfo securityInfo) {
         SearchRequest mediaTypeSearchRequest = createNewSearchRequestInstance(superSearchRequest);
-        mediaTypeSearchRequest.setFilter(new String[]{"mediatype:" + mediaType});
+        addMediaTypeFilter(mediaType, mediaTypeSearchRequest);
 
         SearchAggregated search = search(mediaTypeSearchRequest, new PageRequest(0, pageable.getPageSize()));
 
@@ -153,6 +153,16 @@ public class SearchServiceImpl implements ISearchService {
             search.setContentSearches(getContentSearchs(search.getPage().getContent(), mediaTypeSearchRequest.getQ(), securityInfo));
         }
         return search;
+    }
+
+    private void addMediaTypeFilter(String mediaType, SearchRequest mediaTypeSearchRequest) {
+        int numOfFilters = mediaTypeSearchRequest.getFilter().size();
+        String[] filters = new String[numOfFilters + 1];
+        for (int i = 0; i < numOfFilters; i++) {
+            filters[i] = mediaTypeSearchRequest.getFilter().get(i);
+        }
+        filters[numOfFilters] = "mediatype:" + mediaType;
+        mediaTypeSearchRequest.setFilter(filters);
     }
 
     private SearchAggregated searchForOtherMediaTypes(Pageable pageable, SuperSearchRequest superSearchRequest, List<String> otherMediaTypes) {

@@ -118,6 +118,33 @@ public class SearchServiceImplTest {
         verify(contentSearchService, times(1)).search(eq(searchRequest.getQ()), any(TracableId.class));
     }
 
+    @Test
+    public void whenSuperSearchWithFilterThenDoNotReplaceFiltersFromSearchRequest() throws Exception {
+        SearchRequest aggsSearchRequest = new SearchRequest();
+        aggsSearchRequest.setQ("q");
+        aggsSearchRequest.setFilter(new String[]{"mediatype:bøker", "keydate:2014"});
+        aggsSearchRequest.setAggs("mediatype");
+        when(indexService.search(argThat(new IsSameSearchRequest(aggsSearchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
+
+        SearchRequest bookSearchRequest = new SearchRequest();
+        bookSearchRequest.setQ("q");
+        bookSearchRequest.setFilter(new String[]{"mediatype:bøker", "keydate:2014", "mediatype:bøker"});
+        when(indexService.search(argThat(new IsSameSearchRequest(bookSearchRequest)), any(), any())).thenReturn(new SearchResult(Collections.emptyList(), 0, null, null));
+
+        SearchRequest newspaperSearchRequest = new SearchRequest();
+        newspaperSearchRequest.setQ("q");
+        newspaperSearchRequest.setFilter(new String[]{"mediatype:bøker", "keydate:2014", "mediatype:aviser"});
+        when(indexService.search(argThat(new IsSameSearchRequest(newspaperSearchRequest)), any(), any())).thenReturn(new SearchResult(Collections.emptyList(), 0, null, null));
+
+        SuperSearchRequest superSearchRequest = new SuperSearchRequest();
+        superSearchRequest.setQ("q");
+        superSearchRequest.setFilter(new String[]{"mediatype:bøker", "keydate:2014"});
+        searchService.superSearch(superSearchRequest, new PageRequest(0, 10));
+
+        verify(indexService, times(3)).search(any(), any(), any());
+        verifyNoMoreInteractions(indexService);
+    }
+
     private SearchResult createMediaTypeAggsSearchResult() {
         AggregationResource aggregationResource = new AggregationResource("mediatype");
         aggregationResource.setFacetValues(Arrays.asList(new FacetValueResource("bøker", 1), new FacetValueResource("aviser", 1)));

@@ -30,7 +30,7 @@ public class SearchController {
 
     @InitBinder
     public void sortBinderInit(WebDataBinder binder) {
-        binder.registerCustomEditor(String[].class, new StringArrayPropertyEditor(null));
+        binder.registerCustomEditor(String[].class, new StringArrayPropertyEditor(","));
         binder.registerCustomEditor(String[].class, "mediaTypes", new StringArrayPropertyEditor(","));
     }
 
