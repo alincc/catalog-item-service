@@ -123,7 +123,7 @@ public class SearchServiceImplTest {
         SearchRequest aggsSearchRequest = new SearchRequest();
         aggsSearchRequest.setQ("q");
         aggsSearchRequest.setFilter(new String[]{"mediatype:bøker", "keydate:2014"});
-        aggsSearchRequest.setAggs("mediatype");
+        aggsSearchRequest.setAggs("mediatype:20");
         when(indexService.search(argThat(new IsSameSearchRequest(aggsSearchRequest)), any(), any())).thenReturn(createMediaTypeAggsSearchResult());
 
         SearchRequest bookSearchRequest = new SearchRequest();

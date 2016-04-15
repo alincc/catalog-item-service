@@ -120,7 +120,7 @@ public class SearchServiceImpl implements ISearchService {
     private SearchAggregated doAggsSearch(SearchRequest searchRequest) {
         try {
             SearchRequest aggsSearchRequest = (SearchRequest) searchRequest.clone();
-            aggsSearchRequest.setAggs("mediatype");
+            aggsSearchRequest.setAggs("mediatype:20");
             return search(aggsSearchRequest, new PageRequest(0, 1));
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

@@ -81,8 +81,8 @@ public class SearchControllerIT {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 System.out.println("REQUEST: " + request.getPath());
-                
-                if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=1&grouping=false&aggs=mediatype&explain=false")) {
+
+                if (request.getPath().equals("/catalog/v1/search?q=*&page=0&size=1&grouping=false&aggs=mediatype%3A20&explain=false")) {
                     return new MockResponse().setBody(searchResultMockWithAggragations).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().startsWith("/catalog/v1/search?q=*&page=0&size=10&grouping=false&explain=false&filter=mediatype%3A")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
