@@ -13,6 +13,7 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SuperSearchResultResourceAssembler extends ResourceAssemblerSupport<SuperSearchAggregated, SuperItemSearchResource> {
@@ -32,43 +33,12 @@ public class SuperSearchResultResourceAssembler extends ResourceAssemblerSupport
     private SuperEmbeddedWrapper getSuperEmbeddedWrapper(SuperSearchAggregated superSearchAggregated) {
         SuperEmbeddedWrapper embeddedWrapper = new SuperEmbeddedWrapper();
         Map<String, SearchAggregated> searchAggregateds = superSearchAggregated.getSearchAggregateds();
+        Map<String, ItemSearchResource> searchResources = new HashMap();
         for (Map.Entry<String, SearchAggregated> entry : searchAggregateds.entrySet()) {
             ItemSearchResource itemSearchResource = new SearchResultResourceAssembler().toResource(entry.getValue());
-            final String mediaType = entry.getKey();
-            if ("bøker".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setBooks(itemSearchResource);
-            } else if ("bilder".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setImages(itemSearchResource);
-            } else if ("artikler".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setJournals(itemSearchResource);
-            } else if ("kart".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setMaps(itemSearchResource);
-            } else if ("film".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setMovies(itemSearchResource);
-            } else if ("noter".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setMusicBooks(itemSearchResource);
-            } else if ("musikk".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setMusic(itemSearchResource);
-            } else if ("musikkmanuskripter".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setMusicManuscripts(itemSearchResource);
-            } else if ("aviser".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setNewspapers(itemSearchResource);
-            } else if ("other".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setOthers(itemSearchResource);
-            } else if ("plakater".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setPosters(itemSearchResource);
-            } else if ("programrapporter".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setProgramReports(itemSearchResource);
-            } else if ("privatarkivmateriale".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setPrivateArchiveMaterial(itemSearchResource);
-            } else if ("radio".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setRadio(itemSearchResource);
-            } else if ("lydopptak".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setSoundRecords(itemSearchResource);
-            } else if ("fjernsyn".equalsIgnoreCase(mediaType)) {
-                embeddedWrapper.setTelevision(itemSearchResource);
-            }
+            searchResources.put(entry.getKey(), itemSearchResource);
         }
+        embeddedWrapper.setSearchResults(searchResources);
         return embeddedWrapper;
     }
 

@@ -110,7 +110,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getBooks().getEmbedded().getItems(), hasSize(4));
+        assertThat(entity.getBody().getEmbedded().getSearchResults().get("bøker").getEmbedded().getItems(), hasSize(4));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getOthers().getEmbedded().getItems(), hasSize(4));
+        assertThat(entity.getBody().getEmbedded().getSearchResults().get("other").getEmbedded().getItems(), hasSize(4));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getNewspapers().getEmbedded().getContentSearch(), hasSize(4));
+        assertThat(entity.getBody().getEmbedded().getSearchResults().get("aviser").getEmbedded().getContentSearch(), hasSize(4));
     }
 
     private <T> ResponseEntity<T> getEntity(String url, Class<T> type) {
