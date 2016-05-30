@@ -9,13 +9,13 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuperEmbeddedWrapper {
-    private Map<String, ItemSearchResource> searchResults = new HashMap();
+    private Map<String, ItemSearchResource> itemsByMediaType = new HashMap();
 
-    public Map<String, ItemSearchResource> getSearchResults() {
-        return searchResults;
+    public Map<String, ItemSearchResource> getItemsByMediaType() {
+        return itemsByMediaType;
     }
 
-    public void setSearchResults(Map<String, ItemSearchResource> searchResults) {
-        this.searchResults = searchResults;
+    public void setItemsByMediaType(Map<String, ItemSearchResource> itemsByMediaType) {
+        this.itemsByMediaType = itemsByMediaType;
     }
 }

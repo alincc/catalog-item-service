@@ -66,7 +66,7 @@ public class SearchControllerTest {
 
         ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
 
-        assertThat(entity.getBody().getEmbedded().getSearchResults().get("bøker").getEmbedded().getItems(), hasSize(5));
+        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("bøker").getEmbedded().getItems(), hasSize(5));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class SearchControllerTest {
 
         ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
 
-        assertThat(entity.getBody().getEmbedded().getSearchResults().get("bøker").getEmbedded().getContentSearch(), hasSize(5));
+        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("bøker").getEmbedded().getContentSearch(), hasSize(5));
     }
 
     @Test

@@ -38,7 +38,7 @@ public class SuperSearchResultResourceAssembler extends ResourceAssemblerSupport
             ItemSearchResource itemSearchResource = new SearchResultResourceAssembler().toResource(entry.getValue());
             searchResources.put(entry.getKey(), itemSearchResource);
         }
-        embeddedWrapper.setSearchResults(searchResources);
+        embeddedWrapper.setItemsByMediaType(searchResources);
         return embeddedWrapper;
     }
 
