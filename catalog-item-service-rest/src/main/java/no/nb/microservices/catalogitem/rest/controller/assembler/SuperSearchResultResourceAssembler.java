@@ -5,6 +5,7 @@ import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.rest.controller.SearchController;
 import no.nb.microservices.catalogitem.rest.controller.SearchResultResourceAssembler;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.MediaTypeResult;
 import no.nb.microservices.catalogitem.rest.model.SuperEmbeddedWrapper;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
 import org.springframework.hateoas.Link;
@@ -13,7 +14,8 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SuperSearchResultResourceAssembler extends ResourceAssemblerSupport<SuperSearchAggregated, SuperItemSearchResource> {
@@ -33,12 +35,12 @@ public class SuperSearchResultResourceAssembler extends ResourceAssemblerSupport
     private SuperEmbeddedWrapper getSuperEmbeddedWrapper(SuperSearchAggregated superSearchAggregated) {
         SuperEmbeddedWrapper embeddedWrapper = new SuperEmbeddedWrapper();
         Map<String, SearchAggregated> searchAggregateds = superSearchAggregated.getSearchAggregateds();
-        Map<String, ItemSearchResource> searchResources = new HashMap();
+        List<MediaTypeResult> mediaTypeResults = new ArrayList<>();
         for (Map.Entry<String, SearchAggregated> entry : searchAggregateds.entrySet()) {
             ItemSearchResource itemSearchResource = new SearchResultResourceAssembler().toResource(entry.getValue());
-            searchResources.put(entry.getKey(), itemSearchResource);
+            mediaTypeResults.add(new MediaTypeResult(entry.getKey(), itemSearchResource));
         }
-        embeddedWrapper.setItemsByMediaType(searchResources);
+        embeddedWrapper.setMediaTypeResults(mediaTypeResults);
         return embeddedWrapper;
     }
 

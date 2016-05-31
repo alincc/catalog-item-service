@@ -3,19 +3,18 @@ package no.nb.microservices.catalogitem.rest.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuperEmbeddedWrapper {
-    private Map<String, ItemSearchResource> itemsByMediaType = new HashMap();
+    private List<MediaTypeResult> mediaTypeResults;
 
-    public Map<String, ItemSearchResource> getItemsByMediaType() {
-        return itemsByMediaType;
+    public List<MediaTypeResult> getMediaTypeResults() {
+        return mediaTypeResults;
     }
 
-    public void setItemsByMediaType(Map<String, ItemSearchResource> itemsByMediaType) {
-        this.itemsByMediaType = itemsByMediaType;
+    public void setMediaTypeResults(List<MediaTypeResult> mediaTypeResults) {
+        this.mediaTypeResults = mediaTypeResults;
     }
 }

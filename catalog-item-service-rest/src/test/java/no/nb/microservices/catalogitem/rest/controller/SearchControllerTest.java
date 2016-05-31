@@ -7,6 +7,7 @@ import no.nb.microservices.catalogitem.core.search.model.SuperSearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SuperSearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
+import no.nb.microservices.catalogitem.rest.model.MediaTypeResult;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
 import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.After;
@@ -66,7 +67,7 @@ public class SearchControllerTest {
 
         ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
 
-        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("bøker").getEmbedded().getItems(), hasSize(5));
+        assertThat(getResultForMediaType(entity.getBody(), "bøker").getResult().getEmbedded().getItems(), hasSize(5));
     }
 
     @Test
@@ -78,7 +79,7 @@ public class SearchControllerTest {
 
         ResponseEntity<SuperItemSearchResource> entity = searchController.superSearch(searchRequest, pageRequest);
 
-        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("bøker").getEmbedded().getContentSearch(), hasSize(5));
+        assertThat(getResultForMediaType(entity.getBody(), "bøker").getResult().getEmbedded().getContentSearch(), hasSize(5));
     }
 
     @Test
@@ -113,5 +114,13 @@ public class SearchControllerTest {
         Map<String, SearchAggregated> searchAggregateds = new HashMap<>();
         searchAggregateds.put("bøker", searchAggregated);
         return new SuperSearchAggregated(new PagedResources.PageMetadata(5, 0, 5), searchAggregateds);
+    }
+
+    private MediaTypeResult getResultForMediaType(SuperItemSearchResource superItemSearchResource, String mediaType) {
+        return superItemSearchResource.getEmbedded().getMediaTypeResults()
+                .stream()
+                .filter(mediaTypeResult -> mediaType.equals(mediaTypeResult.getMediaType()))
+                .findFirst()
+                .get();
     }
 }

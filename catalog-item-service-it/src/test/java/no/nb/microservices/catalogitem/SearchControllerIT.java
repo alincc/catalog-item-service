@@ -8,6 +8,7 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import no.nb.commons.web.util.UserUtils;
+import no.nb.microservices.catalogitem.rest.model.MediaTypeResult;
 import no.nb.microservices.catalogitem.rest.model.SuperItemSearchResource;
 import no.nb.sesam.ni.niclient.NiClient;
 import no.nb.sesam.ni.niserver.NiServer;
@@ -110,7 +111,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("bøker").getEmbedded().getItems(), hasSize(4));
+        assertThat(getResultForMediaType(entity.getBody(), "bøker").getResult().getEmbedded().getItems(), hasSize(4));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("other").getEmbedded().getItems(), hasSize(4));
+        assertThat(getResultForMediaType(entity.getBody(), "other").getResult().getEmbedded().getItems(), hasSize(4));
     }
 
     @Test
@@ -130,7 +131,7 @@ public class SearchControllerIT {
 
         assertThat(entity.getStatusCode().value(), is(200));
         assertThat(entity.getBody().getId().getHref(), is(url));
-        assertThat(entity.getBody().getEmbedded().getItemsByMediaType().get("aviser").getEmbedded().getContentSearch(), hasSize(4));
+        assertThat(getResultForMediaType(entity.getBody(), "aviser").getResult().getEmbedded().getContentSearch(), hasSize(4));
     }
 
     private <T> ResponseEntity<T> getEntity(String url, Class<T> type) {
@@ -138,6 +139,14 @@ public class SearchControllerIT {
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
         return new TestRestTemplate().exchange(url, HttpMethod.GET, new HttpEntity<Void>(headers), type);
+    }
+
+    private MediaTypeResult getResultForMediaType(SuperItemSearchResource superItemSearchResource, String mediaType) {
+        return superItemSearchResource.getEmbedded().getMediaTypeResults()
+                .stream()
+                .filter(mediaTypeResult -> mediaType.equals(mediaTypeResult.getMediaType()))
+                .findFirst()
+                .get();
     }
 
     @After
