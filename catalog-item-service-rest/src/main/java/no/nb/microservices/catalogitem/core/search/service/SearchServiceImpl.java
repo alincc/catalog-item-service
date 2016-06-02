@@ -11,9 +11,9 @@ import no.nb.microservices.catalogitem.core.search.exception.LatchException;
 import no.nb.microservices.catalogitem.core.search.model.*;
 import no.nb.microservices.catalogitem.core.utils.SecurityInfoService;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
-import no.nb.microservices.catalogsearchindex.AggregationResource;
-import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogsearchindex.BucketValue;
 import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.SimpleAggregation;
 import org.apache.htrace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,12 +128,12 @@ public class SearchServiceImpl implements ISearchService {
         return null;
     }
 
-    private List<String> getPossibleMediaTypesToSearch(List<AggregationResource> aggregations) {
+    private List<String> getPossibleMediaTypesToSearch(List<SimpleAggregation> aggregations) {
         List<String> mediaTypes = new ArrayList<>();
         if (aggregations != null) {
-            for (AggregationResource aggregationResource : aggregations) {
+            for (SimpleAggregation aggregationResource : aggregations) {
                 if ("mediatype".equalsIgnoreCase(aggregationResource.getName())) {
-                    for (FacetValueResource facetValueResource : aggregationResource.getFacetValues()) {
+                    for (BucketValue facetValueResource : aggregationResource.getBuckets()) {
                         mediaTypes.add(facetValueResource.getKey().toLowerCase());
                     }
                 }

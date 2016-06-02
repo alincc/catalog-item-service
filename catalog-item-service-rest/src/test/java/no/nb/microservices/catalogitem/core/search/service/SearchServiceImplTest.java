@@ -10,9 +10,9 @@ import no.nb.microservices.catalogitem.core.item.service.SecurityInfo;
 import no.nb.microservices.catalogitem.core.item.service.TracableId;
 import no.nb.microservices.catalogitem.core.search.model.*;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
-import no.nb.microservices.catalogsearchindex.AggregationResource;
-import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogsearchindex.BucketValue;
 import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.SimpleAggregation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,9 +146,9 @@ public class SearchServiceImplTest {
     }
 
     private SearchResult createMediaTypeAggsSearchResult() {
-        AggregationResource aggregationResource = new AggregationResource("mediatype");
-        aggregationResource.setFacetValues(Arrays.asList(new FacetValueResource("bøker", 1), new FacetValueResource("aviser", 1)));
-        List<AggregationResource> aggregations = Arrays.asList(aggregationResource);
+        SimpleAggregation aggregationResource = new SimpleAggregation("mediatype");
+        aggregationResource.setBuckets(Arrays.asList(new BucketValue("bøker", 1), new BucketValue("aviser", 1)));
+        List<SimpleAggregation> aggregations = Arrays.asList(aggregationResource);
         return new SearchResult(Collections.emptyList(), 1, aggregations, null);
     }
 

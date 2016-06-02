@@ -1,15 +1,30 @@
 package no.nb.microservices.catalogitem;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.loadbalancer.BaseLoadBalancer;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.Server;
+import com.squareup.okhttp.mockwebserver.Dispatcher;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import no.nb.commons.web.util.UserUtils;
+import no.nb.microservices.catalogitem.rest.controller.assembler.AccessInfoBuilder;
+import no.nb.microservices.catalogitem.rest.model.ItemResource;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogitem.rest.model.Metadata;
+import no.nb.microservices.catalogmetadata.test.exception.TestDataException;
+import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
+import no.nb.microservices.catalogsearchindex.SearchResource;
+import no.nb.sesam.ni.niclient.NiClient;
+import no.nb.sesam.ni.niserver.AuthorisationHandler;
+import no.nb.sesam.ni.niserver.AuthorisationHandlerResolver;
+import no.nb.sesam.ni.niserver.AuthorisationRequest;
+import no.nb.sesam.ni.niserver.NiServer;
+import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,52 +49,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.loadbalancer.BaseLoadBalancer;
-import com.netflix.loadbalancer.ILoadBalancer;
-import com.netflix.loadbalancer.Server;
-import com.squareup.okhttp.mockwebserver.Dispatcher;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.microservices.catalogitem.rest.controller.assembler.AccessInfoBuilder;
-import no.nb.microservices.catalogitem.rest.model.ItemResource;
-import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
-import no.nb.microservices.catalogitem.rest.model.Metadata;
-import no.nb.microservices.catalogmetadata.test.exception.TestDataException;
-import no.nb.microservices.catalogmetadata.test.model.fields.TestFields;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
-import no.nb.microservices.catalogsearchindex.SearchResource;
-import no.nb.sesam.ni.niclient.NiClient;
-import no.nb.sesam.ni.niserver.AuthorisationHandler;
-import no.nb.sesam.ni.niserver.AuthorisationHandlerResolver;
-import no.nb.sesam.ni.niserver.AuthorisationRequest;
-import no.nb.sesam.ni.niserver.NiServer;
-import no.nb.sesam.ni.niserver.authorisation.AcceptHandler;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TestConfig.class,
         RibbonClientConfiguration.class, TestNiConfig.class })
 @WebIntegrationTest("server.port: 0")
 public class ItemControllerIT {
+    public static String TEST_SERVER_ADDR;
+    private static int TEST_SERVER_PORT;
+    private static NiServer ni;
     Logger logger = LoggerFactory.getLogger(ItemControllerIT.class);
-    
     @Value("${local.server.port}")
     int port;
-
     RestTemplate template = new TestRestTemplate();
-
     @Autowired
     ILoadBalancer lb;
-
-    private static int TEST_SERVER_PORT;
-    public static String TEST_SERVER_ADDR;
-
-    private static NiServer ni;
     MockWebServer server;
 
     @BeforeClass
@@ -97,19 +87,28 @@ public class ItemControllerIT {
         ni.shutdown(500);
     }
 
+    private static String objectToJson(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (JsonProcessingException ex) {
+            throw new TestDataException(ex);
+        }
+    }
+    
     @Before
     public void setup() throws Exception {
         String searchResource1 = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
         String searchResultMock = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service.json"));
         String searchResultMockWithAggragations = IOUtils.toString(this.getClass().getResourceAsStream("catalog-search-index-service-aggregations.json"));
-        
+
         server = new MockWebServer();
         final Dispatcher dispatcher = new Dispatcher() {
 
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 System.out.println("REQUEST: " + request.getPath());
-                
+
                 if (request.getPath().equals("/catalog/v1/search?q=Ola&page=0&size=10&sort=title&sort=desc&grouping=false&explain=false")) {
                     return new MockResponse().setBody(searchResultMock).setResponseCode(200).setHeader("Content-Type", "application/hal+json");
                 } else if (request.getPath().contains("/mods")) {
@@ -142,8 +141,8 @@ public class ItemControllerIT {
 
         BaseLoadBalancer blb = (BaseLoadBalancer) lb;
         blb.setServersList(Arrays.asList(new Server(server.getHostName(), server.getPort())));
-    }    
-    
+    }
+
     @Test
     public void testSearch() throws Exception {
         String url = "http://localhost:" + port + "/catalog/v1/items?q=Ola&size=10&sort=title,desc";
@@ -181,7 +180,7 @@ public class ItemControllerIT {
 
         assertThat("Status code should be 200 ", entity.getStatusCode().value(), is(200));
     }
-    
+
     @Test
     public void testGetItem() throws Exception {
         String searchResource = IOUtils.toString(getClass().getResourceAsStream("/no/nb/microservices/catalogitem/searchResource.json"));
@@ -217,11 +216,11 @@ public class ItemControllerIT {
                 server.getPort())));
 
         HttpHeaders headers = defaultHeaders();
-        
+
         ResponseEntity<ItemResource> entity = new TestRestTemplate().exchange(
                 "http://localhost:" + port + "/catalog/v1/items/id1", HttpMethod.GET,
                 new HttpEntity<Void>(headers), ItemResource.class);
-        
+
         assertTrue("Status code should be 200 ", entity.getStatusCode()
                 .is2xxSuccessful());
         assertNotNull("Response should have page element", entity.getBody()
@@ -263,20 +262,19 @@ public class ItemControllerIT {
                             .setHeader("Content-Type", "application/json");
                 } else if (request.getPath().contains("/catalog/v1/search?q=oaiid")) {
                     PageMetadata pageMetadata = new PageMetadata(1, 0, 1);
-                    SearchResource searchResource = new SearchResource(pageMetadata);
                     EmbeddedWrapper wrapper = new EmbeddedWrapper();
                     List<no.nb.microservices.catalogsearchindex.ItemResource> items = new ArrayList<>();
                     no.nb.microservices.catalogsearchindex.ItemResource item = new no.nb.microservices.catalogsearchindex.ItemResource();
                     item.setItemId("12345");
                     items.add(item);
                     wrapper.setItems(items);
-                    searchResource.setEmbedded(wrapper);
-                    
+                    SearchResource searchResource = new SearchResource(pageMetadata, wrapper);
+
                     return new MockResponse().setBody(objectToJson(searchResource))
                             .setResponseCode(200)
                             .setHeader("Content-Type", "application/json");
                 }
-                
+
 
                 return new MockResponse().setResponseCode(404);
             }
@@ -289,11 +287,11 @@ public class ItemControllerIT {
                 server.getPort())));
 
         HttpHeaders headers = defaultHeaders();
-        
+
         ResponseEntity<ItemResource> entity = new TestRestTemplate().exchange(
                 "http://localhost:" + port + "/catalog/v1/items/id1?expand=relatedItems", HttpMethod.GET,
                 new HttpEntity<Void>(headers), ItemResource.class);
-        
+
         Metadata metadata = entity.getBody().getMetadata();
         assertTrue("Status code should be 200 ", entity.getStatusCode()
                 .is2xxSuccessful());
@@ -305,15 +303,6 @@ public class ItemControllerIT {
         headers.add(UserUtils.SSO_HEADER, "token");
         headers.add(UserUtils.REAL_IP_HEADER, "123.45.100.1");
         return headers;
-    }
-    
-    private static String objectToJson(Object object) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(object);
-        } catch (JsonProcessingException ex) {
-            throw new TestDataException(ex);
-        }
     }
     
     private <T> ResponseEntity<T> getEntity(String url, Class<T> type) {

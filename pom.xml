@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.cloud</groupId>
@@ -20,7 +20,7 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <catalog-metadata-service.version>0.0.1-153</catalog-metadata-service.version>
-        <catalog-search-index-service.version>0.0.1-100</catalog-search-index-service.version>
+        <catalog-search-index-service.version>0.0.1-118</catalog-search-index-service.version>
         <catalog-iiif-content-search-service.version>1.0.0-35</catalog-iiif-content-search-service.version>
     </properties>
 

@@ -4,10 +4,10 @@ import no.nb.microservices.catalogitem.core.item.model.Item;
 import no.nb.microservices.catalogitem.core.search.model.SearchAggregated;
 import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.rest.controller.SearchResultResourceAssembler;
-import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogitem.rest.model.ContentSearch;
-import no.nb.microservices.catalogsearchindex.AggregationResource;
-import no.nb.microservices.catalogsearchindex.FacetValueResource;
+import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
+import no.nb.microservices.catalogsearchindex.BucketValue;
+import no.nb.microservices.catalogsearchindex.SimpleAggregation;
 import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.After;
 import org.junit.Before;
@@ -161,17 +161,17 @@ public class SearchResultResourceAssemblerTest {
         SearchResultResourceAssembler searchResultResourceAssembler = new SearchResultResourceAssembler();
         Page<Item> page = new PageImpl<>(new ArrayList<>(), new PageRequest(0, 10) , 1000);
 
-        List<AggregationResource> aggregations = new ArrayList<>();
+        List<SimpleAggregation> aggregations = new ArrayList<>();
 
-        AggregationResource a1 = new AggregationResource("ddc1");
-        List<FacetValueResource> facetValues1 = new ArrayList<>();
-        facetValues1.add(new FacetValueResource("01", 5));
-        a1.setFacetValues(facetValues1);
+        SimpleAggregation a1 = new SimpleAggregation("ddc1");
+        List<BucketValue> buckets1 = new ArrayList<>();
+        buckets1.add(new BucketValue("01", 5));
+        a1.setBuckets(buckets1);
 
-        AggregationResource a2 = new AggregationResource("mediatype");
-        List<FacetValueResource> facetValues2 = new ArrayList<>();
-        facetValues2.add(new FacetValueResource("Bøker", 10));
-        a2.setFacetValues(facetValues2);
+        SimpleAggregation a2 = new SimpleAggregation("mediatype");
+        List<BucketValue> buckets2 = new ArrayList<>();
+        buckets2.add(new BucketValue("Bøker", 10));
+        a2.setBuckets(buckets2);
 
         aggregations.add(a1);
         aggregations.add(a2);

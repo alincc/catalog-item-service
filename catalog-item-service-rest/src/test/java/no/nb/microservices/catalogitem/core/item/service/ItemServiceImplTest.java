@@ -1,13 +1,17 @@
 package no.nb.microservices.catalogitem.core.item.service;
 
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
-
-import java.util.Arrays;
-import java.util.concurrent.Future;
-
+import no.nb.commons.web.util.UserUtils;
+import no.nb.microservices.catalogitem.core.index.model.SearchResult;
+import no.nb.microservices.catalogitem.core.index.service.IndexService;
+import no.nb.microservices.catalogitem.core.item.model.Item;
+import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
+import no.nb.microservices.catalogitem.core.security.service.SecurityService;
+import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
+import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
+import no.nb.microservices.catalogsearchindex.EmbeddedWrapper;
+import no.nb.microservices.catalogsearchindex.ItemResource;
+import no.nb.microservices.catalogsearchindex.SearchResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,31 +24,24 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import no.nb.commons.web.util.UserUtils;
-import no.nb.microservices.catalogitem.core.index.model.SearchResult;
-import no.nb.microservices.catalogitem.core.index.service.IndexService;
-import no.nb.microservices.catalogitem.core.item.model.Item;
-import no.nb.microservices.catalogitem.core.metadata.service.MetadataService;
-import no.nb.microservices.catalogitem.core.security.service.SecurityService;
-import no.nb.microservices.catalogmetadata.model.mods.v3.Mods;
-import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogsearchindex.SearchResource;
-import no.nb.microservices.catalogsearchindex.ItemResource;
+import java.util.Arrays;
+import java.util.concurrent.Future;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceImplTest {
 
-    @InjectMocks
-    private ItemServiceImpl itemService;
-
     @Mock
     MetadataService metadataService;
-    
     @Mock
     SecurityService securityService;
-
     @Mock
     IndexService indexService;
+    @InjectMocks
+    private ItemServiceImpl itemService;
 
     @Before
     public void setup() {
@@ -54,8 +51,8 @@ public class ItemServiceImplTest {
     @Test
     public void testGetItem() {
         String id = "id1";
-        Future<Mods> mods = new AsyncResult<Mods>(TestMods.aDefaultBookMods().build());
-        Future<Boolean> hasAccess = new AsyncResult<Boolean>(true);
+        Future<Mods> mods = new AsyncResult<>(TestMods.aDefaultBookMods().build());
+        Future<Boolean> hasAccess = new AsyncResult<>(true);
         when(metadataService.getModsById(anyObject())).thenReturn(mods);
         when(securityService.hasAccess(anyObject())).thenReturn(hasAccess);
         
@@ -71,9 +68,9 @@ public class ItemServiceImplTest {
         String id = "id1";
         ItemResource resource = new ItemResource();
         SearchResult searchResult = new SearchResult(Arrays.asList(resource), 1, null, null);
-        Future<Mods> mods = new AsyncResult<Mods>(TestMods.aDefaultMusicAlbum().build());
-        Future<Boolean> hasAccess = new AsyncResult<Boolean>(true);
-        Future<SearchResource> searchResource = new AsyncResult<>(new SearchResource(new PagedResources.PageMetadata(1,1,1,1)));
+        Future<Mods> mods = new AsyncResult<>(TestMods.aDefaultMusicAlbum().build());
+        Future<Boolean> hasAccess = new AsyncResult<>(true);
+        Future<SearchResource> searchResource = new AsyncResult<>(new SearchResource(new PagedResources.PageMetadata(1, 1, 1, 1), new EmbeddedWrapper()));
         
         when(metadataService.getModsById(anyObject())).thenReturn(mods);
         when(securityService.hasAccess(anyObject())).thenReturn(hasAccess);

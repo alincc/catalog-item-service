@@ -56,11 +56,11 @@
     "aggregations": [
       {
         "name": "ddc1",
-        "facetValues": []
+        "buckets": []
       },
       {
         "name": "mediaType",
-        "facetValues": [
+        "buckets": [
           {
             "key": "bøker",
             "count": 10

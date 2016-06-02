@@ -8,8 +8,8 @@ import no.nb.microservices.catalogitem.core.search.model.SearchRequest;
 import no.nb.microservices.catalogitem.core.search.service.ISearchService;
 import no.nb.microservices.catalogitem.rest.model.ItemSearchResource;
 import no.nb.microservices.catalogmetadata.test.mods.v3.TestMods;
-import no.nb.microservices.catalogsearchindex.AggregationResource;
 import no.nb.microservices.catalogsearchindex.NBSearchType;
+import no.nb.microservices.catalogsearchindex.SimpleAggregation;
 import no.nb.microservices.catalogsearchindex.TestItemResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,15 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class ItemControllerTest {
 
-    @InjectMocks
-    private ItemController controller;
-
     @Mock
     ItemService itemService;
-
     @Mock
     ISearchService searchService;
-
+    @InjectMocks
+    private ItemController controller;
     private MockMvc mockMvc;
 
     @Before
@@ -88,9 +85,9 @@ public class ItemControllerTest {
 
         List<Item> items = Arrays.asList(new Item.ItemBuilder("123").withItemResource(TestItemResource.aDefaultBook().build()).build());
 
-        List<AggregationResource> aggregations = new ArrayList<>();
-        aggregations.add(new AggregationResource("ddc1"));
-        aggregations.add(new AggregationResource("mediatype"));
+        List<SimpleAggregation> aggregations = new ArrayList<>();
+        aggregations.add(new SimpleAggregation("ddc1"));
+        aggregations.add(new SimpleAggregation("mediatype"));
 
         SearchAggregated searchResult = new SearchAggregated(new PageImpl<>(items, pageable, 100), aggregations, null, searchRequest);
 
